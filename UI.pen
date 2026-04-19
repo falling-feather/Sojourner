@@ -1,0 +1,2043 @@
+{
+  "version": "2.11",
+  "children": [
+    {
+      "type": "frame",
+      "id": "bi8Au",
+      "x": 0,
+      "y": 0,
+      "name": "《人的一生》UI 画板",
+      "clip": true,
+      "width": 6760,
+      "height": 1700,
+      "fill": "#BFB8AC",
+      "layout": "none",
+      "children": [
+        {
+          "type": "frame",
+          "id": "rBmlJ",
+          "x": 48,
+          "y": 120,
+          "name": "01 开始界面",
+          "clip": true,
+          "width": 1280,
+          "height": 720,
+          "fill": {
+            "type": "gradient",
+            "gradientType": "linear",
+            "enabled": true,
+            "rotation": 90,
+            "size": {
+              "height": 1
+            },
+            "colors": [
+              {
+                "color": "#1E1914",
+                "position": 0
+              },
+              {
+                "color": "#352E26",
+                "position": 0.55
+              },
+              {
+                "color": "#221C16",
+                "position": 1
+              }
+            ]
+          },
+          "cornerRadius": 24,
+          "effect": {
+            "type": "shadow",
+            "shadowType": "outer",
+            "color": "#00000055",
+            "offset": {
+              "x": 0,
+              "y": 20
+            },
+            "blur": 56
+          },
+          "layout": "vertical",
+          "gap": 28,
+          "padding": [
+            72,
+            80
+          ],
+          "justifyContent": "center",
+          "alignItems": "center",
+          "children": [
+            {
+              "type": "text",
+              "id": "YSOIM",
+              "name": "deco",
+              "fill": "#9A8B6E",
+              "content": "◆ 人生似河，择岸而行 ◆",
+              "fontFamily": "Inter",
+              "fontSize": 13,
+              "fontWeight": "normal",
+              "letterSpacing": 3
+            },
+            {
+              "type": "text",
+              "id": "HVGJr",
+              "name": "mainTitle",
+              "fill": "#F7F1E8",
+              "content": "过客",
+              "textAlign": "center",
+              "fontFamily": "Playfair Display",
+              "fontSize": 68,
+              "fontWeight": "600"
+            },
+            {
+              "type": "text",
+              "id": "xmC5B",
+              "name": "subTitle",
+              "fill": "#C4B8A8",
+              "textGrowth": "fixed-width",
+              "width": 560,
+              "content": "Sojourner",
+              "lineHeight": 1.55,
+              "textAlign": "center",
+              "fontFamily": "Inter",
+              "fontSize": 15,
+              "fontWeight": "normal"
+            },
+            {
+              "type": "frame",
+              "id": "C5XGa",
+              "name": "主按钮",
+              "fill": "#C4A574",
+              "cornerRadius": 12,
+              "effect": {
+                "type": "shadow",
+                "shadowType": "outer",
+                "color": "#00000035",
+                "offset": {
+                  "x": 0,
+                  "y": 4
+                },
+                "blur": 16
+              },
+              "gap": 10,
+              "padding": [
+                20,
+                56
+              ],
+              "justifyContent": "center",
+              "alignItems": "center",
+              "children": [
+                {
+                  "type": "text",
+                  "id": "en2Ms",
+                  "name": "startLbl",
+                  "fill": "#1A1510",
+                  "content": "开始人生",
+                  "fontFamily": "Inter",
+                  "fontSize": 21,
+                  "fontWeight": "600"
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "Dtion",
+              "name": "secRow",
+              "gap": 24,
+              "alignItems": "center",
+              "children": [
+                {
+                  "type": "text",
+                  "id": "ynlLf",
+                  "name": "secTxt",
+                  "fill": "#8A7F72",
+                  "content": "落入白川的羽 · Falling-feather",
+                  "fontFamily": "Inter",
+                  "fontSize": 13,
+                  "fontWeight": "normal"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "frame",
+          "id": "2hOGa",
+          "x": 1380,
+          "y": 120,
+          "name": "02 主游玩界面",
+          "clip": true,
+          "width": 1280,
+          "height": 720,
+          "fill": "#F4F2EF",
+          "cornerRadius": 24,
+          "effect": {
+            "type": "shadow",
+            "shadowType": "outer",
+            "color": "#00000030",
+            "offset": {
+              "x": 0,
+              "y": 20
+            },
+            "blur": 48
+          },
+          "layout": "vertical",
+          "children": [
+            {
+              "type": "frame",
+              "id": "zHPu9",
+              "name": "hud",
+              "width": "fill_container",
+              "height": 92,
+              "fill": "#E8E4DC",
+              "stroke": {
+                "align": "inside",
+                "thickness": 1,
+                "fill": "#D5CFC4"
+              },
+              "gap": 20,
+              "padding": [
+                22,
+                28
+              ],
+              "justifyContent": "space_between",
+              "alignItems": "center",
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "Y0uLF",
+                  "name": "hudL",
+                  "layout": "vertical",
+                  "gap": 6,
+                  "children": [
+                    {
+                      "type": "text",
+                      "id": "F5yh9",
+                      "name": "hudTitle",
+                      "fill": "#1A1A1A",
+                      "content": "当前阶段 · 求学（示意）",
+                      "fontFamily": "Inter",
+                      "fontSize": 18,
+                      "fontWeight": "600"
+                    },
+                    {
+                      "type": "text",
+                      "id": "Klnji",
+                      "name": "hudSub",
+                      "fill": "#5C554A",
+                      "content": "时间点 3 / 9　·　全局状态与决断点会跨场景保留",
+                      "fontFamily": "Inter",
+                      "fontSize": 12,
+                      "fontWeight": "normal"
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "J0vOG",
+                  "name": "hudR",
+                  "gap": 10,
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "frame",
+                      "id": "ShxUS",
+                      "name": "menuStrip",
+                      "gap": 8,
+                      "padding": [
+                        0,
+                        18,
+                        0,
+                        0
+                      ],
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "text",
+                          "id": "43cXr",
+                          "name": "mEsc",
+                          "fill": "#A89888",
+                          "content": "Esc",
+                          "fontFamily": "Inter",
+                          "fontSize": 11,
+                          "fontWeight": "normal"
+                        },
+                        {
+                          "type": "text",
+                          "id": "xHjoT",
+                          "name": "mMenu",
+                          "fill": "#4D453C",
+                          "content": "菜单",
+                          "fontFamily": "Inter",
+                          "fontSize": 12,
+                          "fontWeight": "600"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "frame",
+                      "id": "9cbEL",
+                      "name": "stat1",
+                      "fill": "#FFFFFF",
+                      "cornerRadius": 10,
+                      "stroke": {
+                        "align": "inside",
+                        "thickness": 1,
+                        "fill": "#E0DAD0"
+                      },
+                      "layout": "vertical",
+                      "gap": 2,
+                      "padding": [
+                        10,
+                        14
+                      ],
+                      "children": [
+                        {
+                          "type": "text",
+                          "id": "BOf8I",
+                          "name": "st1t",
+                          "fill": "#6B645A",
+                          "content": "压力",
+                          "fontFamily": "Inter",
+                          "fontSize": 11,
+                          "fontWeight": "normal"
+                        },
+                        {
+                          "type": "text",
+                          "id": "pkxcP",
+                          "name": "st1v",
+                          "fill": "#B56B3D",
+                          "content": "中",
+                          "fontFamily": "Inter",
+                          "fontSize": 15,
+                          "fontWeight": "600"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "frame",
+                      "id": "pzaLT",
+                      "name": "stat2",
+                      "fill": "#FFFFFF",
+                      "cornerRadius": 10,
+                      "stroke": {
+                        "align": "inside",
+                        "thickness": 1,
+                        "fill": "#E0DAD0"
+                      },
+                      "layout": "vertical",
+                      "gap": 2,
+                      "padding": [
+                        10,
+                        14
+                      ],
+                      "children": [
+                        {
+                          "type": "text",
+                          "id": "kMAa5",
+                          "name": "st2t",
+                          "fill": "#6B645A",
+                          "content": "健康负债",
+                          "fontFamily": "Inter",
+                          "fontSize": 11,
+                          "fontWeight": "normal"
+                        },
+                        {
+                          "type": "text",
+                          "id": "RAddU",
+                          "name": "st2v",
+                          "fill": "#3D8B6E",
+                          "content": "低",
+                          "fontFamily": "Inter",
+                          "fontSize": 15,
+                          "fontWeight": "600"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "frame",
+                      "id": "8hBry",
+                      "name": "stat3",
+                      "fill": "#FFFFFF",
+                      "cornerRadius": 10,
+                      "stroke": {
+                        "align": "inside",
+                        "thickness": 1,
+                        "fill": "#E0DAD0"
+                      },
+                      "layout": "vertical",
+                      "gap": 2,
+                      "padding": [
+                        10,
+                        14
+                      ],
+                      "children": [
+                        {
+                          "type": "text",
+                          "id": "crx0T",
+                          "name": "st3t",
+                          "fill": "#6B645A",
+                          "content": "财力",
+                          "fontFamily": "Inter",
+                          "fontSize": 11,
+                          "fontWeight": "normal"
+                        },
+                        {
+                          "type": "text",
+                          "id": "2q3wb",
+                          "name": "st3v",
+                          "fill": "#2A6B8F",
+                          "content": "稳",
+                          "fontFamily": "Inter",
+                          "fontSize": 15,
+                          "fontWeight": "600"
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "3F49Q",
+              "name": "narrWrap",
+              "width": "fill_container",
+              "height": "fill_container",
+              "fill": "#F4F2EF",
+              "layout": "vertical",
+              "gap": 12,
+              "padding": [
+                24,
+                32
+              ],
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "snWxC",
+                  "name": "narrCard",
+                  "width": "fill_container",
+                  "height": "fill_container",
+                  "fill": "#FFFCF7",
+                  "cornerRadius": 14,
+                  "stroke": {
+                    "align": "inside",
+                    "thickness": 1,
+                    "fill": "#E4DDD2"
+                  },
+                  "layout": "vertical",
+                  "gap": 16,
+                  "padding": 32,
+                  "children": [
+                    {
+                      "type": "text",
+                      "id": "rMfkg",
+                      "name": "labelNar",
+                      "fill": "#9A9084",
+                      "content": "【叙事区 · 内容数据驱动】",
+                      "fontFamily": "Inter",
+                      "fontSize": 12,
+                      "fontWeight": "normal",
+                      "letterSpacing": 1
+                    },
+                    {
+                      "type": "text",
+                      "id": "niSbY",
+                      "name": "p1",
+                      "fill": "#252018",
+                      "textGrowth": "fixed-width",
+                      "width": 1080,
+                      "content": "你坐在教室靠窗的位置，风从操场那边吹过来。高考志愿表就压在肘下——它很轻，却像一块压了很久的石头。",
+                      "lineHeight": 1.6,
+                      "fontFamily": "Inter",
+                      "fontSize": 17,
+                      "fontWeight": "normal"
+                    },
+                    {
+                      "type": "text",
+                      "id": "DI7ib",
+                      "name": "p2",
+                      "fill": "#4A453C",
+                      "textGrowth": "fixed-width",
+                      "width": 1080,
+                      "content": "你知道：有些选择会在很久以后才显形。压力、熬夜、关系与支持……它们不会在这一秒全部结算，却会悄悄改变你人生的权重。",
+                      "lineHeight": 1.55,
+                      "fontFamily": "Inter",
+                      "fontSize": 15,
+                      "fontWeight": "normal"
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "7I2Tl",
+                  "name": "pager",
+                  "width": "fill_container",
+                  "gap": 8,
+                  "justifyContent": "end",
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "text",
+                      "id": "nnP7r",
+                      "name": "pagerTxt",
+                      "fill": "#8B6F4A",
+                      "content": "继续阅读（Space / 点击）",
+                      "fontFamily": "Inter",
+                      "fontSize": 13,
+                      "fontWeight": "normal"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "P4LZg",
+              "name": "choicePanel",
+              "width": "fill_container",
+              "fill": "#ECE6DD",
+              "layout": "vertical",
+              "gap": 10,
+              "padding": [
+                10,
+                32,
+                28,
+                32
+              ],
+              "children": [
+                {
+                  "type": "text",
+                  "id": "rdQih",
+                  "name": "chHint",
+                  "fill": "#8A8278",
+                  "content": "【选项区 · 单次建议 ≤9 项 · 可映射数字键】",
+                  "fontFamily": "Inter",
+                  "fontSize": 11,
+                  "fontWeight": "normal"
+                },
+                {
+                  "type": "frame",
+                  "id": "k7oVZ",
+                  "name": "chRow1",
+                  "width": "fill_container",
+                  "fill": "#FFFFFF",
+                  "cornerRadius": 12,
+                  "stroke": {
+                    "align": "inside",
+                    "thickness": 1,
+                    "fill": "#D4CABE"
+                  },
+                  "gap": 14,
+                  "padding": [
+                    16,
+                    18
+                  ],
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "frame",
+                      "id": "SRKem",
+                      "name": "k1",
+                      "width": 40,
+                      "height": 40,
+                      "fill": "#3A3228",
+                      "cornerRadius": 10,
+                      "justifyContent": "center",
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "text",
+                          "id": "fbr3K",
+                          "name": "n1",
+                          "fill": "#FAF6F0",
+                          "content": "1",
+                          "fontFamily": "Inter",
+                          "fontSize": 15,
+                          "fontWeight": "700"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "text",
+                      "id": "h9OI1",
+                      "name": "t1",
+                      "fill": "#1F1C18",
+                      "textGrowth": "fixed-width",
+                      "width": 980,
+                      "content": "优先冲刺名校：提高期望收益，也抬升压力与不确定性（检定相关）",
+                      "fontFamily": "Inter",
+                      "fontSize": 15,
+                      "fontWeight": "normal"
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "qcLCp",
+                  "name": "chRow2",
+                  "width": "fill_container",
+                  "fill": "#FFFFFF",
+                  "cornerRadius": 12,
+                  "stroke": {
+                    "align": "inside",
+                    "thickness": 1,
+                    "fill": "#D4CABE"
+                  },
+                  "gap": 14,
+                  "padding": [
+                    16,
+                    18
+                  ],
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "frame",
+                      "id": "PeK0J",
+                      "name": "k2",
+                      "width": 40,
+                      "height": 40,
+                      "fill": "#3A3228",
+                      "cornerRadius": 10,
+                      "justifyContent": "center",
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "text",
+                          "id": "oK9JW",
+                          "name": "n2",
+                          "fill": "#FAF6F0",
+                          "content": "2",
+                          "fontFamily": "Inter",
+                          "fontSize": 15,
+                          "fontWeight": "700"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "text",
+                      "id": "ZpAav",
+                      "name": "t2",
+                      "fill": "#1F1C18",
+                      "textGrowth": "fixed-width",
+                      "width": 980,
+                      "content": "选择更稳妥的院校：降低方差，保留长期健康与社会支持",
+                      "fontFamily": "Inter",
+                      "fontSize": 15,
+                      "fontWeight": "normal"
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "4kSSC",
+                  "name": "chRow3",
+                  "width": "fill_container",
+                  "fill": "#FFFFFF",
+                  "cornerRadius": 12,
+                  "stroke": {
+                    "align": "inside",
+                    "thickness": 1,
+                    "fill": "#D4CABE"
+                  },
+                  "gap": 14,
+                  "padding": [
+                    16,
+                    18
+                  ],
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "frame",
+                      "id": "et3dE",
+                      "name": "k3",
+                      "width": 40,
+                      "height": 40,
+                      "fill": "#3A3228",
+                      "cornerRadius": 10,
+                      "justifyContent": "center",
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "text",
+                          "id": "4FpDB",
+                          "name": "n3",
+                          "fill": "#FAF6F0",
+                          "content": "3",
+                          "fontFamily": "Inter",
+                          "fontSize": 15,
+                          "fontWeight": "700"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "text",
+                      "id": "Uy5bz",
+                      "name": "t3",
+                      "fill": "#1F1C18",
+                      "textGrowth": "fixed-width",
+                      "width": 980,
+                      "content": "暂缓决定：先处理当下关系与情绪（可能触发延迟后果标签）",
+                      "fontFamily": "Inter",
+                      "fontSize": 15,
+                      "fontWeight": "normal"
+                    }
+                  ]
+                },
+                {
+                  "type": "text",
+                  "id": "0Nuww",
+                  "name": "focusNote",
+                  "fill": "#A89888",
+                  "content": "焦点态（键盘）示意：当前选项应有可见 focus ring",
+                  "fontFamily": "Inter",
+                  "fontSize": 11,
+                  "fontWeight": "normal"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "frame",
+          "id": "znRPp",
+          "x": 2712,
+          "y": 120,
+          "name": "03 检定反馈（叠加层）",
+          "clip": true,
+          "width": 1280,
+          "height": 720,
+          "fill": "#1A1510CC",
+          "cornerRadius": 24,
+          "effect": {
+            "type": "shadow",
+            "shadowType": "outer",
+            "color": "#00000035",
+            "offset": {
+              "x": 0,
+              "y": 20
+            },
+            "blur": 48
+          },
+          "layout": "vertical",
+          "justifyContent": "center",
+          "alignItems": "center",
+          "children": [
+            {
+              "type": "frame",
+              "id": "kK72i",
+              "name": "modal",
+              "width": 520,
+              "fill": "#FFFCF7",
+              "cornerRadius": 16,
+              "stroke": {
+                "align": "inside",
+                "thickness": 1,
+                "fill": "#D8D0C4"
+              },
+              "effect": {
+                "type": "shadow",
+                "shadowType": "outer",
+                "color": "#00000040",
+                "offset": {
+                  "x": 0,
+                  "y": 24
+                },
+                "blur": 40
+              },
+              "layout": "vertical",
+              "gap": 20,
+              "padding": 36,
+              "alignItems": "center",
+              "children": [
+                {
+                  "type": "text",
+                  "id": "WRgBl",
+                  "name": "mTitle",
+                  "fill": "#8B7355",
+                  "content": "关键节点 · 概率检定",
+                  "fontFamily": "Inter",
+                  "fontSize": 13,
+                  "fontWeight": "normal",
+                  "letterSpacing": 2
+                },
+                {
+                  "type": "text",
+                  "id": "vPeVq",
+                  "name": "mHead",
+                  "fill": "#1A1A1A",
+                  "content": "高考发挥",
+                  "textAlign": "center",
+                  "fontFamily": "Playfair Display",
+                  "fontSize": 28,
+                  "fontWeight": "600"
+                },
+                {
+                  "type": "text",
+                  "id": "SodkG",
+                  "name": "mBody",
+                  "fill": "#4A453C",
+                  "textGrowth": "fixed-width",
+                  "width": 440,
+                  "content": "努力会提高有利结果的期望，但不保证绝对成功。系统保留小概率失常与超常，以叙事解释承接（非静默改状态）。",
+                  "lineHeight": 1.55,
+                  "textAlign": "center",
+                  "fontFamily": "Inter",
+                  "fontSize": 14,
+                  "fontWeight": "normal"
+                },
+                {
+                  "type": "frame",
+                  "id": "dqGhM",
+                  "name": "rollLine",
+                  "fill": "#F0EBE3",
+                  "cornerRadius": 10,
+                  "gap": 10,
+                  "padding": [
+                    12,
+                    16
+                  ],
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "text",
+                      "id": "IwgbN",
+                      "name": "rollLbl",
+                      "fill": "#3A342C",
+                      "content": "检定结果：",
+                      "fontFamily": "Inter",
+                      "fontSize": 14,
+                      "fontWeight": "600"
+                    },
+                    {
+                      "type": "text",
+                      "id": "8awYu",
+                      "name": "rollVal",
+                      "fill": "#2A7A5A",
+                      "content": "超常发挥（示意）",
+                      "fontFamily": "Inter",
+                      "fontSize": 15,
+                      "fontWeight": "700"
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "PBQkf",
+                  "name": "mBtn",
+                  "fill": "#C4A574",
+                  "cornerRadius": 10,
+                  "padding": [
+                    14,
+                    40
+                  ],
+                  "justifyContent": "center",
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "text",
+                      "id": "DlTPq",
+                      "name": "mBtnT",
+                      "fill": "#1A1510",
+                      "content": "继续剧情",
+                      "fontFamily": "Inter",
+                      "fontSize": 16,
+                      "fontWeight": "600"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "text",
+              "id": "0P5c1",
+              "name": "subM",
+              "fill": "#C9BFB0",
+              "content": "本屏为叠加在叙事界面之上；实现可用半透明遮罩 + 居中面板",
+              "fontFamily": "Inter",
+              "fontSize": 11,
+              "fontWeight": "normal"
+            }
+          ]
+        },
+        {
+          "type": "frame",
+          "id": "66ymf",
+          "x": 4044,
+          "y": 120,
+          "name": "04 终局 / 人生摘要",
+          "clip": true,
+          "width": 1280,
+          "height": 720,
+          "fill": "#F4F2EF",
+          "cornerRadius": 24,
+          "effect": {
+            "type": "shadow",
+            "shadowType": "outer",
+            "color": "#00000028",
+            "offset": {
+              "x": 0,
+              "y": 20
+            },
+            "blur": 48
+          },
+          "layout": "vertical",
+          "padding": [
+            40,
+            48
+          ],
+          "children": [
+            {
+              "type": "frame",
+              "id": "gadI8",
+              "name": "endHero",
+              "width": "fill_container",
+              "layout": "vertical",
+              "gap": 12,
+              "padding": [
+                28,
+                0,
+                8,
+                0
+              ],
+              "children": [
+                {
+                  "type": "text",
+                  "id": "9WaMv",
+                  "name": "endEyebrow",
+                  "fill": "#8B7355",
+                  "content": "终局",
+                  "fontFamily": "Inter",
+                  "fontSize": 12,
+                  "fontWeight": "normal",
+                  "letterSpacing": 4
+                },
+                {
+                  "type": "text",
+                  "id": "elUuN",
+                  "name": "endTitle",
+                  "fill": "#1A1A1A",
+                  "content": "你的一生 · 落幕",
+                  "fontFamily": "Playfair Display",
+                  "fontSize": 40,
+                  "fontWeight": "600"
+                },
+                {
+                  "type": "text",
+                  "id": "5fQIb",
+                  "name": "endSub",
+                  "fill": "#5C554A",
+                  "textGrowth": "fixed-width",
+                  "width": 900,
+                  "content": "以下为摘要占位：可含关键抉择回顾、全局属性结算、开放式总结",
+                  "lineHeight": 1.5,
+                  "fontFamily": "Inter",
+                  "fontSize": 14,
+                  "fontWeight": "normal"
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "8elt8",
+              "name": "sumRow",
+              "width": "fill_container",
+              "height": "fill_container",
+              "gap": 16,
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "Bj1Nw",
+                  "name": "sum1",
+                  "width": "fill_container",
+                  "height": "fill_container",
+                  "fill": "#FFFCF7",
+                  "cornerRadius": 14,
+                  "stroke": {
+                    "align": "inside",
+                    "thickness": 1,
+                    "fill": "#E0D8CC"
+                  },
+                  "layout": "vertical",
+                  "gap": 10,
+                  "padding": 22,
+                  "children": [
+                    {
+                      "type": "text",
+                      "id": "hbHE2",
+                      "name": "s1h",
+                      "fill": "#3A342C",
+                      "content": "决断点回顾",
+                      "fontFamily": "Inter",
+                      "fontSize": 13,
+                      "fontWeight": "600"
+                    },
+                    {
+                      "type": "text",
+                      "id": "0WDG8",
+                      "name": "s1b",
+                      "fill": "#4A453C",
+                      "textGrowth": "fixed-width",
+                      "width": 360,
+                      "content": "· 名校志愿 · 职业分叉 · 关系选择……（布尔/枚举标志位）",
+                      "lineHeight": 1.5,
+                      "fontFamily": "Inter",
+                      "fontSize": 14,
+                      "fontWeight": "normal"
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "bUQvF",
+                  "name": "sum2",
+                  "width": "fill_container",
+                  "height": "fill_container",
+                  "fill": "#FFFCF7",
+                  "cornerRadius": 14,
+                  "stroke": {
+                    "align": "inside",
+                    "thickness": 1,
+                    "fill": "#E0D8CC"
+                  },
+                  "layout": "vertical",
+                  "gap": 10,
+                  "padding": 22,
+                  "children": [
+                    {
+                      "type": "text",
+                      "id": "90a5G",
+                      "name": "s2h",
+                      "fill": "#3A342C",
+                      "content": "延迟后果",
+                      "fontFamily": "Inter",
+                      "fontSize": 13,
+                      "fontWeight": "600"
+                    },
+                    {
+                      "type": "text",
+                      "id": "8yWrR",
+                      "name": "s2b",
+                      "fill": "#4A453C",
+                      "textGrowth": "fixed-width",
+                      "width": 360,
+                      "content": "· 长期熬夜/压力 → 中老年健康事件权重上升（示意链路）",
+                      "lineHeight": 1.5,
+                      "fontFamily": "Inter",
+                      "fontSize": 14,
+                      "fontWeight": "normal"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "CI6IX",
+              "name": "endActions",
+              "width": "fill_container",
+              "gap": 16,
+              "padding": [
+                8,
+                0,
+                0,
+                0
+              ],
+              "justifyContent": "center",
+              "alignItems": "center",
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "kaAWn",
+                  "name": "againBtn",
+                  "fill": "#C4A574",
+                  "cornerRadius": 12,
+                  "effect": {
+                    "type": "shadow",
+                    "shadowType": "outer",
+                    "color": "#00000030",
+                    "offset": {
+                      "x": 0,
+                      "y": 4
+                    },
+                    "blur": 14
+                  },
+                  "padding": [
+                    16,
+                    36
+                  ],
+                  "justifyContent": "center",
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "text",
+                      "id": "D3Sdp",
+                      "name": "againT",
+                      "fill": "#1A1510",
+                      "content": "再看一局",
+                      "fontFamily": "Inter",
+                      "fontSize": 17,
+                      "fontWeight": "600"
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "WeKm2",
+                  "name": "homeBtn",
+                  "fill": "#FFFFFF",
+                  "cornerRadius": 12,
+                  "stroke": {
+                    "align": "inside",
+                    "thickness": 1,
+                    "fill": "#C9C0B4"
+                  },
+                  "padding": [
+                    16,
+                    36
+                  ],
+                  "justifyContent": "center",
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "text",
+                      "id": "Q3YmW",
+                      "name": "homeT",
+                      "fill": "#3A342C",
+                      "content": "返回标题",
+                      "fontFamily": "Inter",
+                      "fontSize": 17,
+                      "fontWeight": "500"
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "frame",
+          "id": "ZKuvM",
+          "x": 48,
+          "y": 32,
+          "name": "05 画布说明",
+          "width": 6640,
+          "height": 64,
+          "fill": "#A3988A33",
+          "cornerRadius": 12,
+          "gap": 24,
+          "padding": [
+            12,
+            20
+          ],
+          "alignItems": "center",
+          "children": [
+            {
+              "type": "text",
+              "id": "EeZDN",
+              "name": "legT",
+              "fill": "#3A3328",
+              "textGrowth": "fixed-width",
+              "width": 6600,
+              "content": "《人的一生》桌面端 UI · 上行：主流程 · 下行：暂停 / 设置 / 重开确认 / 返回标题 / 关于 · 羊皮纸暖灰 + 琥珀主按钮",
+              "fontFamily": "Inter",
+              "fontSize": 12,
+              "fontWeight": "normal"
+            }
+          ]
+        },
+        {
+          "type": "frame",
+          "id": "FLGyl",
+          "x": 48,
+          "y": 900,
+          "name": "06 暂停 / 游戏菜单",
+          "clip": true,
+          "width": 1280,
+          "height": 720,
+          "fill": "#14100ECC",
+          "cornerRadius": 24,
+          "effect": {
+            "type": "shadow",
+            "shadowType": "outer",
+            "color": "#00000040",
+            "offset": {
+              "x": 0,
+              "y": 18
+            },
+            "blur": 44
+          },
+          "layout": "vertical",
+          "justifyContent": "center",
+          "alignItems": "center",
+          "children": [
+            {
+              "type": "frame",
+              "id": "znSRA",
+              "name": "pauseCard",
+              "width": 520,
+              "fill": "#FFFCF7",
+              "cornerRadius": 18,
+              "stroke": {
+                "align": "inside",
+                "thickness": 1,
+                "fill": "#D8D0C4"
+              },
+              "effect": {
+                "type": "shadow",
+                "shadowType": "outer",
+                "color": "#00000035",
+                "offset": {
+                  "x": 0,
+                  "y": 20
+                },
+                "blur": 36
+              },
+              "layout": "vertical",
+              "gap": 22,
+              "padding": 40,
+              "alignItems": "center",
+              "children": [
+                {
+                  "type": "text",
+                  "id": "hDSsd",
+                  "name": "pEyebrow",
+                  "fill": "#8B7355",
+                  "content": "PAUSED",
+                  "fontFamily": "Inter",
+                  "fontSize": 11,
+                  "fontWeight": "normal",
+                  "letterSpacing": 4
+                },
+                {
+                  "type": "text",
+                  "id": "xRc3I",
+                  "name": "pTitle",
+                  "fill": "#1A1A1A",
+                  "content": "游戏已暂停",
+                  "fontFamily": "Playfair Display",
+                  "fontSize": 30,
+                  "fontWeight": "600"
+                },
+                {
+                  "type": "text",
+                  "id": "qTCLv",
+                  "name": "pSub",
+                  "fill": "#5C554A",
+                  "textGrowth": "fixed-width",
+                  "width": 420,
+                  "content": "你可以稍作整理，再回到故事里。",
+                  "lineHeight": 1.45,
+                  "textAlign": "center",
+                  "fontFamily": "Inter",
+                  "fontSize": 14,
+                  "fontWeight": "normal"
+                },
+                {
+                  "type": "frame",
+                  "id": "5bQnI",
+                  "name": "btnResume",
+                  "width": "fill_container",
+                  "fill": "#C4A574",
+                  "cornerRadius": 12,
+                  "padding": [
+                    16,
+                    20
+                  ],
+                  "justifyContent": "center",
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "text",
+                      "id": "hYN31",
+                      "name": "bResume",
+                      "fill": "#1A1510",
+                      "content": "继续游戏",
+                      "fontFamily": "Inter",
+                      "fontSize": 17,
+                      "fontWeight": "600"
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "AcHe1",
+                  "name": "btnSet",
+                  "width": "fill_container",
+                  "fill": "#FFFFFF",
+                  "cornerRadius": 12,
+                  "stroke": {
+                    "align": "inside",
+                    "thickness": 1,
+                    "fill": "#C9C0B4"
+                  },
+                  "padding": [
+                    14,
+                    20
+                  ],
+                  "justifyContent": "center",
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "text",
+                      "id": "z2MlC",
+                      "name": "bSet",
+                      "fill": "#3A342C",
+                      "content": "设置",
+                      "fontFamily": "Inter",
+                      "fontSize": 16,
+                      "fontWeight": "600"
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "WK4TM",
+                  "name": "btnRestart",
+                  "width": "fill_container",
+                  "fill": "#FFF5F2",
+                  "cornerRadius": 12,
+                  "stroke": {
+                    "align": "inside",
+                    "thickness": 1,
+                    "fill": "#D4A59A"
+                  },
+                  "padding": [
+                    14,
+                    20
+                  ],
+                  "justifyContent": "center",
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "text",
+                      "id": "qsTfM",
+                      "name": "bRestart",
+                      "fill": "#8B3D2F",
+                      "content": "重开人生",
+                      "fontFamily": "Inter",
+                      "fontSize": 16,
+                      "fontWeight": "600"
+                    }
+                  ]
+                },
+                {
+                  "type": "text",
+                  "id": "xtv4n",
+                  "name": "pHint",
+                  "fill": "#8A8278",
+                  "textGrowth": "fixed-width",
+                  "width": 440,
+                  "content": "Esc / 同键关闭 · 进入「设置」或「重开」前会有确认提示",
+                  "lineHeight": 1.4,
+                  "textAlign": "center",
+                  "fontFamily": "Inter",
+                  "fontSize": 11,
+                  "fontWeight": "normal"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "frame",
+          "id": "ZYQUz",
+          "x": 1380,
+          "y": 900,
+          "name": "07 设置",
+          "clip": true,
+          "width": 1280,
+          "height": 720,
+          "fill": "#F4F2EF",
+          "cornerRadius": 24,
+          "effect": {
+            "type": "shadow",
+            "shadowType": "outer",
+            "color": "#00000028",
+            "offset": {
+              "x": 0,
+              "y": 18
+            },
+            "blur": 44
+          },
+          "layout": "vertical",
+          "children": [
+            {
+              "type": "frame",
+              "id": "r0Tgx",
+              "name": "setTop",
+              "width": "fill_container",
+              "height": 88,
+              "fill": "#E8E4DC",
+              "stroke": {
+                "align": "inside",
+                "thickness": 1,
+                "fill": "#D5CFC4"
+              },
+              "gap": 16,
+              "padding": [
+                20,
+                28
+              ],
+              "justifyContent": "space_between",
+              "alignItems": "center",
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "62ydn",
+                  "name": "backGame",
+                  "fill": "#FFFFFF",
+                  "cornerRadius": 10,
+                  "stroke": {
+                    "align": "inside",
+                    "thickness": 1,
+                    "fill": "#D5CFC4"
+                  },
+                  "gap": 8,
+                  "padding": [
+                    10,
+                    14
+                  ],
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "text",
+                      "id": "rCTKI",
+                      "name": "backLbl",
+                      "fill": "#3A342C",
+                      "content": "← 返回游戏",
+                      "fontFamily": "Inter",
+                      "fontSize": 14,
+                      "fontWeight": "600"
+                    }
+                  ]
+                },
+                {
+                  "type": "text",
+                  "id": "dJ9mp",
+                  "name": "setHead",
+                  "fill": "#1A1A1A",
+                  "content": "设置",
+                  "fontFamily": "Inter",
+                  "fontSize": 20,
+                  "fontWeight": "600"
+                },
+                {
+                  "type": "frame",
+                  "id": "tuvNI",
+                  "name": "setSp",
+                  "width": 120,
+                  "height": 8
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "UXwH6",
+              "name": "setBody",
+              "width": "fill_container",
+              "height": "fill_container",
+              "fill": "#F4F2EF",
+              "layout": "vertical",
+              "gap": 18,
+              "padding": [
+                24,
+                36,
+                32,
+                36
+              ],
+              "children": [
+                {
+                  "type": "text",
+                  "id": "Hp3bu",
+                  "name": "setIntro",
+                  "fill": "#5C554A",
+                  "textGrowth": "fixed-width",
+                  "width": 1120,
+                  "content": "调整呈现与反馈，不会改变你已做出的决断——它们仍在本局内生效。",
+                  "lineHeight": 1.5,
+                  "fontFamily": "Inter",
+                  "fontSize": 14,
+                  "fontWeight": "normal"
+                },
+                {
+                  "type": "frame",
+                  "id": "WqEb1",
+                  "name": "row1",
+                  "width": "fill_container",
+                  "fill": "#FFFCF7",
+                  "cornerRadius": 14,
+                  "stroke": {
+                    "align": "inside",
+                    "thickness": 1,
+                    "fill": "#E4DDD2"
+                  },
+                  "layout": "vertical",
+                  "gap": 8,
+                  "padding": 18,
+                  "children": [
+                    {
+                      "type": "text",
+                      "id": "x5a6J",
+                      "name": "r1t",
+                      "fill": "#2A2620",
+                      "content": "音效与配乐",
+                      "fontFamily": "Inter",
+                      "fontSize": 15,
+                      "fontWeight": "600"
+                    },
+                    {
+                      "type": "frame",
+                      "id": "XpNLx",
+                      "name": "r1s",
+                      "width": "fill_container",
+                      "height": 8,
+                      "fill": "#E0D8CC",
+                      "cornerRadius": 4
+                    },
+                    {
+                      "type": "text",
+                      "id": "LFYHb",
+                      "name": "r1h",
+                      "fill": "#7A7268",
+                      "content": "滑条占位 · 0 — 100 · 静音 / 小 / 中 / 大",
+                      "fontFamily": "Inter",
+                      "fontSize": 12,
+                      "fontWeight": "normal"
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "qe9aj",
+                  "name": "row2",
+                  "width": "fill_container",
+                  "fill": "#FFFCF7",
+                  "cornerRadius": 14,
+                  "stroke": {
+                    "align": "inside",
+                    "thickness": 1,
+                    "fill": "#E4DDD2"
+                  },
+                  "layout": "vertical",
+                  "gap": 8,
+                  "padding": 18,
+                  "children": [
+                    {
+                      "type": "text",
+                      "id": "1NvMd",
+                      "name": "r2t",
+                      "fill": "#2A2620",
+                      "content": "文字呈现速度",
+                      "fontFamily": "Inter",
+                      "fontSize": 15,
+                      "fontWeight": "600"
+                    },
+                    {
+                      "type": "text",
+                      "id": "qOT2q",
+                      "name": "r2p",
+                      "fill": "#5C554A",
+                      "content": "慢 · 标准 · 快 · 瞬间（示意分段）",
+                      "fontFamily": "Inter",
+                      "fontSize": 13,
+                      "fontWeight": "normal"
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "uIbEC",
+                  "name": "row3",
+                  "width": "fill_container",
+                  "fill": "#FFFCF7",
+                  "cornerRadius": 14,
+                  "stroke": {
+                    "align": "inside",
+                    "thickness": 1,
+                    "fill": "#E4DDD2"
+                  },
+                  "layout": "vertical",
+                  "gap": 8,
+                  "padding": 18,
+                  "children": [
+                    {
+                      "type": "text",
+                      "id": "RoJ9M",
+                      "name": "r3t",
+                      "fill": "#2A2620",
+                      "content": "界面与信息",
+                      "fontFamily": "Inter",
+                      "fontSize": 15,
+                      "fontWeight": "600"
+                    },
+                    {
+                      "type": "text",
+                      "id": "paFdp",
+                      "name": "r3p",
+                      "fill": "#5C554A",
+                      "content": "显示状态 HUD · 显示快捷键提示 · 高对比焦点环（无障碍）",
+                      "fontFamily": "Inter",
+                      "fontSize": 13,
+                      "fontWeight": "normal"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "On3Ue",
+              "name": "setFoot",
+              "width": "fill_container",
+              "fill": "#EDE8E0",
+              "padding": [
+                12,
+                36,
+                22,
+                36
+              ],
+              "justifyContent": "end",
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "qnCCI",
+                  "name": "saveBtn",
+                  "fill": "#C4A574",
+                  "cornerRadius": 12,
+                  "padding": [
+                    14,
+                    28
+                  ],
+                  "justifyContent": "center",
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "text",
+                      "id": "RRbfJ",
+                      "name": "saveT",
+                      "fill": "#1A1510",
+                      "content": "保存设定",
+                      "fontFamily": "Inter",
+                      "fontSize": 15,
+                      "fontWeight": "600"
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "frame",
+          "id": "VQM5S",
+          "x": 2712,
+          "y": 900,
+          "name": "08 重开人生 · 确认",
+          "clip": true,
+          "width": 1280,
+          "height": 720,
+          "fill": "#120E0ACC",
+          "cornerRadius": 24,
+          "effect": {
+            "type": "shadow",
+            "shadowType": "outer",
+            "color": "#00000038",
+            "offset": {
+              "x": 0,
+              "y": 18
+            },
+            "blur": 44
+          },
+          "layout": "vertical",
+          "justifyContent": "center",
+          "alignItems": "center",
+          "children": [
+            {
+              "type": "frame",
+              "id": "4p4eG",
+              "name": "rrCard",
+              "width": 560,
+              "fill": "#FFFCF7",
+              "cornerRadius": 18,
+              "stroke": {
+                "align": "inside",
+                "thickness": 1,
+                "fill": "#D8D0C4"
+              },
+              "effect": {
+                "type": "shadow",
+                "shadowType": "outer",
+                "color": "#00000040",
+                "offset": {
+                  "x": 0,
+                  "y": 24
+                },
+                "blur": 40
+              },
+              "layout": "vertical",
+              "gap": 18,
+              "padding": 36,
+              "alignItems": "center",
+              "children": [
+                {
+                  "type": "text",
+                  "id": "9MG6L",
+                  "name": "rrTag",
+                  "fill": "#8B4A3C",
+                  "content": "请再想一想",
+                  "fontFamily": "Inter",
+                  "fontSize": 12,
+                  "fontWeight": "normal",
+                  "letterSpacing": 3
+                },
+                {
+                  "type": "text",
+                  "id": "FQ5fI",
+                  "name": "rrTitle",
+                  "fill": "#1A1A1A",
+                  "content": "重开人生？",
+                  "fontFamily": "Playfair Display",
+                  "fontSize": 28,
+                  "fontWeight": "600"
+                },
+                {
+                  "type": "text",
+                  "id": "MRzuw",
+                  "name": "rrBody",
+                  "fill": "#3A342C",
+                  "textGrowth": "fixed-width",
+                  "width": 480,
+                  "content": "人生的机会无比珍贵，每一次决断都应当做好准备。重开将结束本局旅程，未存档的进度将随之消失。",
+                  "lineHeight": 1.55,
+                  "textAlign": "center",
+                  "fontFamily": "Inter",
+                  "fontSize": 15,
+                  "fontWeight": "normal"
+                },
+                {
+                  "type": "text",
+                  "id": "LHOTl",
+                  "name": "rrSub",
+                  "fill": "#7A7268",
+                  "textGrowth": "fixed-width",
+                  "width": 480,
+                  "content": "若仍希望重新出发，请确认；否则返回暂停菜单。",
+                  "lineHeight": 1.45,
+                  "textAlign": "center",
+                  "fontFamily": "Inter",
+                  "fontSize": 12,
+                  "fontWeight": "normal"
+                },
+                {
+                  "type": "frame",
+                  "id": "sliTd",
+                  "name": "rrRow",
+                  "width": "fill_container",
+                  "gap": 12,
+                  "justifyContent": "center",
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "frame",
+                      "id": "kCbpa",
+                      "name": "rrCancel",
+                      "fill": "#FFFFFF",
+                      "cornerRadius": 12,
+                      "stroke": {
+                        "align": "inside",
+                        "thickness": 1,
+                        "fill": "#C9C0B4"
+                      },
+                      "padding": [
+                        14,
+                        22
+                      ],
+                      "justifyContent": "center",
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "text",
+                          "id": "bjraF",
+                          "name": "rrCanT",
+                          "fill": "#3A342C",
+                          "content": "返回",
+                          "fontFamily": "Inter",
+                          "fontSize": 15,
+                          "fontWeight": "600"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "frame",
+                      "id": "qOUne",
+                      "name": "rrOk",
+                      "fill": "#8B3D2F",
+                      "cornerRadius": 12,
+                      "padding": [
+                        14,
+                        22
+                      ],
+                      "justifyContent": "center",
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "text",
+                          "id": "JtyAw",
+                          "name": "rrOkT",
+                          "fill": "#FFFCF7",
+                          "content": "确认重开",
+                          "fontFamily": "Inter",
+                          "fontSize": 15,
+                          "fontWeight": "600"
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "frame",
+          "id": "KONQV",
+          "x": 4044,
+          "y": 900,
+          "name": "09 返回标题 · 确认",
+          "clip": true,
+          "width": 1280,
+          "height": 720,
+          "fill": "#120E0ACC",
+          "cornerRadius": 24,
+          "layout": "vertical",
+          "justifyContent": "center",
+          "alignItems": "center",
+          "children": [
+            {
+              "type": "frame",
+              "id": "gTRni",
+              "name": "btCard",
+              "width": 560,
+              "fill": "#FFFCF7",
+              "cornerRadius": 18,
+              "stroke": {
+                "align": "inside",
+                "thickness": 1,
+                "fill": "#D8D0C4"
+              },
+              "layout": "vertical",
+              "gap": 16,
+              "padding": 36,
+              "alignItems": "center",
+              "children": [
+                {
+                  "type": "text",
+                  "id": "abIXd",
+                  "name": "btTag",
+                  "fill": "#6B5344",
+                  "content": "离开当前一局",
+                  "fontFamily": "Inter",
+                  "fontSize": 12,
+                  "fontWeight": "normal",
+                  "letterSpacing": 2
+                },
+                {
+                  "type": "text",
+                  "id": "Jdi9N",
+                  "name": "btTitle",
+                  "fill": "#1A1A1A",
+                  "content": "返回标题界面？",
+                  "fontFamily": "Playfair Display",
+                  "fontSize": 26,
+                  "fontWeight": "600"
+                },
+                {
+                  "type": "text",
+                  "id": "Oeoih",
+                  "name": "btBody",
+                  "fill": "#3A342C",
+                  "textGrowth": "fixed-width",
+                  "width": 480,
+                  "content": "人生的机会无比珍贵，每一次决断都应当做好准备。返回标题将结束本局进度，请谨慎选择。",
+                  "lineHeight": 1.55,
+                  "textAlign": "center",
+                  "fontFamily": "Inter",
+                  "fontSize": 14,
+                  "fontWeight": "normal"
+                },
+                {
+                  "type": "frame",
+                  "id": "LAJLz",
+                  "name": "btRow",
+                  "gap": 12,
+                  "justifyContent": "center",
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "frame",
+                      "id": "XV8g1",
+                      "name": "btCancel",
+                      "fill": "#FFFFFF",
+                      "cornerRadius": 12,
+                      "stroke": {
+                        "align": "inside",
+                        "thickness": 1,
+                        "fill": "#C9C0B4"
+                      },
+                      "padding": [
+                        14,
+                        22
+                      ],
+                      "justifyContent": "center",
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "text",
+                          "id": "685Iz",
+                          "name": "btCanT",
+                          "fill": "#3A342C",
+                          "content": "留在游戏",
+                          "fontFamily": "Inter",
+                          "fontSize": 15,
+                          "fontWeight": "600"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "frame",
+                      "id": "E0i3Y",
+                      "name": "btOk",
+                      "fill": "#C4A574",
+                      "cornerRadius": 12,
+                      "padding": [
+                        14,
+                        22
+                      ],
+                      "justifyContent": "center",
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "text",
+                          "id": "D09pp",
+                          "name": "btOkT",
+                          "fill": "#1A1510",
+                          "content": "仍要返回",
+                          "fontFamily": "Inter",
+                          "fontSize": 15,
+                          "fontWeight": "600"
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "frame",
+          "id": "f0ssX",
+          "x": 5360,
+          "y": 900,
+          "name": "10 关于 / 版本",
+          "clip": true,
+          "width": 1280,
+          "height": 720,
+          "fill": "#F4F2EF",
+          "cornerRadius": 24,
+          "effect": {
+            "type": "shadow",
+            "shadowType": "outer",
+            "color": "#00000028",
+            "offset": {
+              "x": 0,
+              "y": 18
+            },
+            "blur": 44
+          },
+          "layout": "vertical",
+          "gap": 16,
+          "padding": [
+            36,
+            40
+          ],
+          "children": [
+            {
+              "type": "text",
+              "id": "KIVDg",
+              "name": "abH",
+              "fill": "#1A1A1A",
+              "content": "关于",
+              "fontFamily": "Playfair Display",
+              "fontSize": 32,
+              "fontWeight": "600"
+            },
+            {
+              "type": "text",
+              "id": "TW8gY",
+              "name": "abP",
+              "fill": "#4A453C",
+              "textGrowth": "fixed-width",
+              "width": 1120,
+              "content": "《人的一生》为叙事向轻量网页游戏。文案与结构由数据驱动；本页为占位，用于版本号、致谢与内容声明。",
+              "lineHeight": 1.55,
+              "fontFamily": "Inter",
+              "fontSize": 15,
+              "fontWeight": "normal"
+            },
+            {
+              "type": "frame",
+              "id": "wff38",
+              "name": "abBox",
+              "width": "fill_container",
+              "fill": "#FFFCF7",
+              "cornerRadius": 14,
+              "stroke": {
+                "align": "inside",
+                "thickness": 1,
+                "fill": "#E4DDD2"
+              },
+              "layout": "vertical",
+              "gap": 10,
+              "padding": 22,
+              "children": [
+                {
+                  "type": "text",
+                  "id": "XxvB2",
+                  "name": "abL1",
+                  "fill": "#2A2620",
+                  "content": "版本：0.x（示意）",
+                  "fontFamily": "Inter",
+                  "fontSize": 14,
+                  "fontWeight": "normal"
+                },
+                {
+                  "type": "text",
+                  "id": "LI7IV",
+                  "name": "abL2",
+                  "fill": "#4A453C",
+                  "textGrowth": "fixed-width",
+                  "width": 1080,
+                  "content": "内容：人生阶段、全局属性、检定与延迟后果均为叙事服务，不做现实仿真。",
+                  "lineHeight": 1.5,
+                  "fontFamily": "Inter",
+                  "fontSize": 14,
+                  "fontWeight": "normal"
+                },
+                {
+                  "type": "text",
+                  "id": "QH0xU",
+                  "name": "abL3",
+                  "fill": "#7A7268",
+                  "content": "致谢占位：音乐 / 字体 / 测试伙伴",
+                  "fontFamily": "Inter",
+                  "fontSize": 13,
+                  "fontWeight": "normal"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
