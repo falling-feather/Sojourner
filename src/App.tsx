@@ -1,5 +1,6 @@
 import { useGameStore } from '@/store/gameStore'
 import { GameSettingsProvider } from '@/settings/gameSettings'
+import { GlobalBgmProvider } from '@/audio/GlobalBgmProvider'
 import { TitleScreen } from '@/ui/TitleScreen'
 import { PlayScreen } from '@/ui/PlayScreen'
 import { EndingScreen } from '@/ui/EndingScreen'
@@ -10,11 +11,13 @@ function App() {
 
   return (
     <GameSettingsProvider>
-      <div className="app">
-        {phase === 'title' ? <TitleScreen /> : null}
-        {phase === 'playing' ? <PlayScreen /> : null}
-        {phase === 'ending' ? <EndingScreen /> : null}
-      </div>
+      <GlobalBgmProvider>
+        <div className="app">
+          {phase === 'title' ? <TitleScreen /> : null}
+          {phase === 'playing' ? <PlayScreen /> : null}
+          {phase === 'ending' ? <EndingScreen /> : null}
+        </div>
+      </GlobalBgmProvider>
     </GameSettingsProvider>
   )
 }
