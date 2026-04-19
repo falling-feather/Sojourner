@@ -19,7 +19,7 @@ export function Hud({ stageTitle, step, total, onMenuClick }: Props) {
       <div className="play-topbar__left">
         <p className="play-topbar__stage">当前阶段 · {stageTitle}</p>
         <p className="play-topbar__meta">
-          时间点 {step} / {total}　·　全局状态与决断点会跨场景保留
+          时间点 {step} / {total} · 全局状态与决断点会跨场景保留
         </p>
       </div>
       <div className="play-topbar__right">

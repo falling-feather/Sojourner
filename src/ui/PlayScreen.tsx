@@ -14,6 +14,9 @@ import {
   SettingsPanel,
   type MenuLayer,
 } from '@/ui/GameMenuLayer'
+import { BgmDock } from '@/ui/BgmDock'
+import { useGameSettings } from '@/settings/gameSettings'
+import { textSpeedToMsPerChar } from '@/settings/gameSettingsStore'
 
 /** 多选项：淡出后再提交，需与 CSS transition 大致对齐 */
 const CHOICE_FADE_OUT_MS = 420
@@ -36,7 +39,9 @@ export function PlayScreen() {
   const [pickPhase, setPickPhase] = useState<'idle' | 'exiting'>('idle')
 
   const reducedMotion = usePrefersReducedMotion()
+  const { settings } = useGameSettings()
   const pickTimerRef = useRef<number | null>(null)
+  const typeInstant = reducedMotion || settings.textSpeed === 'instant'
 
   const scene = getScene(story, stageId, sceneId)
   const st = story.stages.find((s) => s.id === stageId)
@@ -67,10 +72,10 @@ export function PlayScreen() {
       setChoicesReveal(true)
       return
     }
-    const delay = reducedMotion ? 0 : 90
+    const delay = typeInstant ? 0 : 90
     const t = window.setTimeout(() => setChoicesReveal(true), delay)
     return () => window.clearTimeout(t)
-  }, [typewriterDone, scene, state, reducedMotion])
+  }, [typewriterDone, scene, state, typeInstant])
 
   useEffect(() => {
     const onEnter = (e: KeyboardEvent) => {
@@ -165,8 +170,8 @@ export function PlayScreen() {
             paragraphs={narrativeParas}
             sceneKey={sceneKey}
             onTypingComplete={() => setTypewriterDone(true)}
-            reducedMotion={reducedMotion}
-            msPerChar={reducedMotion ? 0 : 22}
+            reducedMotion={typeInstant}
+            msPerChar={typeInstant ? 0 : textSpeedToMsPerChar(settings.textSpeed)}
           />
           <ChoiceList
             choices={scene.choices}
@@ -179,6 +184,8 @@ export function PlayScreen() {
           />
         </div>
       </div>
+
+      <BgmDock />
 
       <CheckToast
         open={!!pendingCheck}

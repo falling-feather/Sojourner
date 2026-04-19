@@ -1,3 +1,6 @@
+import { useGameSettings } from '@/settings/gameSettings'
+import type { TextSpeedId } from '@/settings/gameSettingsStore'
+
 export type MenuLayer =
   | 'none'
   | 'pause'
@@ -72,7 +75,16 @@ export function PauseMenu({
   )
 }
 
+const TEXT_SPEEDS: { id: TextSpeedId; label: string }[] = [
+  { id: 'slow', label: '慢' },
+  { id: 'normal', label: '标准' },
+  { id: 'fast', label: '快' },
+  { id: 'instant', label: '瞬间' },
+]
+
 export function SettingsPanel({ onBack }: { onBack: () => void }) {
+  const { settings, set } = useGameSettings()
+
   return (
     <div
       className="overlay overlay--dim"
@@ -91,26 +103,63 @@ export function SettingsPanel({ onBack }: { onBack: () => void }) {
           <span className="settings-head__spacer" aria-hidden="true" />
         </div>
         <p className="settings-intro">
-          调整呈现与反馈，不会改变你已做出的决断——它们仍在本局内生效。
+          以下选项会立即保存到本机浏览器。不会改变你已做出的剧情决断——它们仍在本局内生效。
         </p>
         <div className="settings-section">
-          <h3 className="settings-section__h">音效与配乐</h3>
-          <div className="settings-placeholder" />
-          <p className="settings-section__hint">滑条占位 · 后续版本接入音量</p>
-        </div>
-        <div className="settings-section">
-          <h3 className="settings-section__h">文字呈现速度</h3>
-          <p className="settings-section__hint">慢 · 标准 · 快 · 瞬间（占位）</p>
-        </div>
-        <div className="settings-section">
-          <h3 className="settings-section__h">界面与信息</h3>
+          <h3 className="settings-section__h">配乐（游玩界面）</h3>
+          <label className="settings-row">
+            <span className="settings-row__label">启用背景音乐</span>
+            <input
+              type="checkbox"
+              className="settings-toggle"
+              checked={settings.bgmEnabled}
+              onChange={(e) => set({ bgmEnabled: e.target.checked })}
+            />
+          </label>
+          <label className="settings-row settings-row--col">
+            <span className="settings-row__label">配乐音量</span>
+            <input
+              type="range"
+              className="settings-range"
+              min={0}
+              max={1}
+              step={0.02}
+              value={settings.bgmVolume}
+              disabled={!settings.bgmEnabled}
+              onChange={(e) => set({ bgmVolume: Number(e.target.value) })}
+              aria-valuetext={`${Math.round(settings.bgmVolume * 100)}%`}
+            />
+            <span className="settings-range__val">{Math.round(settings.bgmVolume * 100)}%</span>
+          </label>
           <p className="settings-section__hint">
-            显示状态 HUD · 显示快捷键提示 · 高对比焦点环（占位）
+            关闭后可通过游玩页右下角唱片再次开启。音量仅影响配乐，不含系统音量。
+          </p>
+        </div>
+        <div className="settings-section">
+          <h3 className="settings-section__h">叙事文字速度</h3>
+          <div className="settings-segment" role="group" aria-label="文字速度">
+            {TEXT_SPEEDS.map(({ id, label }) => (
+              <button
+                key={id}
+                type="button"
+                className={
+                  settings.textSpeed === id
+                    ? 'settings-segment__btn settings-segment__btn--active'
+                    : 'settings-segment__btn'
+                }
+                onClick={() => set({ textSpeed: id })}
+              >
+                {label}
+              </button>
+            ))}
+          </div>
+          <p className="settings-section__hint">
+            「瞬间」将直接显示整段文本（等同无障碍减少动效时的表现）。
           </p>
         </div>
         <div className="settings-foot">
           <button type="button" className="btn btn--primary" onClick={onBack}>
-            保存设定
+            完成
           </button>
         </div>
       </div>
