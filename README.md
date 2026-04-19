@@ -29,6 +29,16 @@
 
 开发服务器默认地址：<http://localhost:5173>（端口以终端输出为准）。
 
+## GitHub Pages
+
+仓库已包含 [`.github/workflows/pages.yml`](.github/workflows/pages.yml)：在 `main` 推送后自动执行 `npm run build`（`VITE_BASE=/Sojourner/`）并部署到 Pages。
+
+1. 打开 GitHub 仓库 **Settings → Pages**。
+2. **Build and deployment** 里将 **Source** 设为 **GitHub Actions**（不要选「从分支部署」来直接托管源码；本站需先构建 `dist`）。
+3. 首次可在 **Actions** 页手动重跑 workflow；成功后站点一般为：  
+   `https://falling-feather.github.io/Sojourner/`  
+   若仓库改名，请同步修改 workflow 中的 `VITE_BASE` 与 [`vite.config.ts`](vite.config.ts) 注释。
+
 ## 目录结构（摘要）
 
 ```
