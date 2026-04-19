@@ -1,0 +1,137 @@
+{
+  "_comment": "由 content/story.json 人工整理的事件图摘要，供策划改稿对照；不以运行时校验为准。",
+  "source": "content/story.json",
+  "version": "1.0.0",
+  "rng": {
+    "algorithm": "Mulberry32 + string hashSeed",
+    "perRunSeed": "每次开始游戏生成新 UUID（见 gameStore newRunSeed），旧版曾固定 meta.rngSeedDefault 导致局局相同",
+    "checkResolution": "rawRoll = floor(next01*101) 即 0-100；score = clamp(round(rawRoll + modifiers), 0, 100)；modifiers 见各 check"
+  },
+  "stagesOrder": [
+    "birth",
+    "childhood",
+    "primary",
+    "youth",
+    "high_pressure",
+    "gaokao",
+    "path_open",
+    "work_life",
+    "elder",
+    "ending"
+  ],
+  "linearSpine": [
+    { "stageId": "birth", "sceneId": "birth_hello", "choiceId": "birth_next" },
+    { "stageId": "childhood", "sceneId": "child_play", "choiceId": "child_next" },
+    { "stageId": "primary", "sceneId": "pri_school", "choiceId": "* 见 branches.primary_school" },
+    { "stageId": "youth", "sceneId": "youth_gate", "choiceId": "youth_next" },
+    { "stageId": "high_pressure", "sceneId": "high_night", "choiceId": "* 见 branches.high_night" },
+    { "stageId": "gaokao", "sceneId": "gk_before", "choiceId": "gk_enter", "note": "含 threshold 检定" },
+    { "stageId": "gaokao", "sceneId": "gk_result_*", "choiceId": "* 见 branches.gaokao_results" },
+    { "stageId": "path_open", "sceneId": "path_campus", "choiceId": "* 见 branches.path_open" },
+    { "stageId": "work_life", "sceneId": "work_daily", "choiceId": "to_elder" },
+    { "stageId": "elder", "sceneId": "elder_health", "choiceId": "* 见 branches.elder" },
+    { "stageId": "ending", "sceneId": "end_reflect", "choiceId": null, "note": "终局，无选项" }
+  ],
+  "branches": {
+    "primary_school": {
+      "scene": "primary/pri_school",
+      "choices": [
+        {
+          "id": "pri_steady",
+          "label": "按部就班，把基础打牢",
+          "to": { "stageId": "youth", "sceneId": "youth_gate" }
+        },
+        {
+          "id": "pri_wide",
+          "label": "多试试兴趣，少盯分数",
+          "to": { "stageId": "youth", "sceneId": "youth_gate" }
+        }
+      ]
+    },
+    "high_night": {
+      "scene": "high_pressure/high_night",
+      "choices": [
+        {
+          "id": "grind_late",
+          "label": "再熬一小时，把错题啃完",
+          "tags": ["熬夜"],
+          "to": { "stageId": "gaokao", "sceneId": "gk_before" }
+        },
+        {
+          "id": "rest_ok",
+          "label": "准时睡，相信白天的效率",
+          "to": { "stageId": "gaokao", "sceneId": "gk_before" }
+        }
+      ]
+    },
+    "gaokao_check": {
+      "scene": "gaokao/gk_before",
+      "choiceId": "gk_enter",
+      "checkId": "gaokao",
+      "checkLabel": "高考发挥",
+      "modifiers": {
+        "addStatWeights": [{ "stat": "career", "weight": 0.32 }],
+        "luckWeight": 0.12,
+        "stressPenalty": 0.22
+      },
+      "bands": [
+        {
+          "range": [0, 28],
+          "label": "失常",
+          "nextScene": "gk_result_low",
+          "effectsSummary": "tier=false, +stress"
+        },
+        {
+          "range": [29, 72],
+          "label": "正常发挥",
+          "nextScene": "gk_result_mid",
+          "effectsSummary": "tier=true"
+        },
+        {
+          "range": [73, 100],
+          "label": "超常发挥",
+          "nextScene": "gk_result_high",
+          "effectsSummary": "tier=true, +career, +luck"
+        }
+      ],
+      "resultScenes": {
+        "gk_result_low": { "next": { "stageId": "path_open", "sceneId": "path_campus" }, "choiceId": "from_low" },
+        "gk_result_mid": { "next": { "stageId": "path_open", "sceneId": "path_campus" }, "choiceId": "from_mid" },
+        "gk_result_high": { "next": { "stageId": "path_open", "sceneId": "path_campus" }, "choiceId": "from_high" }
+      }
+    },
+    "path_open": {
+      "scene": "path_open/path_campus",
+      "choices": [
+        {
+          "id": "work_hard",
+          "label": "加班换成长，先把路走宽",
+          "tags": ["熬夜"],
+          "to": { "stageId": "work_life", "sceneId": "work_daily" }
+        },
+        {
+          "id": "work_balance",
+          "label": "守住节奏，拒绝无限加班",
+          "to": { "stageId": "work_life", "sceneId": "work_daily" }
+        }
+      ]
+    },
+    "elder": {
+      "scene": "elder/elder_health",
+      "choices": [
+        {
+          "id": "elder_ok",
+          "label": "这些年还算平稳，学会与自己和解",
+          "visibleWhen": { "statMax": { "stat": "healthDebt", "value": 35 } },
+          "to": { "stageId": "ending", "sceneId": "end_reflect" }
+        },
+        {
+          "id": "elder_warn",
+          "label": "慢性病与药盒成为日常，你仍想抓住体面",
+          "visibleWhen": { "statMin": { "stat": "healthDebt", "value": 36 } },
+          "to": { "stageId": "ending", "sceneId": "end_reflect" }
+        }
+      ]
+    }
+  }
+}

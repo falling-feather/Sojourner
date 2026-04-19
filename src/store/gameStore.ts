@@ -14,6 +14,15 @@ import { createRng } from '@/engine/rng'
 
 const story = parseStory(storyRaw)
 
+/** 每局新 seed，避免固定 default seed 导致连续多局检定结果完全相同 */
+function newRunSeed(): string {
+  const c = globalThis.crypto
+  if (c?.randomUUID) {
+    return c.randomUUID()
+  }
+  return `run-${Date.now()}-${Math.random().toString(36).slice(2, 12)}`
+}
+
 function cloneInitial(s: Story): GlobalState {
   return structuredClone(s.initial)
 }
@@ -88,13 +97,14 @@ export const useGameStore = create<GameStore>((set, get) => ({
     }),
 
   startGame: () => {
-    const seed = get().rngSeed
+    const seed = newRunSeed()
     const rng = createRng(seed)
     let state = cloneInitial(story)
     const { stageId, sceneId } = story.meta.start
     state = enterScene(story, state, stageId, sceneId)
     set({
       rng,
+      rngSeed: seed,
       state,
       stageId,
       sceneId,

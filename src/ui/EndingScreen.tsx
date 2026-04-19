@@ -1,6 +1,49 @@
 import { getScene } from '@/engine/machine'
+import type { GlobalState } from '@/engine/types'
 import { useGameStore } from '@/store/gameStore'
 import { NarrativeView } from '@/ui/NarrativeView'
+
+/** 决断点 key → 简短中文说明（未知 key 仍显示原名） */
+const FLAG_LABELS: Record<string, string> = {
+  gk_tier: '高考发挥段位（正常及以上）',
+  academic: '学术/科研志向已确认',
+  married: '已婚',
+  parent: '已育儿',
+  freedom_path: '离开原本城市、换活法',
+}
+
+function labelFlag(key: string): string {
+  return FLAG_LABELS[key] ?? key
+}
+
+function EndingStats({ state }: { state: GlobalState }) {
+  const s = state.stats
+  return (
+    <div className="ending-stats" aria-label="本局数值快照">
+      <span className="ending-stats__item">压力 {Math.round(s.stress)}</span>
+      <span className="ending-stats__sep" aria-hidden="true">
+        ·
+      </span>
+      <span className="ending-stats__item">健康负债 {Math.round(s.healthDebt)}</span>
+      <span className="ending-stats__sep" aria-hidden="true">
+        ·
+      </span>
+      <span className="ending-stats__item">支持 {Math.round(s.support)}</span>
+      <span className="ending-stats__sep" aria-hidden="true">
+        ·
+      </span>
+      <span className="ending-stats__item">财力 {Math.round(s.wealth)}</span>
+      <span className="ending-stats__sep" aria-hidden="true">
+        ·
+      </span>
+      <span className="ending-stats__item">学业/事业 {Math.round(s.career)}</span>
+      <span className="ending-stats__sep" aria-hidden="true">
+        ·
+      </span>
+      <span className="ending-stats__item">运气 {Math.round(s.luck)}</span>
+    </div>
+  )
+}
 
 export function EndingScreen() {
   const story = useGameStore((s) => s.story)
@@ -16,15 +59,19 @@ export function EndingScreen() {
   const flags = Object.entries(state.flags).filter(([, v]) => v)
   const tags = state.tags
 
+  const endingTheme = scene?.title?.trim()
+  const heroSub = endingTheme
+    ? `本局以「${endingTheme}」收束。下方为关键决断点、长期行为标签与本局六维数值快照；最末是本篇结局正文。`
+    : '下方为关键决断点、长期行为标签与本局六维数值快照；最末是本篇结局正文。'
+
   return (
-    <div className="screen screen--ending">
+    <div className="screen screen--ending screen--ending--in">
       <div className="ending-frame">
         <header className="ending-hero">
           <p className="ending-hero__eyebrow">终局</p>
           <h1 className="ending-hero__title">你的一生 · 落幕</h1>
-          <p className="ending-hero__sub">
-            以下为摘要占位：可含关键抉择回顾、全局属性结算、开放式总结（内容由数据驱动）。
-          </p>
+          <p className="ending-hero__sub">{heroSub}</p>
+          <EndingStats state={state} />
         </header>
 
         <div className="ending-grid">
@@ -34,11 +81,13 @@ export function EndingScreen() {
             </h2>
             <ul className="ending-list">
               {flags.length === 0 ? (
-                <li className="ending-list__empty">本局暂无已解锁决断点标记（示意）</li>
+                <li className="ending-list__empty">
+                  本局尚未留下已解锁的决断点（剧情里通过关键选择写入的标志会列在此处）。
+                </li>
               ) : (
                 flags.map(([k]) => (
                   <li key={k} className="ending-list__item">
-                    · {k}
+                    · {labelFlag(k)}
                   </li>
                 ))
               )}
@@ -49,7 +98,9 @@ export function EndingScreen() {
               延迟后果 / 标签
             </h2>
             {tags.length === 0 ? (
-              <p className="ending-card__p">暂无长期标签（示意）</p>
+              <p className="ending-card__p ending-card__p--muted">
+                暂无长期行为标签（例如熬夜、读研等累积习惯会显示于此）。
+              </p>
             ) : (
               <ul className="ending-list">
                 {tags.map((t) => (
@@ -63,7 +114,12 @@ export function EndingScreen() {
         </div>
 
         <div className="ending-narrative-wrap">
-          <NarrativeView title={st?.title} paragraphs={scene?.narrative ?? []} />
+          <NarrativeView
+            sceneKey={`${stageId}::${sceneId}::end`}
+            title={st?.title}
+            paragraphs={scene?.narrative ?? []}
+            skipTypewriter
+          />
         </div>
 
         <div className="ending-actions">

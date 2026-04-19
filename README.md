@@ -8,7 +8,7 @@
 - **引擎**：全局属性、标签与标志位、可复现随机检定（高考等节点）。
 - **界面**：标题 → 游玩（叙事 + HUD + 选项）→ 检定反馈 → 结局；支持数字键 `1`–`9` 快捷选肢。
 
-详细需求、数据契约与 Pencil 协作说明见 [`docs/DEVELOPER.md`](docs/DEVELOPER.md)。设计稿若使用 Pencil，可维护仓库内 `UI.pen`（仅作视觉参考，运行时不依赖）。
+详细需求、数据契约与 Pencil 协作说明见 [`docs/DEVELOPER.md`](docs/DEVELOPER.md)。**剧情分支与随机检定说明**（含路线图）见 [`docs/STORY_ROUTES.md`](docs/STORY_ROUTES.md)，机器可读摘要见 [`docs/story-routes.json`](docs/story-routes.json)。设计稿若使用 Pencil，可维护仓库内 `UI.pen`（仅作视觉参考，运行时不依赖）。
 
 ## 环境要求
 
@@ -32,8 +32,10 @@
 ## 目录结构（摘要）
 
 ```
-content/story.json    # 剧情数据
-docs/DEVELOPER.md     # 开发者文档
+content/story.json       # 剧情数据
+docs/DEVELOPER.md        # 开发者文档
+docs/STORY_ROUTES.md     # 事件路线与随机说明（策划向）
+docs/story-routes.json   # 同上（结构化摘要）
 scripts/              # 校验脚本等
 src/engine/           # RNG、效果、检定、图校验
 src/store/            # Zustand 状态

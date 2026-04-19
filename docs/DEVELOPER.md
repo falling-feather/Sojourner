@@ -238,7 +238,7 @@ docs/DEVELOPER.md           # 本文档
 
 ## 12. 运行时行为摘要
 
-1. **开局**：`clone initial` → 对起点场景执行 `onEnter` → 可复现 RNG（`mulberry32` + 字符串 seed 哈希）。
+1. **开局**：`clone initial` → 对起点场景执行 `onEnter` → RNG（`mulberry32` + 字符串 seed 哈希）。**每次点击开始**会生成 **新的运行种子**（`crypto.randomUUID()`，不可用则时间戳兜底），避免连续多局与固定 `rngSeedDefault` 完全相同；`meta.rngSeedDefault` 仍可用于回标题后的占位状态。事件路线说明见 [`STORY_ROUTES.md`](STORY_ROUTES.md) 与 [`story-routes.json`](story-routes.json)。
 2. **选肢**：先应用选项 `effects`；若有 `check`，弹出检定层，确认后再对目标场景 `onEnter`。
 3. **引擎**不持久化存档；**再来一局** 清空为 `initial` 并回到标题。
 
