@@ -1,7 +1,7 @@
 {
   "meta": {
     "title": "人的一生",
-    "version": "2.0.0",
+    "version": "2.2.0",
     "estimatedMinutes": [8, 15],
     "start": { "stageId": "birth", "sceneId": "birth_hello" },
     "rngSeedDefault": "life-demo"
@@ -136,6 +136,17 @@
               "id": "ms_art",
               "label": "走特长：艺术/体育试一试",
               "effects": [{ "op": "addStat", "stat": "luck", "value": 8 }],
+              "next": { "kind": "stage", "stageId": "youth_hs", "sceneId": "youth_fork" }
+            },
+            {
+              "id": "ms_voc",
+              "label": "偏向职校/学艺早出师，换一条跑道",
+              "effects": [
+                { "op": "addStat", "stat": "career", "value": 6 },
+                { "op": "addStat", "stat": "support", "value": 4 },
+                { "op": "addStat", "stat": "stress", "value": -4 },
+                { "op": "addTag", "tag": "技能线" }
+              ],
               "next": { "kind": "stage", "stageId": "youth_hs", "sceneId": "youth_fork" }
             }
           ]
@@ -413,9 +424,10 @@
               "label": "出站后争取留校或研究所，投身学术",
               "effects": [
                 { "op": "addStat", "stat": "career", "value": 14 },
-                { "op": "setFlag", "key": "academic", "value": true }
+                { "op": "setFlag", "key": "academic", "value": true },
+                { "op": "addTag", "tag": "学术线" }
               ],
-              "next": { "kind": "stage", "stageId": "ending", "sceneId": "end_scholar" }
+              "next": { "kind": "stage", "stageId": "careerEarly", "sceneId": "job_pick" }
             },
             {
               "id": "phd_corp",
@@ -504,20 +516,26 @@
             },
             {
               "id": "w_burn",
-              "label": "身心俱疲，先停下来（可能提前退场）",
+              "label": "承认透支，把节奏放慢，让身体与关系先喘口气",
               "visibleWhen": { "statMin": { "stat": "stress", "value": 52 } },
-              "effects": [{ "op": "addStat", "stat": "healthDebt", "value": 6 }],
-              "next": { "kind": "stage", "stageId": "ending", "sceneId": "end_burnout" }
+              "effects": [
+                { "op": "addStat", "stat": "stress", "value": -16 },
+                { "op": "addStat", "stat": "support", "value": 10 },
+                { "op": "addStat", "stat": "healthDebt", "value": -3 },
+                { "op": "addTag", "tag": "休整" }
+              ],
+              "next": { "kind": "stage", "stageId": "careerMid", "sceneId": "career_split" }
             },
             {
               "id": "w_quit_city",
-              "label": "离开这座城市，换种活法",
+              "label": "换座城市、换一种花销节奏，把生活重新铺开",
               "visibleWhen": { "statMax": { "stat": "wealth", "value": 45 } },
               "effects": [
-                { "op": "addStat", "stat": "stress", "value": -12 },
+                { "op": "addStat", "stat": "stress", "value": -10 },
+                { "op": "addStat", "stat": "wealth", "value": -4 },
                 { "op": "setFlag", "key": "freedom_path", "value": true }
               ],
-              "next": { "kind": "stage", "stageId": "ending", "sceneId": "end_freedom" }
+              "next": { "kind": "stage", "stageId": "relationships", "sceneId": "romance_start" }
             }
           ]
         }
@@ -536,13 +554,13 @@
           "choices": [
             {
               "id": "c_mogul",
-              "label": "全力冲刺收入与职位，向「世俗成功」靠拢",
+              "label": "全力冲刺收入与职位，把筹码押在事业上一段",
               "visibleWhen": { "statMin": { "stat": "wealth", "value": 38 } },
               "effects": [
                 { "op": "addStat", "stat": "wealth", "value": 18 },
                 { "op": "addStat", "stat": "stress", "value": 14 }
               ],
-              "next": { "kind": "stage", "stageId": "ending", "sceneId": "end_mogul" }
+              "next": { "kind": "stage", "stageId": "relationships", "sceneId": "romance_start" }
             },
             {
               "id": "c_go_on",
@@ -556,9 +574,10 @@
               "visibleWhen": { "tag": "读研" },
               "effects": [
                 { "op": "addStat", "stat": "career", "value": 10 },
-                { "op": "setFlag", "key": "academic", "value": true }
+                { "op": "setFlag", "key": "academic", "value": true },
+                { "op": "addTag", "tag": "学术线" }
               ],
-              "next": { "kind": "stage", "stageId": "ending", "sceneId": "end_scholar" }
+              "next": { "kind": "stage", "stageId": "relationships", "sceneId": "romance_start" }
             }
           ]
         }
@@ -667,7 +686,10 @@
             {
               "id": "m_no",
               "label": "暂不结婚，保持伴侣或单身状态",
-              "effects": [{ "op": "addStat", "stat": "stress", "value": -2 }],
+              "effects": [
+                { "op": "setFlag", "key": "married", "value": false },
+                { "op": "addStat", "stat": "stress", "value": -2 }
+              ],
               "next": { "kind": "stage", "stageId": "familyRing", "sceneId": "kids_scene" }
             }
           ]
@@ -697,8 +719,10 @@
               "label": "丁克，把二人世界拉长",
               "visibleWhen": { "flag": { "key": "married", "value": true } },
               "effects": [
+                { "op": "setFlag", "key": "parent", "value": false },
                 { "op": "addStat", "stat": "wealth", "value": 8 },
-                { "op": "addStat", "stat": "stress", "value": -4 }
+                { "op": "addStat", "stat": "stress", "value": -4 },
+                { "op": "addTag", "tag": "二人世界" }
               ],
               "next": { "kind": "stage", "stageId": "lifeLate", "sceneId": "midlife_fork" }
             },
@@ -706,17 +730,25 @@
               "id": "k_skip",
               "label": "没有婚姻前提，跳过生育议题",
               "visibleWhen": { "flag": { "key": "married", "value": false } },
-              "effects": [{ "op": "addStat", "stat": "stress", "value": -4 }],
+              "effects": [
+                { "op": "setFlag", "key": "parent", "value": false },
+                { "op": "addStat", "stat": "stress", "value": -4 },
+                { "op": "addTag", "tag": "独自走过中年" }
+              ],
               "next": { "kind": "stage", "stageId": "lifeLate", "sceneId": "midlife_fork" }
             },
             {
-              "id": "k_warm_end",
-              "label": "在此收束：珍惜眼前人，以幸福作结",
+              "id": "k_continue_warm",
+              "label": "珍惜眼前人，把日子继续延展到更远的秋天",
               "visibleWhen": {
                 "flag": { "key": "married", "value": true },
                 "statMin": { "stat": "support", "value": 58 }
               },
-              "next": { "kind": "stage", "stageId": "ending", "sceneId": "end_warm" }
+              "effects": [
+                { "op": "addStat", "stat": "support", "value": 6 },
+                { "op": "addStat", "stat": "stress", "value": -6 }
+              ],
+              "next": { "kind": "stage", "stageId": "lifeLate", "sceneId": "midlife_fork" }
             }
           ]
         }
@@ -738,7 +770,8 @@
               "label": "回乡或退一步，离父母更近",
               "effects": [
                 { "op": "addStat", "stat": "support", "value": 12 },
-                { "op": "addStat", "stat": "wealth", "value": -6 }
+                { "op": "addStat", "stat": "wealth", "value": -6 },
+                { "op": "addTag", "tag": "还乡晚年" }
               ],
               "next": { "kind": "stage", "stageId": "lifeLate", "sceneId": "elder_care" }
             },
@@ -747,7 +780,8 @@
               "label": "留在大城市，继续搏资源与机会",
               "effects": [
                 { "op": "addStat", "stat": "wealth", "value": 10 },
-                { "op": "addStat", "stat": "stress", "value": 12 }
+                { "op": "addStat", "stat": "stress", "value": 12 },
+                { "op": "addTag", "tag": "都市扎根" }
               ],
               "next": { "kind": "stage", "stageId": "lifeLate", "sceneId": "elder_care" }
             },
@@ -757,7 +791,8 @@
               "visibleWhen": { "statMin": { "stat": "wealth", "value": 32 } },
               "effects": [
                 { "op": "addStat", "stat": "wealth", "value": 10 },
-                { "op": "addStat", "stat": "stress", "value": 20 }
+                { "op": "addStat", "stat": "stress", "value": 20 },
+                { "op": "addTag", "tag": "余热创业" }
               ],
               "next": { "kind": "stage", "stageId": "lifeLate", "sceneId": "elder_care" }
             }
@@ -766,22 +801,92 @@
         {
           "id": "elder_care",
           "narrative": [
-            "父母的白发比天气预报更准。你开始理解「照顾」不是事件，而是日常。",
-            "早年习惯会在身体上记账：体检报告比回忆更诚实。"
+            "父母的白发比天气预报更准；体检单上的箭头，也开始指向你自己。",
+            "晚年不是故事的尾巴，而是另一种叙述的开场：你打算把接下来的年月，过成哪一种光亮？"
           ],
           "choices": [
             {
-              "id": "elder_soft",
-              "label": "与遗憾和解，把故事交给时间",
-              "visibleWhen": { "statMax": { "stat": "healthDebt", "value": 40 } },
-              "next": { "kind": "stage", "stageId": "ending", "sceneId": "end_reflect" }
+              "id": "elder_cap_family",
+              "label": "以家为轴：周末饭桌、孙辈的笑声与电话里的叮咛",
+              "visibleWhen": { "flag": { "key": "parent", "value": true } },
+              "next": { "kind": "stage", "stageId": "ending", "sceneId": "end_elder_family" }
             },
             {
-              "id": "elder_hard",
-              "label": "带病前行，药盒与责任并行",
-              "visibleWhen": { "statMin": { "stat": "healthDebt", "value": 41 } },
-              "effects": [{ "op": "addStat", "stat": "stress", "value": 8 }],
-              "next": { "kind": "stage", "stageId": "ending", "sceneId": "end_reflect" }
+              "id": "elder_cap_solo",
+              "label": "独身亦自足：散步、旧友与随手翻的书",
+              "visibleWhen": { "tag": "独身倾向" },
+              "next": { "kind": "stage", "stageId": "ending", "sceneId": "end_elder_solo" }
+            },
+            {
+              "id": "elder_cap_scholar",
+              "label": "讲台或书桌仍在：带学生、写东西，老仍好奇",
+              "visibleWhen": { "flag": { "key": "academic", "value": true } },
+              "next": { "kind": "stage", "stageId": "ending", "sceneId": "end_elder_scholar" }
+            },
+            {
+              "id": "elder_cap_affluent",
+              "label": "物质宽裕些：旅行、照护与选择多一点",
+              "visibleWhen": { "statMin": { "stat": "wealth", "value": 52 } },
+              "next": { "kind": "stage", "stageId": "ending", "sceneId": "end_elder_affluent" }
+            },
+            {
+              "id": "elder_cap_hometown",
+              "label": "小城或近乡：慢车、院子与熟人社会的问候",
+              "visibleWhen": { "flag": { "key": "freedom_path", "value": true } },
+              "next": { "kind": "stage", "stageId": "ending", "sceneId": "end_elder_hometown" }
+            },
+            {
+              "id": "elder_cap_body",
+              "label": "身体有旧账，心却放轻：药盒与阳光都在桌上",
+              "visibleWhen": { "statMin": { "stat": "healthDebt", "value": 32 } },
+              "next": { "kind": "stage", "stageId": "ending", "sceneId": "end_elder_health_note" }
+            },
+            {
+              "id": "elder_cap_metro",
+              "label": "仍扎在都市：地铁、展览、老友与不减的好奇心",
+              "visibleWhen": { "tag": "都市扎根" },
+              "next": { "kind": "stage", "stageId": "ending", "sceneId": "end_elder_metro" }
+            },
+            {
+              "id": "elder_cap_return",
+              "label": "回到更近的故乡节奏：祠堂、田埂与亲戚的问候",
+              "visibleWhen": { "tag": "还乡晚年" },
+              "next": { "kind": "stage", "stageId": "ending", "sceneId": "end_elder_return" }
+            },
+            {
+              "id": "elder_cap_second_wind",
+              "label": "余热仍在：小店、顾问或副业，手不离事",
+              "visibleWhen": { "tag": "余热创业" },
+              "next": { "kind": "stage", "stageId": "ending", "sceneId": "end_elder_second_wind" }
+            },
+            {
+              "id": "elder_cap_duo",
+              "label": "二人世界到白头：旅行清单与互相体检提醒",
+              "visibleWhen": { "tag": "二人世界" },
+              "next": { "kind": "stage", "stageId": "ending", "sceneId": "end_elder_couple_duo" }
+            },
+            {
+              "id": "elder_cap_wander_mid",
+              "label": "独自走过中年，晚年把社交收束成少数深交",
+              "visibleWhen": { "tag": "独自走过中年" },
+              "next": { "kind": "stage", "stageId": "ending", "sceneId": "end_elder_solo_midlife" }
+            },
+            {
+              "id": "elder_cap_crafts",
+              "label": "手脑仍灵：工具台、学徒与社区里的一点名气",
+              "visibleWhen": { "tag": "技能线" },
+              "next": { "kind": "stage", "stageId": "ending", "sceneId": "end_elder_craftsman" }
+            },
+            {
+              "id": "elder_cap_community",
+              "label": "人情网密：互助群、志愿与「有事喊一声」的底气",
+              "visibleWhen": { "statMin": { "stat": "support", "value": 62 } },
+              "next": { "kind": "stage", "stageId": "ending", "sceneId": "end_elder_community" }
+            },
+            {
+              "id": "elder_cap_quiet",
+              "label": "寻常晚年：晨昏、新闻、体检与不再逞强的睡眠",
+              "next": { "kind": "stage", "stageId": "ending", "sceneId": "end_elder_quiet" }
             }
           ]
         }
@@ -792,58 +897,129 @@
       "title": "结局",
       "scenes": [
         {
-          "id": "end_scholar",
-          "title": "投身学术",
+          "id": "end_elder_quiet",
+          "title": "寻常晚年",
           "isEnding": true,
           "narrative": [
-            "你选择在纸页与实验之间安身。证明自己没有终点，但追问本身已是尊严。",
-            "【结局：投身学术】—— 名与利让位于问题意识与同行评议。"
+            "晨昏、新闻、社区通知与一年一次的体检——你把日子过成细水长流，不再用年轻时的刻度为难自己。",
+            "【老年结局：细水长流】—— 平凡不是退让，是你终于肯对自己温柔。"
           ]
         },
         {
-          "id": "end_burnout",
-          "title": "燃尽退场",
+          "id": "end_elder_family",
+          "title": "家为轴的晚年",
           "isEnding": true,
           "narrative": [
-            "你停下来了。不是失败，是把「必须向前」的咒语解开。",
-            "【结局：燃尽退场】—— 城市还在转，你先学会呼吸。"
+            "周末饭桌的热气、孙辈含糊的称呼、电话那头「吃了吗」的重复——「家」这个字，在白发岁月里反而更具体。",
+            "【老年结局：亲情环绕】—— 你把牵挂活成了日常，也把日常活成了归宿。"
           ]
         },
         {
-          "id": "end_freedom",
-          "title": "离开与自由",
+          "id": "end_elder_solo",
+          "title": "独身亦自得",
           "isEnding": true,
           "narrative": [
-            "你带走很少的行李与很多的空白日程。自由不是答案，却是你此刻的解法。",
-            "【结局：离开与自由】—— 另一种诚实的生活。"
+            "没有谁的日程必须与你重叠：散步、旧友、随手翻的书与偶尔一场旅行，你把自由留到白发，仍对自己诚实。",
+            "【老年结局：独身自足】—— 独处不是缺口，是你留给自己呼吸的房间。"
           ]
         },
         {
-          "id": "end_mogul",
-          "title": "世俗高峰",
+          "id": "end_elder_scholar",
+          "title": "问学到老",
           "isEnding": true,
           "narrative": [
-            "账户与头衔都往上走。你知道代价写在体检与睡眠里，但仍选择押注这一局。",
-            "【结局：世俗高峰】—— 你证明了自己，至少在账面上。"
+            "讲台或书桌仍在眼前，问问题的人换了一茬又一茬；纸页变薄，好奇心却不愿退休。",
+            "【老年结局：学术晚年】—— 你到老仍对未知鞠躬，把一生过成一条没有终稿的追问。"
           ]
         },
         {
-          "id": "end_warm",
-          "title": "平凡圆满",
+          "id": "end_elder_affluent",
+          "title": "宽裕的晚年",
           "isEnding": true,
           "narrative": [
-            "你把幸福定义得很小：一桌热饭，一句废话，一场不必逞强的晚安。",
-            "【结局：娶妻生子式的圆满】—— 故事不必等到白头才值得收束。"
+            "账户与生活都宽裕一些：照护、旅行、偶尔「买个体面」不必再算账。你知道钱买不来全部，却能让晚年少几处为难。",
+            "【老年结局：物质从容】—— 你把年轻时攒的筹码，换成了白发岁月里的选择余地。"
           ]
         },
         {
-          "id": "end_reflect",
-          "title": "回望一生",
+          "id": "end_elder_hometown",
+          "title": "小城或近乡",
           "isEnding": true,
           "narrative": [
-            "故事收束时，你不会带走分数与头衔，只会带走一串被选择雕刻过的日子。",
-            "如果再来一次，你会在某个夜晚早点睡吗？还是仍会那样热烈地活？",
-            "【结局：回望一生】—— 人生没有标准答案，只有你如何与遗憾共处。"
+            "慢车、菜市、院子里的风和邻里的招呼——换一座城养老，日程变短，人情却变厚。",
+            "【老年结局：熟人社会】—— 你把自己安放进一张熟悉的网里，心比年轻时更踏实。"
+          ]
+        },
+        {
+          "id": "end_elder_health_note",
+          "title": "带病亦平和",
+          "isEnding": true,
+          "narrative": [
+            "药盒与阳光一起摆在桌上；身体有旧账，你却把心事放轻，与疼感和解着过日子。",
+            "【老年结局：与身体谈判】—— 不是全胜，而是学会了与局限同桌吃饭。"
+          ]
+        },
+        {
+          "id": "end_elder_metro",
+          "title": "都市里的晚年",
+          "isEnding": true,
+          "narrative": [
+            "地铁仍熟、展览仍换、老友仍约——城市没有变慢，你只是学会了在嘈杂里给自己留一条安静的动线。",
+            "【老年结局：都市扎根】—— 你把一生焊在资源最密的地方，白发仍是这卷轴里的一行注脚。"
+          ]
+        },
+        {
+          "id": "end_elder_return",
+          "title": "还乡养老",
+          "isEnding": true,
+          "narrative": [
+            "祠堂前的香、田埂上的风、亲戚递来的一碗汤——离出生地更近之后，日历变薄，人情变厚。",
+            "【老年结局：还乡】—— 你不是退回过去，而是把余生安放进熟悉的方言里。"
+          ]
+        },
+        {
+          "id": "end_elder_second_wind",
+          "title": "余热不息",
+          "isEnding": true,
+          "narrative": [
+            "小店招牌、顾问合同或副业群里的接龙——你仍把日子接在「有事做」三个字上，只是不再为证明，只为心里那口气。",
+            "【老年结局：第二春】—— 赌性未改，但筹码换成了从容。"
+          ]
+        },
+        {
+          "id": "end_elder_couple_duo",
+          "title": "二人到老",
+          "isEnding": true,
+          "narrative": [
+            "旅行清单划掉又写上，体检报告互相提醒——没有孩子的笑声挤进门缝，却把对话磨得更细、更长。",
+            "【老年结局：二人世界】—— 你把亲密活成日常，而不是节日的例外。"
+          ]
+        },
+        {
+          "id": "end_elder_solo_midlife",
+          "title": "独行至终章",
+          "isEnding": true,
+          "narrative": [
+            "中年以后你学会少解释、少社交，晚年只留少数深交与固定节奏——不是冷漠，是把力气留给真正相干的人。",
+            "【老年结局：独自走过】—— 你以独身完成一生，却不觉得自己缺座。"
+          ]
+        },
+        {
+          "id": "end_elder_craftsman",
+          "title": "手艺人晚年",
+          "isEnding": true,
+          "narrative": [
+            "工具台仍亮，学徒仍问，社区仍有人认得「找你修最放心」——早年换的跑道，到老成了名姓。",
+            "【老年结局：技能扎根】—— 你证明了一技之长也能长成一生的屋檐。"
+          ]
+        },
+        {
+          "id": "end_elder_community",
+          "title": "人情互助",
+          "isEnding": true,
+          "narrative": [
+            "互助群、楼栋长、志愿排班与「有事喊一声」——支持你的人从未散场，晚年是被无数只手轻轻托住的。",
+            "【老年结局：社群之网】—— 你把信任存进了邻里与旧友，连孤独都要排队。"
           ]
         }
       ]

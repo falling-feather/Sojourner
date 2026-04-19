@@ -1,7 +1,7 @@
 {
-  "_comment": "由 content/story.json 人工整理的事件图摘要，供策划改稿对照；不以运行时校验为准。",
+  "_comment": "旧版人工摘要，节点名与当前 story.json 多不一致。事件树与结局请以 docs/EVENT_BRANCHES.draft.md §11 与 content/story.json 为准；勿以本文件为权威。",
   "source": "content/story.json",
-  "version": "1.0.0",
+  "version": "1.0.0-stale",
   "rng": {
     "algorithm": "Mulberry32 + string hashSeed",
     "perRunSeed": "每次开始游戏生成新 UUID（见 gameStore newRunSeed），旧版曾固定 meta.rngSeedDefault 导致局局相同",
@@ -30,7 +30,7 @@
     { "stageId": "path_open", "sceneId": "path_campus", "choiceId": "* 见 branches.path_open" },
     { "stageId": "work_life", "sceneId": "work_daily", "choiceId": "to_elder" },
     { "stageId": "elder", "sceneId": "elder_health", "choiceId": "* 见 branches.elder" },
-    { "stageId": "ending", "sceneId": "end_reflect", "choiceId": null, "note": "终局，无选项" }
+    { "stageId": "ending", "sceneId": "end_elder_*", "choiceId": null, "note": "终局多类，见 EVENT_BRANCHES §11" }
   ],
   "branches": {
     "primary_school": {

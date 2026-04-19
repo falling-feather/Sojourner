@@ -2,6 +2,8 @@
 
 供策划迭代：改剧情请优先改 `content/story.json`，再跑 `npm run validate:story`。
 
+**与当前正文对齐**：**事件树、结局库、交互点代号（E01–E20）以 [`EVENT_BRANCHES.draft.md`](EVENT_BRANCHES.draft.md) §11 为准**（随 `content/story.json` **v2.2.0+**：**十四类**老年结局、`ms_voc`、中年标签等）；本文侧重 **RNG 说明**，下方阶段名/简图可能滞后，**一切以校验通过的 `story.json` 为准**。
+
 ---
 
 ## 1. 随机数基于什么？为何之前每局都一样？
@@ -61,8 +63,9 @@ flowchart TD
   gk_high --> path_campus
   path_campus -->|work_hard 或 work_balance| work_daily
   work_daily --> elder_health
-  elder_health -->|healthDebt≤35 见 elder_ok| end_reflect
-  elder_health -->|healthDebt≥36 见 elder_warn| end_reflect
+  elder_health --> elder_care
+  elder_care -->|多条件选项| end_elder_family
+  elder_care --> end_elder_quiet
 ```
 
 ---
@@ -111,7 +114,7 @@ flowchart TD
 | `elder_ok` | `healthDebt ≤ 35` | 这些年还算平稳… |
 | `elder_warn` | `healthDebt ≥ 36` | 慢性病与药盒… |
 
-→ 均到 `ending / end_reflect`（`isEnding: true`）。
+→ 到 `ending / end_elder_*`（`isEnding: true`，详见 `EVENT_BRANCHES.draft.md` §11）。
 
 ---
 

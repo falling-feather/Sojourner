@@ -52,7 +52,7 @@
 满足**所有**已写字段时才显示（逻辑与 `src/engine/choiceVisibility.ts` 一致）：
 
 - `tag`：全局 `tags` 中须包含该字符串。
-- `flag`：`flags[key] === value`。
+- `flag`：若 `value` 为 **true**，须 `flags[key] === true`；若 `value` 为 **false**，则仅在 **`flags[key] === true` 时隐藏**（未写入的键视为「非 true」，避免「只写了结婚为 true、未写未婚」导致未婚选项全部不可见）。
 - `statMax`：对应 `stats[stat] <= value`（高于则隐藏）。
 - `statMin`：对应 `stats[stat] >= value`（低于则隐藏）。
 
@@ -156,9 +156,13 @@
 
 ---
 
-## 11. 完整事件链（`content/story.json` v2）
+## 11. 完整事件链（`content/story.json`）
 
-`meta.version` 为 **2.0.0**，`estimatedMinutes` 为 **[8, 15]**。以下与当前 JSON **逐条对齐**；**20 个交互点**用代号 **E01–E20** 标识（每个代号对应**至少一次玩家决策或一次检定**）。
+**权威数据源**：[`content/story.json`](../content/story.json)（`meta.version`）；改稿后务必运行 `npm run validate:story`。
+
+`meta.version` 为 **2.2.0**，`estimatedMinutes` 为 **[8, 15]**。以下与当前 JSON **意图对齐**；**20 个交互点**用代号 **E01–E20** 标识（每个代号对应**至少一次玩家决策或一次检定**）。
+
+**收束侧重**：无中途提前结局；主线推进至 **`elder_care`**，再在 **十四类「老年生活」结局**（`end_elder_*`）中择一收束（见 §11.2 结局库）。**v2.2.0** 起：`ms_fork` 增 **`ms_voc`（技能线）**；`midlife_fork` 各选项带 **中年标签**（`还乡晚年` / `都市扎根` / `余热创业`）；`elder_care` 增 **标签/高支持** 驱动的额外收束；`visibleWhen.flag` 对 **`false`** 的判定见 §3.1（未写入的布尔 flag 不阻塞「未婚/未育」类选项）。
 
 **入口**：`birth` / `birth_hello`。
 
@@ -182,34 +186,42 @@
 | **E01** | `birth_hello` | 诞生 | 1：推进时间 |
 | **E02** | `child_play` | 幼年 | 1：进小学 |
 | **E03** | `pri_school` | 小学 | 3：`pri_focus` / `pri_wide` / `pri_balance` |
-| **E04** | `ms_fork` | 中学分流 | 3：`ms_key` / `ms_norm` / `ms_art` |
+| **E04** | `ms_fork` | 中学分流 | 4：`ms_key` / `ms_norm` / `ms_art` / **`ms_voc`**（`tag` **技能线**） |
 | **E05** | `youth_fork` | 初高中主轴 | 2：`y_gaokao` / `y_life` |
 | **E06** | `high_night` | 高三熬夜 | 2：`grind_late` / `rest_ok` |
 | **E07** | `gk_before` | **高考检定** | 1：`gk_enter` → `gaokao_main` 三档 → `gk_rl` / `gk_rm` / `gk_rh` |
 | **E08** | `uni_y1` | 大学一年级 | 3：`u_club` / `u_gpa` / `u_intern` |
 | **E09** | `uni_grad` | 毕业去向 | 3：`u_phd` / `u_work` / `u_public` |
-| **E10** | `phd_path` **或** 跳过 | 读研出站 | **若选 `u_phd`**：2 选项 `phd_faculty` → **结局** 或 `phd_corp` → 职场；**若未读研** 本点不存在，直接进入 E11 |
+| **E10** | `phd_path` **或** 跳过 | 读研出站 | **若选 `u_phd`**：`phd_faculty` / `phd_corp` 均 → **E11 `job_pick`**（学术志向打 `academic` + `学术线`）；**若未读研** 本点不存在，直接进入 E11 |
 | **E11** | `job_pick` | 第一份工作 | 3：`j_big` / `j_startup` / `j_stable` |
-| **E12** | `work_y3` | 工作第三年 | 2～4：`w_climb` / `w_balance`；条件项 `w_burn`（`stress≥52`）→ **结局**；`w_quit_city`（`wealth≤45`）→ **结局** |
-| **E13** | `career_split` | 事业中期 | 最多 3：`c_mogul`（`wealth≥38`）→ **结局**；`c_go_on` → 婚恋线；`c_academic`（需 `tag` **读研**）→ **结局** |
+| **E12** | `work_y3` | 工作第三年 | 2～4：`w_climb` / `w_balance`；条件项 `w_burn`（`stress≥52`）→ **休整后继续** `career_split`；`w_quit_city`（`wealth≤45`）→ **换城生活** `romance_start`（`freedom_path`，供老年结局差分） |
+| **E13** | `career_split` | 事业中期 | 最多 3：`c_mogul`（`wealth≥38`）/ `c_go_on` / `c_academic`（`tag` **读研**）均 → **婚恋线** `romance_start`（不再中途结局） |
 | **E14** | `romance_start` | 如何脱单 | 3：`r_active` / `r_blind` / `r_solo` |
 | **E15** | `bond_pair` | 关系推进 | 3：`b_fast` / `b_slow` / `b_end` |
 | **E16** | `marry_scene` | 婚否 | 2：`m_yes`（`setFlag married`）/ `m_no` |
-| **E17** | `kids_scene` | 生育 / 丁克 / 收束 | 已婚：`k_yes` / `k_dink`；未婚仅 `k_skip`；条件 **`k_warm_end`**：`married` 且 **`support≥58`** → **幸福结局** |
-| **E18** | `midlife_fork` | 中年去向 | 3：`mid_home` / `mid_stay`；`mid_start`（`wealth≥32`） |
-| **E19** | `elder_care` | 体检与回望 | 2 互斥：`elder_soft`（`healthDebt≤40`）/ `elder_hard`（`healthDebt≥41`）→ **默认结局** |
-| **E20** | **结局库** | 六类 `isEnding` | 见下表（非单一场景，为收束类型总称） |
+| **E17** | `kids_scene` | 生育 / 丁克 / 延展 | 已婚：`k_yes` / `k_dink`；未婚仅 `k_skip`；条件 **`k_continue_warm`**：`married` 且 **`support≥58`** → **继续主线** `midlife_fork`（非结局） |
+| **E18** | `midlife_fork` | 中年去向 | 3：`mid_home`（`tag` **还乡晚年**）/ `mid_stay`（`tag` **都市扎根**）；条件 **`mid_start`**（`wealth≥32`，`tag` **余热创业**） |
+| **E19** | `elder_care` | **老年收束前最后一站** | 依 `visibleWhen` 展示多条「如何叙述晚年」；**必含**无条件的 **`elder_cap_quiet`** → `end_elder_quiet` |
+| **E20** | **结局库** | **十四类** `isEnding`（均为**老年生活**主题） | 见下表 |
 
-**中途结局**（不必走到 E19）：`end_scholar`、`end_burnout`、`end_freedom`、`end_mogul`、`end_warm`，以及长线收束 `end_reflect`。
+**结局库**（均在 `stageId: ending`，且仅能从 **`elder_care`** 进入；无中途提前结局）。
 
-| 结局 `sceneId` | 触发路径（摘要） |
-|----------------|------------------|
-| `end_scholar` | `phd_path` → `phd_faculty`；或 `career_split` → `c_academic`（需 **读研**） |
-| `end_burnout` | `work_y3` → `w_burn`（`stress≥52`） |
-| `end_freedom` | `work_y3` → `w_quit_city`（`wealth≤45`） |
-| `end_mogul` | `career_split` → `c_mogul`（`wealth≥38`） |
-| `end_warm` | `kids_scene` → `k_warm_end`（`married` 且 `support≥58`） |
-| `end_reflect` | `elder_care` 任一档 |
+| 结局 `sceneId` | 叙事侧重 | 典型触发（`elder_care` 选项） |
+|----------------|----------|------------------------------|
+| `end_elder_quiet` | 寻常晚年、细水长流 | **`elder_cap_quiet`**（无条件，兜底） |
+| `end_elder_family` | 亲情环绕、含饴弄孙 | **`elder_cap_family`**（`parent`） |
+| `end_elder_solo` | 独身亦自足 | **`elder_cap_solo`**（`tag` **独身倾向**） |
+| `end_elder_scholar` | 讲台/书桌到老年 | **`elder_cap_scholar`**（`academic`） |
+| `end_elder_affluent` | 物质宽裕的晚年 | **`elder_cap_affluent`**（`wealth≥52`） |
+| `end_elder_hometown` | 换城/熟人社会养老 | **`elder_cap_hometown`**（`freedom_path`） |
+| `end_elder_health_note` | 带病亦平和 | **`elder_cap_body`**（`healthDebt≥32`） |
+| `end_elder_metro` | 仍扎都市 | **`elder_cap_metro`**（`tag` **都市扎根**） |
+| `end_elder_return` | 还乡节奏 | **`elder_cap_return`**（`tag` **还乡晚年**） |
+| `end_elder_second_wind` | 余热/副业不息 | **`elder_cap_second_wind`**（`tag` **余热创业**） |
+| `end_elder_couple_duo` | 二人世界到老 | **`elder_cap_duo`**（`tag` **二人世界**） |
+| `end_elder_solo_midlife` | 独自走过中年至终章 | **`elder_cap_wander_mid`**（`tag` **独自走过中年**） |
+| `end_elder_craftsman` | 手艺人晚年 | **`elder_cap_crafts`**（`tag` **技能线**） |
+| `end_elder_community` | 人情互助网 | **`elder_cap_community`**（`support≥62`） |
 
 ---
 
@@ -226,16 +238,29 @@
 
 | 场景 | 选项 `id` | 条件 |
 |------|-----------|------|
+| `ms_fork` | `ms_voc` | （无额外门槛，打 `tag` **技能线**） |
 | `work_y3` | `w_burn` | `stress` **≥ 52** |
 | `work_y3` | `w_quit_city` | `wealth` **≤ 45** |
 | `career_split` | `c_mogul` | `wealth` **≥ 38** |
 | `career_split` | `c_academic` | 含 `tag` **读研** |
 | `kids_scene` | `k_yes` / `k_dink` | `flag` **married = true** |
 | `kids_scene` | `k_skip` | `flag` **married = false** |
-| `kids_scene` | `k_warm_end` | `married` 且 **`support` ≥ 58** |
+| `kids_scene` | `k_continue_warm` | `married` 且 **`support` ≥ 58** |
 | `midlife_fork` | `mid_start` | `wealth` **≥ 32** |
-| `elder_care` | `elder_soft` | `healthDebt` **≤ 40** |
-| `elder_care` | `elder_hard` | `healthDebt` **≥ 41** |
+| `elder_care` | `elder_cap_family` | `flag` **parent = true** |
+| `elder_care` | `elder_cap_solo` | 含 `tag` **独身倾向** |
+| `elder_care` | `elder_cap_scholar` | `flag` **academic = true** |
+| `elder_care` | `elder_cap_affluent` | `wealth` **≥ 52** |
+| `elder_care` | `elder_cap_hometown` | `flag` **freedom_path = true** |
+| `elder_care` | `elder_cap_body` | `healthDebt` **≥ 32** |
+| `elder_care` | `elder_cap_metro` | `tag` **都市扎根** |
+| `elder_care` | `elder_cap_return` | `tag` **还乡晚年** |
+| `elder_care` | `elder_cap_second_wind` | `tag` **余热创业** |
+| `elder_care` | `elder_cap_duo` | `tag` **二人世界** |
+| `elder_care` | `elder_cap_wander_mid` | `tag` **独自走过中年** |
+| `elder_care` | `elder_cap_crafts` | `tag` **技能线** |
+| `elder_care` | `elder_cap_community` | `support` **≥ 62** |
+| `elder_care` | `elder_cap_quiet` | （无条件，始终可选） |
 
 ---
 
@@ -247,7 +272,7 @@
 flowchart TB
   subgraph E01_E07["E01–E07 童年·学业·高考"]
     E01["E01 birth_hello"] --> E02["E02 child_play"] --> E03["E03 pri_school"]
-    E03 --> E04["E04 ms_fork"] --> E05["E05 youth_fork"] --> E06["E06 high_night"] --> E07["E07 gk_before 检定"]
+    E03 --> E04["E04 ms_fork 4岔含技能线"] --> E05["E05 youth_fork"] --> E06["E06 high_night"] --> E07["E07 gk_before 检定"]
   end
   E07 --> RL["gk_rl"]
   E07 --> RM["gk_rm"]
@@ -258,25 +283,26 @@ flowchart TB
   U1 --> Ug["E09 uni_grad"]
   Ug --> PhD["E10 phd_path"]
   Ug --> J0["E11 job_pick"]
-  PhD -->|phd_faculty| ES["结局 end_scholar"]
-  PhD -->|phd_corp| J0
+  PhD -->|phd_faculty / phd_corp| J0
   J0 --> Wy["E12 work_y3"]
-  Wy -->|w_burn| EB["结局 end_burnout"]
-  Wy -->|w_quit_city| EF["结局 end_freedom"]
-  Wy --> Cs["E13 career_split"]
-  Cs -->|c_mogul| EM["结局 end_mogul"]
-  Cs -->|c_academic| ES
-  Cs -->|c_go_on| Rm["E14 romance_start"]
+  Wy -->|w_burn| Cs["E13 career_split"]
+  Wy -->|w_quit_city| Rm2["E14 romance_start"]
+  Wy --> Cs
+  Cs --> Rm["E14 romance_start"]
   Rm --> Bd["E15 bond_pair"] --> Mr["E16 marry_scene"] --> Kd["E17 kids_scene"]
-  Kd -->|k_warm_end| EW["结局 end_warm"]
-  Kd --> Mf["E18 midlife_fork"] --> Ec["E19 elder_care"] --> ER["结局 end_reflect"]
+  Kd -->|k_continue_warm| Mf["E18 midlife_fork"]
+  Kd --> Mf
+  Mf --> Ec["E19 elder_care"]
+  Ec --> Eend["E20 十四类老年结局 end_elder_*"]
 ```
 
 **读图说明**：
 
-- **E10**：仅当 `uni_grad` 选择 **`u_phd`** 时出现 `phd_path`；选 **`u_work` / `u_public`** 则 E10 跳过，**E11** 紧接 E09。  
-- **E13** 三条出路：`c_mogul` / `c_academic` 直接进结局；`c_go_on` 进入婚恋线 E14–E17。  
-- **E17** 在满足 `k_warm_end` 时可 **提前幸福结局**，否则进入中年 E18–E19。
+- **E10**：仅当 `uni_grad` 选择 **`u_phd`** 时出现 `phd_path`；两选项均汇入 **E11**。  
+- **E12**：`w_burn` / `w_quit_city` 不再进中途结局；分别汇入 **E13** 或 **E14**。  
+- **E13**：`c_mogul` / `c_academic` / `c_go_on` 均进入 **E14**，主线继续。  
+- **E17**：`k_continue_warm` 仅 **跳过提前收束**，进入 **E18**。  
+- **E19**：在 `elder_care` 按条件展示多条老年收束；**十四类结局均为老年生活主题**（多条件可同时满足时，玩家择一收束）。
 
 ---
 
