@@ -160,9 +160,9 @@
 
 **权威数据源**：[`content/story.json`](../content/story.json)（`meta.version`）；改稿后务必运行 `npm run validate:story`。
 
-`meta.version` 为 **2.2.0**，`estimatedMinutes` 为 **[8, 15]**。以下与当前 JSON **意图对齐**；**20 个交互点**用代号 **E01–E20** 标识（每个代号对应**至少一次玩家决策或一次检定**）。
+`meta.version` 为 **2.6.0**，`estimatedMinutes` 为 **[8, 15]**。以下与当前 JSON **意图对齐**；**20 个交互点**用代号 **E01–E20** 标识（每个代号对应**至少一次玩家决策或一次检定**）。
 
-**收束侧重**：无中途提前结局；主线推进至 **`elder_care`**，再在 **十四类「老年生活」结局**（`end_elder_*`）中择一收束（见 §11.2 结局库）。**v2.2.0** 起：`ms_fork` 增 **`ms_voc`（技能线）**；`midlife_fork` 各选项带 **中年标签**（`还乡晚年` / `都市扎根` / `余热创业`）；`elder_care` 增 **标签/高支持** 驱动的额外收束；`visibleWhen.flag` 对 **`false`** 的判定见 §3.1（未写入的布尔 flag 不阻塞「未婚/未育」类选项）。
+**收束侧重**：无中途提前结局；主线推进至 **`elder_care`**，再在 **十四类「老年生活」结局**（`end_elder_*`）中择一收束（见 §11.2 结局库）。**v2.2.0** 起：`ms_fork` 增 **`ms_voc`（技能线）**；`midlife_fork` 各选项带 **中年标签**（`还乡晚年` / `都市扎根` / `余热创业`）；`elder_care` 增 **标签/高支持** 驱动的额外收束；`visibleWhen.flag` 对 **`false`** 的判定见 §3.1（未写入的布尔 flag 不阻塞「未婚/未育」类选项）。**v2.3.0** 起：高考检定 **`bandMode: stressSplit`**（智商/积淀 + 压力动态分界，UI 不展示骰值，见 §11.3）。
 
 **入口**：`birth` / `birth_hello`。
 
@@ -189,20 +189,80 @@
 | **E04** | `ms_fork` | 中学分流 | 4：`ms_key` / `ms_norm` / `ms_art` / **`ms_voc`**（`tag` **技能线**） |
 | **E05** | `youth_fork` | 初高中主轴 | 2：`y_gaokao` / `y_life` |
 | **E06** | `high_night` | 高三熬夜 | 2：`grind_late` / `rest_ok` |
-| **E07** | `gk_before` | **高考检定** | 1：`gk_enter` → `gaokao_main` 三档 → `gk_rl` / `gk_rm` / `gk_rh` |
-| **E08** | `uni_y1` | 大学一年级 | 3：`u_club` / `u_gpa` / `u_intern` |
-| **E09** | `uni_grad` | 毕业去向 | 3：`u_phd` / `u_work` / `u_public` |
-| **E10** | `phd_path` **或** 跳过 | 读研出站 | **若选 `u_phd`**：`phd_faculty` / `phd_corp` 均 → **E11 `job_pick`**（学术志向打 `academic` + `学术线`）；**若未读研** 本点不存在，直接进入 E11 |
-| **E11** | `job_pick` | 第一份工作 | 3：`j_big` / `j_startup` / `j_stable` |
-| **E12** | `work_y3` | 工作第三年 | 2～4：`w_climb` / `w_balance`；条件项 `w_burn`（`stress≥52`）→ **休整后继续** `career_split`；`w_quit_city`（`wealth≤45`）→ **换城生活** `romance_start`（`freedom_path`，供老年结局差分） |
-| **E13** | `career_split` | 事业中期 | 最多 3：`c_mogul`（`wealth≥38`）/ `c_go_on` / `c_academic`（`tag` **读研**）均 → **婚恋线** `romance_start`（不再中途结局） |
-| **E14** | `romance_start` | 如何脱单 | 3：`r_active` / `r_blind` / `r_solo` |
-| **E15** | `bond_pair` | 关系推进 | 3：`b_fast` / `b_slow` / `b_end` |
-| **E16** | `marry_scene` | 婚否 | 2：`m_yes`（`setFlag married`）/ `m_no` |
-| **E17** | `kids_scene` | 生育 / 丁克 / 延展 | 已婚：`k_yes` / `k_dink`；未婚仅 `k_skip`；条件 **`k_continue_warm`**：`married` 且 **`support≥58`** → **继续主线** `midlife_fork`（非结局） |
-| **E18** | `midlife_fork` | 中年去向 | 3：`mid_home`（`tag` **还乡晚年**）/ `mid_stay`（`tag` **都市扎根**）；条件 **`mid_start`**（`wealth≥32`，`tag` **余热创业**） |
-| **E19** | `elder_care` | **老年收束前最后一站** | 依 `visibleWhen` 展示多条「如何叙述晚年」；**必含**无条件的 **`elder_cap_quiet`** → `end_elder_quiet` |
-| **E20** | **结局库** | **十四类** `isEnding`（均为**老年生活**主题） | 见下表 |
+| **E07** | `gk_gate` → `gk_before` | **高考节点**（含艺考分支 + 高考检定） | 入口 `gk_gate`：若有 `tag` **艺考倾向** 可走 `gk_try_art`（`art_exam`）或 `gk_to_exam`；随后 `gk_before`：`gk_enter` → `gaokao_main` 三档 |
+| **E08** | `uni_y1` | 大学一年级 | 3：`u_club` / `u_gpa` / `u_intern`；其中 `u_intern` → **P02** `uni_intern_crunch`；其余两项（及艺考成功 `uni_art_y1`）→ **P01** `uni_major_fork` |
+| **E09** | `uni_grad` | 毕业去向 | 3：`u_phd` / `u_work` / `u_public`（毕业前会经过 **P01** 专业岔路；实习线会经过 **P02**） |
+| **E10** | `phd_path` **或** 跳过 | 读研出站 | **若选 `u_phd`**：`phd_faculty` / `phd_corp` 均 → **P03** `offer_compare`（学术志向写入 `academic` + `学术线`）；**若未读研** 本点不存在 |
+| **E11** | `offer_compare` | 机会取舍（P03） | 3：平台/匹配/现金流 → `job_pick` |
+| **E12** | `job_pick` | 第一份工作 | 3：`j_big` / `j_startup` / `j_stable` |
+| **E13** | `work_y3` | 工作第三年 | 2～5：`w_climb` / `w_balance`；**P04**：`w_layoff`（`stress≥50` 且 `wealth≤40`）→ `work_layoff`；条件项 `w_burn` / `w_quit_city` |
+| **E14** | `career_split` | 事业中期 | 最多 3：`c_mogul` / `c_go_on` / `c_academic`（无中途结局，均继续） |
+| **E15** | `romance_start` | 如何脱单 | 3：`r_active` / `r_blind` / `r_solo` |
+| **E16** | `bond_pair` | 关系推进 | 3：`b_fast` / `b_slow` / `b_end` |
+| **E17** | `marry_scene` → `housing_buy` | 婚否 + 住房决策（P05） | `m_yes/m_no` 后进入 `housing_buy`（买房/租房/回到家附近）再到 `kids_scene` |
+| **E18** | `kids_scene` | 生育 / 丁克 / 延展 | 已婚：`k_yes` / `k_dink`；未婚：`k_skip`；条件 **`k_continue_warm`** 仍继续主线 |
+| **E19** | `midlife_fork` | 中年后半程（P06–P09 扩展树） | `midlife_fork` 后进入 P06，并在照护/空巢/退休/社群节点出现多分支（见 §11.2.1 与 §11.5） |
+| **E20** | **结局库** | **十八类** `isEnding`（均为**老年生活**主题） | 见下表（新增 `end_elder_caregiver` / `end_elder_mortgage` / `end_elder_rehab`） |
+
+### 11.2.1 分支速查（入口 / 触发 / 去向）
+
+本节把“树上真正会分叉的地方”单独列出来，便于策划快速定位与回归测试。
+
+- **艺考分支（高考入口）**
+  - **入口**：`gaokao/gk_gate`
+  - **触发**：需 `tag` **艺考倾向**（中学 `ms_art` 写入）
+  - **去向**：
+    - 成功：`university/uni_art_y1`（写入 `flag: art_admit=true` + `tag: 艺术院校`）
+    - 失败：回 `gaokao/gk_before` 继续高考
+
+- **专科分支（高考失常+低学业积淀）**
+  - **入口**：`gaokao/gk_rl` 的 `from_rl_jc`
+  - **触发**：`gk_tier=false` 且 `career≤42`
+  - **去向**：`juniorCollege/jc_y1` → `jc_grad` → `careerEarly/job_pick`（可选 `jc_upgrade` 回 `university/uni_y1`）
+
+- **P01 专业岔路**
+  - **入口**：`university/uni_major_fork`
+  - **触发**：固定进入（由 `uni_y1` 的 `u_club/u_gpa`、`uni_intern_crunch`、`uni_art_y1` 汇入）
+  - **去向**：理工/商科/人文（写入对应 `tag`），艺考成功可选「作品集驱动」（需 `art_admit=true`）
+
+- **P02 实习高压**
+  - **入口**：`university/uni_intern_crunch`
+  - **触发**：`uni_y1` 选择 `u_intern`
+  - **去向**：两选项回 `uni_major_fork`（卷→`stress/healthDebt`↑；立边界→`stress`↓、`support`↑）
+
+- **P03 Offer 取舍**
+  - **入口**：`careerEarly/offer_compare`
+  - **触发**：`uni_grad` 选 `u_work/u_public`；以及专科 `jc_grad` 选 `jc_work`
+  - **去向**：三选项回 `careerEarly/job_pick`（平台/匹配/现金流）
+
+- **P04 裁员/转向**
+  - **入口**：`careerEarly/work_y3` 的 `w_layoff`
+  - **触发**：`stress≥50` 且 `wealth≤40`
+  - **去向**：`careerEarly/work_layoff` → `careerMid/career_split`（补偿休整/转技能/靠关系）
+
+- **P05 住房决策**
+  - **入口**：`familyRing/housing_buy`
+  - **触发**：`marry_scene` 后固定进入
+  - **去向**：买房（需 `wealth≥30`，写入 `tag: 房贷`）/租房（`tag: 租房生活`）/回家附近（`support`↑）→ `kids_scene`
+
+- **P06–P09 中年链**
+  - **入口**：`lifeLate/midlife_fork`
+  - **触发**：从 `midlife_fork` 进入 `parent_illness`，随后在照护/空巢/退休/社群节点出现**多分支**（并最终汇入 `elder_care`）：
+    - `parent_illness` → `caregiving_strain` / `caregiving_service` / `caregiving_boundary`
+    - `empty_nest` 增加 `en_grandchild`（需 `parent=true`）
+    - `retire_hang` 增加 `rt_health`（需 `healthDebt≥30`）
+    - `community_role` 增加 `cr_mentor`（需 `career≥55`）
+  - **关键门槛**：`parent_illness` 的用钱换时间需 `wealth≥40`；`retire_hang` 的规划退休需 `wealth≥46`；`community_role` 的接过角色需 `support≥58`
+
+- **P10 留下火种结局**
+  - **入口**：`lifeLate/elder_care` 的 `elder_cap_legacy`
+  - **触发**：`luck≥65`
+  - **去向**：`ending/end_elder_legacy`
+
+- **新增老年结局入口（中年事件直连的差分）**
+  - **`elder_cap_caregiver`**：需 `tag` **照护者** → `end_elder_caregiver`
+  - **`elder_cap_mortgage`**：需 `tag` **房贷** 且 `wealth≤35` → `end_elder_mortgage`
+  - **`elder_cap_rehab`**：需 `tag` **康复计划** → `end_elder_rehab`
 
 **结局库**（均在 `stageId: ending`，且仅能从 **`elder_care`** 进入；无中途提前结局）。
 
@@ -222,15 +282,32 @@
 | `end_elder_solo_midlife` | 独自走过中年至终章 | **`elder_cap_wander_mid`**（`tag` **独自走过中年**） |
 | `end_elder_craftsman` | 手艺人晚年 | **`elder_cap_crafts`**（`tag` **技能线**） |
 | `end_elder_community` | 人情互助网 | **`elder_cap_community`**（`support≥62`） |
+| `end_elder_caregiver` | 照护余生 | **`elder_cap_caregiver`**（`tag` **照护者**） |
+| `end_elder_mortgage` | 还贷到老 | **`elder_cap_mortgage`**（`tag` **房贷** 且 `wealth≤35`） |
+| `end_elder_rehab` | 养回身体 | **`elder_cap_rehab`**（`tag` **康复计划**） |
+| `end_elder_legacy` | 留下一点东西 | **`elder_cap_legacy`**（`luck≥65`） |
 
 ---
 
-### 11.3 高考检定 `gk_before`（E07 详解）
+### 11.3 高考节点 `gk_gate → gk_before`（E07）
 
-- 选项：`gk_enter`，检定 id `gaokao_main`。  
-- `modifiers`：`addStatWeights`（`career` 0.3）、`luckWeight` 0.12、`stressPenalty` 0.2。  
-- **Bands**：0–28 → `gk_rl`；29–72 → `gk_rm`；73–100 → `gk_rh`（并设置 `gk_tier` 等）。  
-- 三档结果场景各 **1 个 continue 选项** 进入 `uni_y1`（属性修正不同）。
+- **入口场景 `gk_gate`**：  
+  - 若曾在中学选择 `ms_art`（打 `tag: 艺考倾向`），则出现 `gk_try_art`：进行一次 `threshold` 检定 `art_exam`（static）。  
+    - **成功**：进入 `university/uni_art_y1`，并写入 `flag: art_admit = true` + `tag: 艺术院校`，后续在大学/择业叙事可据此差分。  
+    - **失败**：回到 `gk_before` 继续高考。  
+  - 永远可选 `gk_to_exam`：直接进入 `gk_before`。  
+
+- **高考检定 `gk_before`**：选项 `gk_enter`，检定 id `gaokao_main`，`bandMode`：**`stressSplit`**（见 `src/engine/check.ts`）。  
+- **双维度**：  
+  - **智商（叙事）**：由 `stats.career`（学业积淀）映射为展示的「叙事智商」`iqDisplay`，并决定 **卷面基准分** `baseScore`（`gaokaoBaseScoreFromCareer`）。  
+  - **压力**：**不**再进入 `stressPenalty` 扣结算分；改为 **动态三档分界** `computeStressSplitEdges(stress)`：压力低时接近旧版 0–26 / 27–72 / 73–100；压力升高时失常档上界随 `≈压力/2` 放宽、超常档下界随压力抬高（具体以代码为准）。  
+- **内部检定分**（0–100）：`rawRoll` + 修正（`career` 加权 + `luck` 加权），再落入上式三档之一，对应 JSON 中 **顺序固定** 的三条 `bands`（失常 / 正常 / 超常）的 `next` 与 `effects`。  
+- **界面**：不向玩家展示骰值与内部结算分；展示叙事智商、基准分、临场波动、折算总分（见 `CheckToast` + `CheckResolution.hideDice`）。  
+- 三档结果场景各 **1 个 continue 选项** 进入 `uni_y1`（属性修正不同）；`gk_rl` 额外包含 **专科分支** `from_rl_jc`（仅在 `gk_tier=false` 且 `career≤42` 时出现）→ `juniorCollege/jc_y1`。
+
+### 11.3.1 占位事件节点与世界树（策划参考）
+
+事件树的“主干+散叶”设计动机与节点清单详见 **[`WORLD_TREE_PLACEHOLDERS.draft.md`](WORLD_TREE_PLACEHOLDERS.draft.md)**（其中 P01–P10 现已全部实装；文档用于记录每个节点的设计意图与影响方向）。
 
 ---
 
@@ -239,14 +316,23 @@
 | 场景 | 选项 `id` | 条件 |
 |------|-----------|------|
 | `ms_fork` | `ms_voc` | （无额外门槛，打 `tag` **技能线**） |
+| `gk_gate` | `gk_try_art` | `tag` **艺考倾向** |
 | `work_y3` | `w_burn` | `stress` **≥ 52** |
 | `work_y3` | `w_quit_city` | `wealth` **≤ 45** |
+| `work_y3` | `w_layoff` | `stress` **≥ 50** 且 `wealth` **≤ 40** |
 | `career_split` | `c_mogul` | `wealth` **≥ 38** |
 | `career_split` | `c_academic` | 含 `tag` **读研** |
 | `kids_scene` | `k_yes` / `k_dink` | `flag` **married = true** |
 | `kids_scene` | `k_skip` | `flag` **married = false** |
 | `kids_scene` | `k_continue_warm` | `married` 且 **`support` ≥ 58** |
 | `midlife_fork` | `mid_start` | `wealth` **≥ 32** |
+| `uni_major_fork` | `m_art_track` | `flag` **art_admit = true** |
+| `housing_buy` | `hb_buy` | `wealth` **≥ 30** |
+| `parent_illness` | `pi_money` | `wealth` **≥ 40** |
+| `retire_hang` | `rt_plan` | `wealth` **≥ 46** |
+| `retire_hang` | `rt_health` | `healthDebt` **≥ 30** |
+| `community_role` | `cr_take` | `support` **≥ 58** |
+| `community_role` | `cr_mentor` | `career` **≥ 55** |
 | `elder_care` | `elder_cap_family` | `flag` **parent = true** |
 | `elder_care` | `elder_cap_solo` | 含 `tag` **独身倾向** |
 | `elder_care` | `elder_cap_scholar` | `flag` **academic = true** |
@@ -260,6 +346,10 @@
 | `elder_care` | `elder_cap_wander_mid` | `tag` **独自走过中年** |
 | `elder_care` | `elder_cap_crafts` | `tag` **技能线** |
 | `elder_care` | `elder_cap_community` | `support` **≥ 62** |
+| `elder_care` | `elder_cap_caregiver` | `tag` **照护者** |
+| `elder_care` | `elder_cap_mortgage` | `tag` **房贷** 且 `wealth` **≤ 35** |
+| `elder_care` | `elder_cap_rehab` | `tag` **康复计划** |
+| `elder_care` | `elder_cap_legacy` | `luck` **≥ 65** |
 | `elder_care` | `elder_cap_quiet` | （无条件，始终可选） |
 
 ---
@@ -270,39 +360,70 @@
 
 ```mermaid
 flowchart TB
-  subgraph E01_E07["E01–E07 童年·学业·高考"]
+  subgraph School["E01–E07 童年·学业·高考"]
     E01["E01 birth_hello"] --> E02["E02 child_play"] --> E03["E03 pri_school"]
-    E03 --> E04["E04 ms_fork 4岔含技能线"] --> E05["E05 youth_fork"] --> E06["E06 high_night"] --> E07["E07 gk_before 检定"]
+    E03 --> E04["E04 ms_fork（含技能线/艺考倾向）"] --> E05["E05 youth_fork"] --> E06["E06 high_night"] --> E07["E07 gk_gate→gk_before（含艺考）"]
   end
-  E07 --> RL["gk_rl"]
-  E07 --> RM["gk_rm"]
-  E07 --> RH["gk_rh"]
-  RL --> U1["E08 uni_y1"]
-  RM --> U1
-  RH --> U1
-  U1 --> Ug["E09 uni_grad"]
-  Ug --> PhD["E10 phd_path"]
-  Ug --> J0["E11 job_pick"]
-  PhD -->|phd_faculty / phd_corp| J0
-  J0 --> Wy["E12 work_y3"]
-  Wy -->|w_burn| Cs["E13 career_split"]
-  Wy -->|w_quit_city| Rm2["E14 romance_start"]
-  Wy --> Cs
-  Cs --> Rm["E14 romance_start"]
-  Rm --> Bd["E15 bond_pair"] --> Mr["E16 marry_scene"] --> Kd["E17 kids_scene"]
-  Kd -->|k_continue_warm| Mf["E18 midlife_fork"]
-  Kd --> Mf
-  Mf --> Ec["E19 elder_care"]
-  Ec --> Eend["E20 十四类老年结局 end_elder_*"]
+
+  %% 高考节点：艺考/高考/专科
+  E07 -->|艺考成功| UA["university/uni_art_y1"]
+  E07 -->|回主路| GB["gaokao/gk_before"]
+  GB --> RL["gk_rl"]
+  GB --> RM["gk_rm"]
+  GB --> RH["gk_rh"]
+  RL -->|专科分支| JC1["juniorCollege/jc_y1"] --> JCg["juniorCollege/jc_grad"]
+
+  %% 大学：一年级 → 实习(P02)/专业(P01) → 毕业去向
+  subgraph Uni["E08–E10 大学（含散叶）"]
+    U1["E08 uni_y1"] -->|u_intern| IC["P02 uni_intern_crunch"] --> MF["P01 uni_major_fork"] --> Ug["E09 uni_grad"]
+    U1 -->|u_club / u_gpa| MF --> Ug
+    UA --> MF
+    RM --> U1
+    RH --> U1
+    RL --> U1
+  end
+
+  %% 毕业后：offer 取舍(P03) → 第一份工作
+  Ug --> PhD["E10 phd_path（可选）"]
+  Ug --> OC["E11 offer_compare（P03）"]
+  PhD --> OC
+  JCg -->|jc_work| J0["E12 job_pick"]
+  OC --> J0["E12 job_pick"]
+
+  %% 职场：第三年 + 裁员(P04) → 事业中期
+  J0 --> Wy["E13 work_y3"]
+  Wy -->|w_layoff| LO["P04 work_layoff"] --> Cs["E14 career_split"]
+  Wy -->|w_climb / w_balance / w_burn| Cs
+  Wy -->|w_quit_city| Rm2["E15 romance_start"]
+  Cs --> Rm2
+
+  %% 婚恋/家庭：住房(P05) → 生育
+  Rm2 --> Bd["E16 bond_pair"] --> Mr["E17 marry_scene"] --> HB["P05 housing_buy"] --> Kd["E18 kids_scene"]
+
+  %% 中年链：P06–P09 串行 → 老年收束
+  Kd --> Mf["E19 midlife_fork"]
+  Mf --> PI["P06 parent_illness"]
+  PI --> CS["caregiving_strain"]
+  PI --> SV["caregiving_service"]
+  PI --> CB["caregiving_boundary"]
+  CS --> EN["P07 empty_nest"]
+  SV --> EN
+  CB --> EN
+  EN --> RT["P08 retire_hang"]
+  RT --> CR["P09 community_role"]
+  CR --> Ec["elder_care"]
+
+  %% 老年结局：end_elder_*（含 P10 legacy）
+  Ec --> Eend["E20 18类老年结局 end_elder_*（含 caregiver/mortgage/rehab/legacy）"]
 ```
 
 **读图说明**：
 
-- **E10**：仅当 `uni_grad` 选择 **`u_phd`** 时出现 `phd_path`；两选项均汇入 **E11**。  
-- **E12**：`w_burn` / `w_quit_city` 不再进中途结局；分别汇入 **E13** 或 **E14**。  
-- **E13**：`c_mogul` / `c_academic` / `c_go_on` 均进入 **E14**，主线继续。  
-- **E17**：`k_continue_warm` 仅 **跳过提前收束**，进入 **E18**。  
-- **E19**：在 `elder_care` 按条件展示多条老年收束；**十四类结局均为老年生活主题**（多条件可同时满足时，玩家择一收束）。
+- **E10**：仅当 `uni_grad` 选择 **`u_phd`** 时出现 `phd_path`；两选项均汇入 **E11**（`offer_compare`）。  
+- **E13**：`w_burn` / `w_quit_city` 不再进中途结局；分别汇入 **E14** 或 **E15**。  
+- **E14**：`c_mogul` / `c_academic` / `c_go_on` 均进入 **E15**，主线继续。  
+- **E17**：`m_yes/m_no` 先到 `housing_buy`（P05）再到 `kids_scene`。  
+- **E19**：中年后半程固定串行经过 P06–P09；在 `elder_care` 按条件展示多条老年收束；**十五类结局均为老年生活主题**（多条件可同时满足时，玩家择一收束）。
 
 ---
 

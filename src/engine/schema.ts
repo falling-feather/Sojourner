@@ -77,6 +77,8 @@ export const ThresholdCheckSchema = z.object({
   kind: z.literal('threshold'),
   id: z.string(),
   label: z.string(),
+  /** static：用 bands 的 min/max；stressSplit：按当前压力动态切三档，bands 须恰好 3 条且顺序为 失常/正常/超常 */
+  bandMode: z.enum(['static', 'stressSplit']).optional(),
   modifiers: CheckModifiersSchema.optional(),
   bands: z
     .array(

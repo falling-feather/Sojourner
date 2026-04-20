@@ -41,7 +41,15 @@ export function validateStoryGraph(story: Story): void {
             for (const b of ch.check.bands) {
               assertNextExists(story, scenes, st.id, b.next)
             }
-            validateBandsCover0to100(st.id, sc.id, ch.check.id, ch.check.bands)
+            if (ch.check.bandMode === 'stressSplit') {
+              if (ch.check.bands.length !== 3) {
+                throw new Error(
+                  `场景 ${st.id}/${sc.id} 检定「${ch.check.id}」bandMode stressSplit 须恰好 3 条 band（失常/正常/超常）`,
+                )
+              }
+            } else {
+              validateBandsCover0to100(st.id, sc.id, ch.check.id, ch.check.bands)
+            }
           }
         }
       }
