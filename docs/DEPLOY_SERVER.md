@@ -25,7 +25,8 @@
 1. 安装 **Node.js LTS**（建议 20.x 或 22.x），安装时勾选 **npm**。
 2. 将本仓库克隆或拷贝到服务器目录，例如 `D:\apps\A-life`。
 3. 在项目根目录执行一次依赖安装：  
-   `npm ci`（有 `package-lock.json` 时）或 `npm install`。
+   `npm ci`（有 `package-lock.json` 时）或 `npm install`。  
+   仓库根目录含 **`.npmrc`**（`legacy-peer-deps=true`），用于在 **Vite 8** 下安装 `vite-plugin-pwa`（上游尚未更新 peer 范围）；与 GitHub Actions 行为一致。
 
 ## 五、一键构建并启动（推荐）
 
