@@ -1,7 +1,7 @@
 import { getScene } from '@/engine/machine'
-import type { GlobalState } from '@/engine/types'
 import { useGameStore } from '@/store/gameStore'
 import { NarrativeView } from '@/ui/NarrativeView'
+import { EndingStatsHex } from '@/ui/EndingStatsHex'
 
 /** 决断点 key → 简短中文说明（未知 key 仍显示原名） */
 const FLAG_LABELS: Record<string, string> = {
@@ -16,41 +16,13 @@ function labelFlag(key: string): string {
   return FLAG_LABELS[key] ?? key
 }
 
-function EndingStats({ state }: { state: GlobalState }) {
-  const s = state.stats
-  return (
-    <div className="ending-stats" aria-label="本局数值快照">
-      <span className="ending-stats__item">压力 {Math.round(s.stress)}</span>
-      <span className="ending-stats__sep" aria-hidden="true">
-        ·
-      </span>
-      <span className="ending-stats__item">健康负债 {Math.round(s.healthDebt)}</span>
-      <span className="ending-stats__sep" aria-hidden="true">
-        ·
-      </span>
-      <span className="ending-stats__item">支持 {Math.round(s.support)}</span>
-      <span className="ending-stats__sep" aria-hidden="true">
-        ·
-      </span>
-      <span className="ending-stats__item">财力 {Math.round(s.wealth)}</span>
-      <span className="ending-stats__sep" aria-hidden="true">
-        ·
-      </span>
-      <span className="ending-stats__item">学业/事业 {Math.round(s.career)}</span>
-      <span className="ending-stats__sep" aria-hidden="true">
-        ·
-      </span>
-      <span className="ending-stats__item">运气 {Math.round(s.luck)}</span>
-    </div>
-  )
-}
-
 export function EndingScreen() {
   const story = useGameStore((s) => s.story)
   const stageId = useGameStore((s) => s.stageId)
   const sceneId = useGameStore((s) => s.sceneId)
   const goTitle = useGameStore((s) => s.goTitle)
   const startGame = useGameStore((s) => s.startGame)
+  const playerName = useGameStore((s) => s.playerName)
   const state = useGameStore((s) => s.state)
 
   const scene = getScene(story, stageId, sceneId)
@@ -61,8 +33,8 @@ export function EndingScreen() {
 
   const endingTheme = scene?.title?.trim()
   const heroSub = endingTheme
-    ? `本局以「${endingTheme}」收束。下方为关键决断点、长期行为标签与本局六维数值快照；最末是本篇结局正文。`
-    : '下方为关键决断点、长期行为标签与本局六维数值快照；最末是本篇结局正文。'
+    ? `本局以「${endingTheme}」收束。下方为关键决断点、长期行为标签与本局六维得分示意；最末是本篇结局正文。`
+    : '下方为关键决断点、长期行为标签与本局六维得分示意；最末是本篇结局正文。'
 
   return (
     <div className="screen screen--ending screen--ending--in">
@@ -70,8 +42,13 @@ export function EndingScreen() {
         <header className="ending-hero">
           <p className="ending-hero__eyebrow">终局</p>
           <h1 className="ending-hero__title">你的一生 · 落幕</h1>
+          {playerName ? (
+            <p className="ending-hero__sub" style={{ marginTop: 8 }}>
+              {playerName}，你的结局如下。
+            </p>
+          ) : null}
           <p className="ending-hero__sub">{heroSub}</p>
-          <EndingStats state={state} />
+          <EndingStatsHex state={state} />
         </header>
 
         <div className="ending-grid">

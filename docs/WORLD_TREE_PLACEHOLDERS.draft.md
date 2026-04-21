@@ -1,12 +1,12 @@
-# 占位事件节点与世界树（策划草稿）
+# 世界树（策划草稿）
 
-> **状态**：本文件用于管理「计划节点」；其中 **P02 / P04 已实装**（见下表），其余仍为占位。落地到 `content/story.json` 后需跑 `npm run validate:story`，并同步 [`EVENT_BRANCHES.draft.md`](EVENT_BRANCHES.draft.md) §11。
+> **状态**：本文件用于描述「世界树」与关键分支点；P01–P10 已全部实装。落地到 `content/story.json` 后需跑 `npm run validate:story`，并同步 [`EVENT_BRANCHES.draft.md`](EVENT_BRANCHES.draft.md) §11。
 
 ---
 
 ## 1. 与主线的关系
 
-当前主线仍是一条时间轴：**诞生 → … → 高考 → 大学 → 职场 → 婚恋/家庭 → 中年 → 老年收束**。下表节点为 **在既有阶段之间或之内增加的「散叶」**，用于拉长决策链、让属性/标签更频繁地反馈到叙事。
+当前主线仍是一条时间轴：**诞生 → … → 高考 → 大学 → 职场 → 婚恋/家庭 → 中年 → 老年收束**。本文件关注的是：**不增加深度**（不再继续加长时间轴），而是在既有枢纽节点旁边增加更多“横向分支/世界线差分”（广度），并允许部分世界线在后续节点**合并**或保持差异。
 
 ---
 
@@ -29,7 +29,7 @@
 
 ## 3. 世界树结构（示意）
 
-下图表示 **已落地** 与 **仍占位** 的叉路：实线为已落地，虚线为占位。
+下图用于快速识别“哪些节点会分叉”。后续若要强调“广度”，应把分叉点画成**并列分支**，而不是把时间轴继续往下拉长。
 
 ```mermaid
 graph LR
@@ -54,6 +54,70 @@ graph LR
   E --> E2["P09: community_role"]
   E --> E3["P10: end_elder_legacy"]
 ```
+
+## 3.1 高考后“增加广度”的世界树（示意，不增加深度）
+
+把“高考后到老年”视为若干**枢纽层**（大学 / 毕业&offer / 职场 / 家庭 / 中年 / 老年），每一层横向展开多条世界线；但层级数量不变（不加深度），世界线可在后续层**合并**。
+
+```mermaid
+graph LR
+  GK["高考节点: gk_gate -> gk_before"]
+  U["大学枢纽: uni_y1/uni_major_fork/uni_grad"]
+  OC["毕业枢纽: offer_compare -> job_pick"]
+  W["职场枢纽: work_y3(+可选 work_layoff)"]
+  F["家庭枢纽: housing_buy -> kids_scene"]
+  ML["中年枢纽: midlife_fork (+P06..P09)"]
+  EL["老年枢纽: elder_care -> endings"]
+
+  GK --> U
+  U --> OC
+  OC --> W
+  W --> F
+  F --> ML
+  ML --> EL
+
+  %% 横向世界线（示意）：同层分叉，后续可合并
+  GK --> WL_ART["世界线: 艺考/艺术院校 (art_admit)"]
+  GK --> WL_JC["世界线: 专科/专升本 (专科路径/专升本)"]
+  GK --> WL_STD["世界线: 常规高考 (gk_tier/学业积淀)"]
+
+  WL_ART --> U
+  WL_JC --> U
+  WL_STD --> U
+
+  U --> WL_MAJOR["专业线: 理工/商科/人文/作品集驱动 (P01 tags)"]
+  WL_MAJOR --> OC
+
+  OC --> WL_OFFER["offer线: 平台/匹配/现金流 (P03)"]
+  WL_OFFER --> W
+
+  W --> WL_WORK["职场线: 晋升/降速/裁员转向/换城 (P04+条件)"]
+  WL_WORK --> F
+
+  F --> WL_HOME["家庭线: 买房/租房/回家附近 + 生育/丁克/不婚 (P05+kids)"]
+  WL_HOME --> ML
+
+  ML --> WL_MID["中年线: 照护/空巢/退休/社群/传帮带 等 (P06..P09 扩展)"]
+  WL_MID --> EL
+```
+
+### 3.2 独特世界线（单独拉出的分支示意）
+
+以下分支会在某些条件下“形成更强的独特叙事轨道”（并不增加深度，只是在某一层出现额外横向分流），并在老年结局入口上体现差异：
+
+- **艺术院校世界线**
+  - **开始条件**：`flag art_admit = true`（`gk_gate` 的 `art_exam` 成功）
+  - **持续差分**：`uni_major_fork` 的 `m_art_track`（作品集驱动）可见；老年可走更偏作品/legacy 的入口（如 `elder_cap_legacy`）
+  - **结束状态**：可与常规路线在 `uni_grad`/`offer_compare` 合并，也可保持差分到老年入口
+
+- **专科→专升本世界线**
+  - **开始条件**：`tag 专科路径`（`gk_rl/from_rl_jc`）进入 `juniorCollege`
+  - **合并点**：`jc_upgrade` 回到 `university/uni_y1`（与常规大学线合并）
+  - **独特轨道**：直接就业 `jc_work` 可绕开部分“校园叙事”，在 `offer_compare` 处与他线汇聚
+
+- **照护/康复世界线**
+  - **开始条件**：`tag 照护者` / `tag 康复计划`（来自 P06 扩展分叉）
+  - **结束状态**：老年入口可直达更专属结局（`end_elder_caregiver` / `end_elder_rehab`）
 
 ---
 

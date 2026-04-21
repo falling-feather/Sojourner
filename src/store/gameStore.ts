@@ -31,9 +31,10 @@ type PendingNav = { stageId: string; sceneId: string }
 
 type GameStore = {
   story: Story
-  phase: 'title' | 'playing' | 'ending'
+  phase: 'title' | 'playing' | 'ending' | 'gm'
   rngSeed: string
   rng: ReturnType<typeof createRng>
+  playerName: string | null
   state: GlobalState
   stageId: string
   sceneId: string
@@ -41,10 +42,16 @@ type GameStore = {
   pendingNav: PendingNav | null
   startGame: () => void
   goTitle: () => void
+  setPlayerName: (name: string) => void
+  enterGm: () => void
   pickChoice: (choiceId: string) => void
   dismissCheck: () => void
   restartFromEnding: () => void
   navigateAuto: (next: Next) => void
+  gmSetStats: (next: Partial<GlobalState['stats']>) => void
+  gmToggleFlag: (key: string) => void
+  gmSetTags: (tags: string[]) => void
+  gmGo: (stageId: string, sceneId: string) => void
 }
 
 function applyArrival(
@@ -78,6 +85,7 @@ export const useGameStore = create<GameStore>((set, get) => ({
   phase: 'title',
   rngSeed: story.meta.rngSeedDefault ?? 'life',
   rng: createRng(story.meta.rngSeedDefault ?? 'life'),
+  playerName: null,
   state: cloneInitial(story),
   stageId: story.meta.start.stageId,
   sceneId: story.meta.start.sceneId,
@@ -92,6 +100,7 @@ export const useGameStore = create<GameStore>((set, get) => ({
       rng: createRng(story.meta.rngSeedDefault ?? 'life'),
       stageId: story.meta.start.stageId,
       sceneId: story.meta.start.sceneId,
+      playerName: null,
       pendingCheck: null,
       pendingNav: null,
     }),
@@ -109,9 +118,19 @@ export const useGameStore = create<GameStore>((set, get) => ({
       stageId,
       sceneId,
       phase: 'playing',
+      playerName: null,
       pendingCheck: null,
       pendingNav: null,
     })
+  },
+
+  setPlayerName: (name: string) => {
+    const v = name.trim()
+    set({ playerName: v.length ? v.slice(0, 24) : null })
+  },
+
+  enterGm: () => {
+    set({ phase: 'gm' })
   },
 
   pickChoice: (choiceId: string) => {
@@ -160,5 +179,42 @@ export const useGameStore = create<GameStore>((set, get) => ({
     set({
       ...applyArrival({ ...g }, stageId, sceneId),
     })
+  },
+
+  gmSetStats: (next) => {
+    const g = get()
+    set({
+      state: {
+        ...g.state,
+        stats: { ...g.state.stats, ...next },
+      },
+    })
+  },
+
+  gmToggleFlag: (key) => {
+    const g = get()
+    const cur = g.state.flags[key] === true
+    set({
+      state: {
+        ...g.state,
+        flags: { ...g.state.flags, [key]: !cur },
+      },
+    })
+  },
+
+  gmSetTags: (tags) => {
+    const g = get()
+    const uniq = Array.from(new Set(tags.map((t) => t.trim()).filter(Boolean)))
+    set({
+      state: {
+        ...g.state,
+        tags: uniq,
+      },
+    })
+  },
+
+  gmGo: (stageId: string, sceneId: string) => {
+    const g = get()
+    set({ ...applyArrival({ ...g }, stageId, sceneId), phase: 'playing' })
   },
 }))

@@ -1,6 +1,9 @@
 import { useGlobalBgm } from '@/audio/globalBgmContext'
 
-/** 仅游玩页：右下角唱片 + 曲名（过长则轮播）；音频由 GlobalBgmProvider 统一管理 */
+/**
+ * 游玩 / GM 阶段右下角唱片控件；音频仍由 GlobalBgmProvider 全局播放，
+ * 标题与终局页不挂载本组件，避免遮挡画面，但 BGM 不中断。
+ */
 export function BgmDock() {
   const { isPlaying, currentTitle, bgmEnabled, toggleFromDock } =
     useGlobalBgm()

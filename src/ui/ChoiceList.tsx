@@ -42,6 +42,8 @@ export function ChoiceList({
 
   if (list.length === 0) return null
 
+  /** 叙事未结束时保持占位隐藏，避免未加 enter 类时选项先闪现再被动画重置 */
+  const pendingHide = !reveal && !reducedMotion
   const showEnter = reveal && !reducedMotion
   const exiting = pickPhase === 'exiting' && !reducedMotion
 
@@ -50,6 +52,7 @@ export function ChoiceList({
       <ul
         className={[
           'choice-list__ul',
+          pendingHide ? 'choice-list__ul--pending' : '',
           showEnter ? 'choice-list__ul--enter' : '',
           exiting ? 'choice-list__ul--exiting' : '',
         ]

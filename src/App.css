@@ -153,7 +153,26 @@ body {
   animation: titleHeroPop 1.56s cubic-bezier(0.22, 1, 0.36, 1) both;
 }
 
-.title-hero__below {
+.title-hero__en {
+  margin: 0.65rem 0 0;
+  font-family: var(--font-body);
+  font-size: clamp(1rem, 2.4vw, 1.2rem);
+  font-weight: 400;
+  letter-spacing: 0.14em;
+  color: #c8c8c8;
+  opacity: 0;
+  transform: translateY(0.75rem);
+  visibility: hidden;
+  pointer-events: none;
+}
+
+.title-hero__en--in {
+  visibility: visible;
+  pointer-events: auto;
+  animation: titleLineIn 1.05s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+
+.title-hero__rest {
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -162,32 +181,29 @@ body {
   pointer-events: none;
 }
 
-.screen--title--ready .title-hero__below {
-  visibility: visible;
-  pointer-events: auto;
-}
-
-.title-hero__below > * {
+.title-hero__rest > * {
   opacity: 0;
   transform: translateY(1rem);
 }
 
-.screen--title--ready .title-hero__below > * {
+.title-hero__rest--in {
+  visibility: visible;
+  pointer-events: auto;
+}
+
+.title-hero__rest--in > * {
   animation: titleLineIn 1.24s cubic-bezier(0.22, 1, 0.36, 1) forwards;
 }
 
-/* DOM：Sojourner → 眉题 → CTA；动画顺序与 DOM 一致（先英字后中文标语） */
-.screen--title--ready .title-hero__en {
+/* 眉题 → CTA → 提示 */
+.title-hero__rest--in .title-hero__eyebrow {
   animation-delay: 0.08s;
 }
-.screen--title--ready .title-hero__eyebrow {
-  animation-delay: 0.24s;
+.title-hero__rest--in .title-hero__cta {
+  animation-delay: 0.26s;
 }
-.screen--title--ready .title-hero__cta {
-  animation-delay: 0.44s;
-}
-.screen--title--ready .title-hero__hint {
-  animation-delay: 0.68s;
+.title-hero__rest--in .title-hero__hint {
+  animation-delay: 0.48s;
 }
 
 .title-hero__eyebrow {
@@ -197,15 +213,6 @@ body {
   font-weight: 500;
   letter-spacing: 0.18em;
   color: #9a9a9a;
-}
-
-.title-hero__en {
-  margin: 0.65rem 0 0;
-  font-family: var(--font-body);
-  font-size: clamp(1rem, 2.4vw, 1.2rem);
-  font-weight: 400;
-  letter-spacing: 0.14em;
-  color: #c8c8c8;
 }
 
 .title-hero__cta {
@@ -262,8 +269,8 @@ body {
   transform: translateY(0.5rem);
 }
 
-.screen--title--ready .title-credits {
-  animation: titleLineIn 1.3s cubic-bezier(0.22, 1, 0.36, 1) 0.9s forwards;
+.screen--title--credits .title-credits {
+  animation: titleLineIn 1.3s cubic-bezier(0.22, 1, 0.36, 1) 0.55s forwards;
 }
 
 @keyframes titleHeroPop {
@@ -839,7 +846,7 @@ body {
   font-weight: 600;
 }
 
-/* 游玩页 · 唱片 BGM（仅 PlayScreen） */
+/* 全局 · 唱片 BGM（标题 / 游玩 / 终局共用） */
 
 .bgm-dock {
   position: fixed;
@@ -1023,30 +1030,66 @@ body {
   line-height: 1.5;
 }
 
-.ending-stats {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: baseline;
-  gap: 0.35rem 0.5rem;
-  margin: 1rem 0 0;
-  padding: 0.65rem 0.85rem;
-  max-width: 52rem;
-  font-family: var(--font-ui);
-  font-size: 0.82rem;
-  letter-spacing: 0.02em;
-  color: #4a453c;
+.ending-hex {
+  margin: 1.15rem 0 0;
+  padding: 0.85rem 1rem 1rem;
+  max-width: 22rem;
+  margin-left: auto;
+  margin-right: auto;
+  text-align: center;
   background: rgba(232, 228, 220, 0.55);
   border: 1px solid #e4ddd4;
-  border-radius: 10px;
+  border-radius: 14px;
 }
 
-.ending-stats__item {
-  white-space: nowrap;
+.ending-hex__caption {
+  margin: 0 0 0.35rem;
+  font-family: var(--font-ui);
+  font-size: 0.72rem;
+  line-height: 1.45;
+  letter-spacing: 0.02em;
+  color: #6b645a;
 }
 
-.ending-stats__sep {
-  color: #b8b0a6;
-  user-select: none;
+.ending-hex__svg {
+  width: min(100%, 240px);
+  height: auto;
+  display: block;
+  margin: 0 auto;
+}
+
+.ending-hex__grid {
+  fill: none;
+  stroke: #d8d0c4;
+  stroke-width: 1.1;
+}
+
+.ending-hex__grid--inner {
+  stroke: #e8e2d8;
+  stroke-width: 0.85;
+}
+
+.ending-hex__axis {
+  stroke: #e0d8cc;
+  stroke-width: 0.75;
+}
+
+.ending-hex__area {
+  fill: url(#endingHexFill);
+  stroke: none;
+}
+
+.ending-hex__stroke {
+  stroke: #8b7355;
+  stroke-width: 1.35;
+  stroke-linejoin: round;
+}
+
+.ending-hex__label {
+  font-family: var(--font-ui);
+  font-size: 7.5px;
+  fill: #4a453c;
+  letter-spacing: 0.02em;
 }
 
 .ending-grid {
@@ -1144,6 +1187,12 @@ body {
 
 /* —— 游玩：选项浮现与碎裂 —— */
 
+.choice-list__ul--pending .choice-list__li {
+  opacity: 0;
+  transform: translateY(10px);
+  pointer-events: none;
+}
+
 .choice-list__ul--enter .choice-list__li {
   opacity: 0;
   transform: translateY(22px);
@@ -1191,30 +1240,40 @@ body {
 
 @media (prefers-reduced-motion: reduce) {
   .title-hero__h-text,
-  .title-hero__below > *,
-  .screen--title--ready .title-credits,
+  .title-hero__en--in,
+  .title-hero__rest--in > *,
+  .screen--title--credits .title-credits,
   .choice-list__ul--enter .choice-list__li,
+  .choice-list__ul--pending .choice-list__li,
   .screen--ending--in,
   .narrative--typing .narrative__p:last-child::after {
     animation: none !important;
   }
 
-  .title-hero__below {
+  .title-hero__en {
     visibility: visible;
     pointer-events: auto;
-  }
-
-  .title-hero__below > * {
     opacity: 1 !important;
     transform: none !important;
   }
 
-  .screen--title--ready .title-credits {
+  .title-hero__rest {
+    visibility: visible;
+    pointer-events: auto;
+  }
+
+  .title-hero__rest > * {
+    opacity: 1 !important;
+    transform: none !important;
+  }
+
+  .screen--title--credits .title-credits {
     opacity: 0.55 !important;
     transform: none !important;
   }
 
-  .choice-list__ul--enter .choice-list__li {
+  .choice-list__ul--enter .choice-list__li,
+  .choice-list__ul--pending .choice-list__li {
     opacity: 1 !important;
     transform: none !important;
   }

@@ -23,6 +23,22 @@ export function GlobalBgmProvider({ children }: { children: ReactNode }) {
 
   const track = BGM_TRACKS[trackIndex % BGM_TRACKS.length]
 
+  /** 浏览器自动播放策略：在任意首次用户手势时尝试恢复播放 */
+  useEffect(() => {
+    const tryResume = () => {
+      const snap = getGameSettingsSnapshot()
+      if (!snap.bgmEnabled) return
+      const a = audioRef.current
+      if (a?.paused) void a.play().catch(() => {})
+    }
+    window.addEventListener('pointerdown', tryResume, { capture: true })
+    window.addEventListener('keydown', tryResume, { capture: true })
+    return () => {
+      window.removeEventListener('pointerdown', tryResume, { capture: true })
+      window.removeEventListener('keydown', tryResume, { capture: true })
+    }
+  }, [])
+
   useEffect(() => {
     const a = new Audio()
     a.preload = 'auto'

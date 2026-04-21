@@ -160,7 +160,7 @@
 
 **权威数据源**：[`content/story.json`](../content/story.json)（`meta.version`）；改稿后务必运行 `npm run validate:story`。
 
-`meta.version` 为 **2.6.0**，`estimatedMinutes` 为 **[8, 15]**。以下与当前 JSON **意图对齐**；**20 个交互点**用代号 **E01–E20** 标识（每个代号对应**至少一次玩家决策或一次检定**）。
+`meta.version` 为 **2.7.0**，`estimatedMinutes` 为 **[8, 15]**。以下与当前 JSON **意图对齐**；**20 个交互点**用代号 **E01–E20** 标识（每个代号对应**至少一次玩家决策或一次检定**）。
 
 **收束侧重**：无中途提前结局；主线推进至 **`elder_care`**，再在 **十四类「老年生活」结局**（`end_elder_*`）中择一收束（见 §11.2 结局库）。**v2.2.0** 起：`ms_fork` 增 **`ms_voc`（技能线）**；`midlife_fork` 各选项带 **中年标签**（`还乡晚年` / `都市扎根` / `余热创业`）；`elder_care` 增 **标签/高支持** 驱动的额外收束；`visibleWhen.flag` 对 **`false`** 的判定见 §3.1（未写入的布尔 flag 不阻塞「未婚/未育」类选项）。**v2.3.0** 起：高考检定 **`bandMode: stressSplit`**（智商/积淀 + 压力动态分界，UI 不展示骰值，见 §11.3）。
 
@@ -193,7 +193,7 @@
 | **E08** | `uni_y1` | 大学一年级 | 3：`u_club` / `u_gpa` / `u_intern`；其中 `u_intern` → **P02** `uni_intern_crunch`；其余两项（及艺考成功 `uni_art_y1`）→ **P01** `uni_major_fork` |
 | **E09** | `uni_grad` | 毕业去向 | 3：`u_phd` / `u_work` / `u_public`（毕业前会经过 **P01** 专业岔路；实习线会经过 **P02**） |
 | **E10** | `phd_path` **或** 跳过 | 读研出站 | **若选 `u_phd`**：`phd_faculty` / `phd_corp` 均 → **P03** `offer_compare`（学术志向写入 `academic` + `学术线`）；**若未读研** 本点不存在 |
-| **E11** | `offer_compare` | 机会取舍（P03） | 3：平台/匹配/现金流 → `job_pick` |
+| **E11** | `offer_compare` | 机会取舍（P03） | 3～6：平台/匹配/现金流；条件分支：自由职业（作品集驱动）/体制倾向/证书流 → 对应起步场景 |
 | **E12** | `job_pick` | 第一份工作 | 3：`j_big` / `j_startup` / `j_stable` |
 | **E13** | `work_y3` | 工作第三年 | 2～5：`w_climb` / `w_balance`；**P04**：`w_layoff`（`stress≥50` 且 `wealth≤40`）→ `work_layoff`；条件项 `w_burn` / `w_quit_city` |
 | **E14** | `career_split` | 事业中期 | 最多 3：`c_mogul` / `c_go_on` / `c_academic`（无中途结局，均继续） |
@@ -202,7 +202,7 @@
 | **E17** | `marry_scene` → `housing_buy` | 婚否 + 住房决策（P05） | `m_yes/m_no` 后进入 `housing_buy`（买房/租房/回到家附近）再到 `kids_scene` |
 | **E18** | `kids_scene` | 生育 / 丁克 / 延展 | 已婚：`k_yes` / `k_dink`；未婚：`k_skip`；条件 **`k_continue_warm`** 仍继续主线 |
 | **E19** | `midlife_fork` | 中年后半程（P06–P09 扩展树） | `midlife_fork` 后进入 P06，并在照护/空巢/退休/社群节点出现多分支（见 §11.2.1 与 §11.5） |
-| **E20** | **结局库** | **十八类** `isEnding`（均为**老年生活**主题） | 见下表（新增 `end_elder_caregiver` / `end_elder_mortgage` / `end_elder_rehab`） |
+| **E20** | **结局库** | **二十一类** `isEnding`（均为**老年生活**主题） | 见下表（新增 `end_elder_artist` / `end_elder_system` / `end_elder_craft_brand`） |
 
 ### 11.2.1 分支速查（入口 / 触发 / 去向）
 
@@ -233,7 +233,10 @@
 - **P03 Offer 取舍**
   - **入口**：`careerEarly/offer_compare`
   - **触发**：`uni_grad` 选 `u_work/u_public`；以及专科 `jc_grad` 选 `jc_work`
-  - **去向**：三选项回 `careerEarly/job_pick`（平台/匹配/现金流）
+  - **去向**：平台/匹配/现金流 → `job_pick`；此外在满足条件时可进入更独特的起步分支（仍会快速汇入主线）：
+    - **自由职业**：需 `tag` **作品集驱动** → `careerEarly/freelance_start`（写入 `tag: 自由职业`）
+    - **体制路径**：需 `tag` **体制倾向** → `careerEarly/civil_entry`（写入 `tag: 体制内`）
+    - **手艺接单**：需 `tag` **证书流** → `careerEarly/craft_start`（写入 `tag: 工匠口碑/招牌手艺`）
 
 - **P04 裁员/转向**
   - **入口**：`careerEarly/work_y3` 的 `w_layoff`
@@ -285,6 +288,9 @@
 | `end_elder_caregiver` | 照护余生 | **`elder_cap_caregiver`**（`tag` **照护者**） |
 | `end_elder_mortgage` | 还贷到老 | **`elder_cap_mortgage`**（`tag` **房贷** 且 `wealth≤35`） |
 | `end_elder_rehab` | 养回身体 | **`elder_cap_rehab`**（`tag` **康复计划**） |
+| `end_elder_artist` | 创作到老 | **`elder_cap_artist_late`**（`tag` **自由职业**） |
+| `end_elder_system` | 体制晚年 | **`elder_cap_system_late`**（`tag` **体制内**） |
+| `end_elder_craft_brand` | 招牌手艺 | **`elder_cap_craft_late`**（`tag` **招牌手艺**） |
 | `end_elder_legacy` | 留下一点东西 | **`elder_cap_legacy`**（`luck≥65`） |
 
 ---
@@ -349,6 +355,9 @@
 | `elder_care` | `elder_cap_caregiver` | `tag` **照护者** |
 | `elder_care` | `elder_cap_mortgage` | `tag` **房贷** 且 `wealth` **≤ 35** |
 | `elder_care` | `elder_cap_rehab` | `tag` **康复计划** |
+| `elder_care` | `elder_cap_artist_late` | `tag` **自由职业** |
+| `elder_care` | `elder_cap_system_late` | `tag` **体制内** |
+| `elder_care` | `elder_cap_craft_late` | `tag` **招牌手艺** |
 | `elder_care` | `elder_cap_legacy` | `luck` **≥ 65** |
 | `elder_care` | `elder_cap_quiet` | （无条件，始终可选） |
 
@@ -389,6 +398,12 @@ flowchart TB
   PhD --> OC
   JCg -->|jc_work| J0["E12 job_pick"]
   OC --> J0["E12 job_pick"]
+  OC -->|自由职业| FL["freelance_start"]
+  OC -->|体制路径| CV["civil_entry"]
+  OC -->|手艺接单| CF["craft_start"]
+  FL --> J0
+  CV --> J0
+  CF --> J0
 
   %% 职场：第三年 + 裁员(P04) → 事业中期
   J0 --> Wy["E13 work_y3"]
@@ -414,7 +429,7 @@ flowchart TB
   CR --> Ec["elder_care"]
 
   %% 老年结局：end_elder_*（含 P10 legacy）
-  Ec --> Eend["E20 18类老年结局 end_elder_*（含 caregiver/mortgage/rehab/legacy）"]
+  Ec --> Eend["E20 21类老年结局 end_elder_*（含 caregiver/mortgage/rehab/artist/system/craft/legacy）"]
 ```
 
 **读图说明**：
@@ -423,7 +438,7 @@ flowchart TB
 - **E13**：`w_burn` / `w_quit_city` 不再进中途结局；分别汇入 **E14** 或 **E15**。  
 - **E14**：`c_mogul` / `c_academic` / `c_go_on` 均进入 **E15**，主线继续。  
 - **E17**：`m_yes/m_no` 先到 `housing_buy`（P05）再到 `kids_scene`。  
-- **E19**：中年后半程固定串行经过 P06–P09；在 `elder_care` 按条件展示多条老年收束；**十五类结局均为老年生活主题**（多条件可同时满足时，玩家择一收束）。
+- **E19**：中年后半程在 P06 出现多分支后汇入；在 `elder_care` 按条件展示多条老年收束；**二十一类结局均为老年生活主题**（多条件可同时满足时，玩家择一收束）。
 
 ---
 

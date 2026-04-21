@@ -7,14 +7,12 @@ import { Hud } from '@/ui/Hud'
 import { NarrativeView } from '@/ui/NarrativeView'
 import { ChoiceList } from '@/ui/ChoiceList'
 import { CheckToast } from '@/ui/CheckToast'
-import { getStoryProgress } from '@/ui/storyProgress'
 import {
   ConfirmDialog,
   PauseMenu,
   SettingsPanel,
   type MenuLayer,
 } from '@/ui/GameMenuLayer'
-import { BgmDock } from '@/ui/BgmDock'
 import { useGameSettings } from '@/settings/gameSettings'
 import { textSpeedToMsPerChar } from '@/settings/gameSettingsStore'
 
@@ -32,12 +30,10 @@ export function PlayScreen() {
   const navigateAuto = useGameStore((s) => s.navigateAuto)
   const goTitle = useGameStore((s) => s.goTitle)
   const startGame = useGameStore((s) => s.startGame)
-
   const [menu, setMenu] = useState<MenuLayer>('none')
   const [typewriterDone, setTypewriterDone] = useState(false)
   const [choicesReveal, setChoicesReveal] = useState(false)
   const [pickPhase, setPickPhase] = useState<'idle' | 'exiting'>('idle')
-
   const reducedMotion = usePrefersReducedMotion()
   const { settings } = useGameSettings()
   const pickTimerRef = useRef<number | null>(null)
@@ -45,34 +41,34 @@ export function PlayScreen() {
 
   const scene = getScene(story, stageId, sceneId)
   const st = story.stages.find((s) => s.id === stageId)
-  const { step, total } = getStoryProgress(story, stageId, sceneId)
-
   const sceneKey = `${stageId}::${sceneId}`
   const narrativeParas = scene?.narrative ?? []
 
   const closeAllMenus = useCallback(() => setMenu('none'), [])
 
   useEffect(() => {
-    setTypewriterDone(false)
-    setChoicesReveal(false)
-    setPickPhase('idle')
-    if (pickTimerRef.current) {
-      window.clearTimeout(pickTimerRef.current)
-      pickTimerRef.current = null
-    }
+    queueMicrotask(() => {
+      setTypewriterDone(false)
+      setChoicesReveal(false)
+      setPickPhase('idle')
+      if (pickTimerRef.current) {
+        window.clearTimeout(pickTimerRef.current)
+        pickTimerRef.current = null
+      }
+    })
   }, [sceneKey])
 
   useEffect(() => {
     if (!typewriterDone) {
-      setChoicesReveal(false)
+      queueMicrotask(() => setChoicesReveal(false))
       return
     }
     const list = scene ? visibleChoices(scene.choices, state) : []
     if (list.length === 0) {
-      setChoicesReveal(true)
+      queueMicrotask(() => setChoicesReveal(true))
       return
     }
-    const delay = typeInstant ? 0 : 90
+    const delay = 0
     const t = window.setTimeout(() => setChoicesReveal(true), delay)
     return () => window.clearTimeout(t)
   }, [typewriterDone, scene, state, typeInstant])
@@ -158,8 +154,6 @@ export function PlayScreen() {
       <div className="play-frame">
         <Hud
           stageTitle={st?.title ?? '—'}
-          step={step}
-          total={total}
           onMenuClick={() => {
             if (!pendingCheck) setMenu('pause')
           }}
@@ -184,8 +178,6 @@ export function PlayScreen() {
           />
         </div>
       </div>
-
-      <BgmDock />
 
       <CheckToast
         open={!!pendingCheck}

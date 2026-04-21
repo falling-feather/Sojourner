@@ -1,23 +1,29 @@
-import { useEffect, useLayoutEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
 import { useGameStore } from '@/store/gameStore'
 import { usePrefersReducedMotion } from '@/hooks/usePrefersReducedMotion'
 
-/** 开屏第二阶段延迟（毫秒），相对上一版再慢一倍 */
-const TITLE_BELOW_DELAY_MS = 2080
+/** 「过客」主字动画开始后，再出现英文的间隔（毫秒） */
+const TITLE_EN_DELAY_MS = 420
+/** 英文出现后再停顿，再出现眉题 / CTA 等 */
+const TITLE_REST_AFTER_EN_MS = 620
 
 export function TitleScreen() {
   const startGame = useGameStore((s) => s.startGame)
   const reduced = usePrefersReducedMotion()
-  const [heroIn, setHeroIn] = useState(false)
-
-  useLayoutEffect(() => {
-    if (reduced) setHeroIn(true)
-  }, [reduced])
+  const [enIn, setEnIn] = useState(reduced)
+  const [restIn, setRestIn] = useState(reduced)
 
   useEffect(() => {
     if (reduced) return
-    const t = window.setTimeout(() => setHeroIn(true), TITLE_BELOW_DELAY_MS)
-    return () => window.clearTimeout(t)
+    const tEn = window.setTimeout(() => setEnIn(true), TITLE_EN_DELAY_MS)
+    const tRest = window.setTimeout(
+      () => setRestIn(true),
+      TITLE_EN_DELAY_MS + TITLE_REST_AFTER_EN_MS,
+    )
+    return () => {
+      window.clearTimeout(tEn)
+      window.clearTimeout(tRest)
+    }
   }, [reduced])
 
   useEffect(() => {
@@ -32,15 +38,15 @@ export function TitleScreen() {
   }, [startGame])
 
   return (
-    <div className={`screen screen--title ${heroIn ? 'screen--title--ready' : ''}`}>
+    <div className={`screen screen--title ${restIn ? 'screen--title--credits' : ''}`}>
       <div className="title-hero">
         <h1 className="title-hero__h">
           <span className="title-hero__h-text">过客</span>
         </h1>
-        <div className="title-hero__below">
-          <p className="title-hero__en" lang="en">
-            Sojourner
-          </p>
+        <p className={`title-hero__en ${enIn ? 'title-hero__en--in' : ''}`} lang="en">
+          Sojourner
+        </p>
+        <div className={`title-hero__rest ${restIn ? 'title-hero__rest--in' : ''}`}>
           <p className="title-hero__eyebrow">◆ 人生似河，择岸而行 ◆</p>
           <button
             type="button"

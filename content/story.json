@@ -1,7 +1,7 @@
 {
   "meta": {
     "title": "人的一生",
-    "version": "2.6.0",
+    "version": "2.8.1",
     "estimatedMinutes": [8, 15],
     "start": { "stageId": "birth", "sceneId": "birth_hello" },
     "rngSeedDefault": "life-demo"
@@ -32,7 +32,7 @@
           "choices": [
             {
               "id": "birth_flow",
-              "label": "时间开始向前流动",
+              "label": "继续",
               "next": { "kind": "stage", "stageId": "childhood", "sceneId": "child_play" }
             }
           ]
@@ -266,7 +266,7 @@
                     "min": 55,
                     "max": 100,
                     "label": "艺术院校录取",
-                    "next": { "kind": "stage", "stageId": "university", "sceneId": "uni_art_y1" },
+                    "next": { "kind": "scene", "sceneId": "gk_after" },
                     "effects": [
                       { "op": "setFlag", "key": "art_admit", "value": true },
                       { "op": "addTag", "tag": "艺术院校" },
@@ -346,12 +346,12 @@
           "choices": [
             {
               "id": "from_rl",
-              "label": "收拾情绪，去读大学",
+              "label": "收拾情绪，继续往前走",
               "effects": [
                 { "op": "addStat", "stat": "career", "value": 4 },
                 { "op": "addStat", "stat": "stress", "value": 6 }
               ],
-              "next": { "kind": "stage", "stageId": "university", "sceneId": "uni_y1" }
+              "next": { "kind": "scene", "sceneId": "gk_after" }
             },
             {
               "id": "from_rl_jc",
@@ -378,9 +378,9 @@
           "choices": [
             {
               "id": "from_rm",
-              "label": "带着平常心报到",
+              "label": "志愿落定，进入下一段",
               "effects": [{ "op": "addStat", "stat": "career", "value": 8 }],
-              "next": { "kind": "stage", "stageId": "university", "sceneId": "uni_y1" }
+              "next": { "kind": "scene", "sceneId": "gk_after" }
             }
           ]
         },
@@ -398,7 +398,296 @@
                 { "op": "addStat", "stat": "career", "value": 12 },
                 { "op": "addStat", "stat": "stress", "value": 4 }
               ],
+              "next": { "kind": "scene", "sceneId": "gk_after" }
+            }
+          ]
+        },
+        {
+          "id": "gk_after",
+          "narrative": [
+            "高考像一条分界线：它把你从「同一张卷子」里放出来，也把你推向更复杂的地图。",
+            "此刻你终于可以决定：是顺着既定的路报到，还是把手里的能力当成另一条航道。"
+          ],
+          "choices": [
+            {
+              "id": "gka_uni",
+              "label": "去大学报到：先把平台与视野打开",
+              "visibleWhen": { "flag": { "key": "art_admit", "value": false } },
+              "effects": [{ "op": "addStat", "stat": "support", "value": 4 }],
               "next": { "kind": "stage", "stageId": "university", "sceneId": "uni_y1" }
+            },
+            {
+              "id": "gka_art_uni",
+              "label": "去艺术院校报到：把天赋押在作品与审美上",
+              "visibleWhen": { "flag": { "key": "art_admit", "value": true } },
+              "effects": [{ "op": "addStat", "stat": "career", "value": 4 }],
+              "next": { "kind": "stage", "stageId": "university", "sceneId": "uni_art_y1" }
+            },
+            {
+              "id": "gka_skill_job",
+              "label": "先去工作：用技术换现金流，把生活先稳住",
+              "visibleWhen": { "tag": "技能线" },
+              "effects": [
+                { "op": "addStat", "stat": "wealth", "value": 8 },
+                { "op": "addStat", "stat": "stress", "value": 6 },
+                { "op": "addTag", "tag": "技能先行" }
+              ],
+              "next": { "kind": "stage", "stageId": "skillWorld", "sceneId": "sw_entry" }
+            },
+            {
+              "id": "gka_skill_focus",
+              "label": "专注技术：不急着并入主路，先把手艺/技术磨成自己的「底盘」",
+              "visibleWhen": { "tag": "技能线" },
+              "effects": [
+                { "op": "addStat", "stat": "career", "value": 6 },
+                { "op": "addStat", "stat": "stress", "value": 8 },
+                { "op": "addTag", "tag": "技术主线" }
+              ],
+              "next": { "kind": "stage", "stageId": "skillWorld", "sceneId": "sw_pivot" }
+            },
+            {
+              "id": "gka_gap",
+              "label": "停一年：打工/自学/备考，给自己一次重新定向",
+              "effects": [
+                { "op": "addStat", "stat": "stress", "value": -6 },
+                { "op": "addStat", "stat": "luck", "value": 4 },
+                { "op": "addTag", "tag": "间隔年" }
+              ],
+              "next": { "kind": "stage", "stageId": "skillWorld", "sceneId": "sw_gap" }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "skillWorld",
+      "title": "技术世界线",
+      "scenes": [
+        {
+          "id": "sw_entry",
+          "narrative": [
+            "你没有立刻把自己交给「学生身份」。你把会的东西拿出来换钱：修、装、写、剪、做、焊……",
+            "世界很现实：它不问你是不是天才，只问你能不能交付。"
+          ],
+          "choices": [
+            {
+              "id": "sw_entry_merge",
+              "label": "先把这段经历当作过渡：攒点钱，再回到主路",
+              "effects": [
+                { "op": "addStat", "stat": "wealth", "value": 6 },
+                { "op": "addStat", "stat": "support", "value": 4 }
+              ],
+              "next": { "kind": "stage", "stageId": "careerEarly", "sceneId": "job_pick" }
+            },
+            {
+              "id": "sw_entry_deepen",
+              "label": "不把它当过渡：把技术当作长期职业，继续往下挖",
+              "effects": [{ "op": "addStat", "stat": "career", "value": 6 }],
+              "next": { "kind": "scene", "sceneId": "sw_pivot" }
+            }
+          ]
+        },
+        {
+          "id": "sw_gap",
+          "narrative": [
+            "这一年没有统一模板：你一边打工一边自学，一边观察自己真正能坚持的事。",
+            "当别人按学期结算，你按「今晚到底有没有长进」结算。"
+          ],
+          "choices": [
+            {
+              "id": "sw_gap_exam",
+              "label": "再试一次：把这年当跳板，回到升学主路",
+              "effects": [
+                { "op": "addStat", "stat": "career", "value": 6 },
+                { "op": "addStat", "stat": "stress", "value": 6 }
+              ],
+              "next": { "kind": "stage", "stageId": "university", "sceneId": "uni_y1" }
+            },
+            {
+              "id": "sw_gap_skill",
+              "label": "确认方向：把自学沉下去，走技术世界线",
+              "effects": [{ "op": "addTag", "tag": "自学派" }],
+              "next": { "kind": "scene", "sceneId": "sw_pivot" }
+            }
+          ]
+        },
+        {
+          "id": "sw_pivot",
+          "narrative": [
+            "你发现自己真正擅长的不是「考试」，而是「把问题拆开，把结果做出来」。",
+            "接下来你要把这门技术走成哪一种人生？"
+          ],
+          "choices": [
+            {
+              "id": "sw_deepen",
+              "label": "精进技术：考证/刷题/练手，把能力做成硬通货",
+              "effects": [
+                { "op": "addStat", "stat": "career", "value": 10 },
+                { "op": "addTag", "tag": "证书流" }
+              ],
+              "next": { "kind": "stage", "stageId": "careerEarly", "sceneId": "offer_compare" }
+            },
+            {
+              "id": "sw_workshop",
+              "label": "发展小作坊：接单、拉客户，把活做成规模",
+              "effects": [
+                { "op": "addStat", "stat": "wealth", "value": 8 },
+                { "op": "addStat", "stat": "support", "value": 6 },
+                { "op": "addTag", "tag": "小作坊" }
+              ],
+              "next": { "kind": "scene", "sceneId": "sw_workshop2" }
+            },
+            {
+              "id": "sw_apprentice",
+              "label": "收徒带人：把经验变成方法，让别人跟得上你",
+              "effects": [
+                { "op": "addStat", "stat": "support", "value": 10 },
+                { "op": "addTag", "tag": "收徒" }
+              ],
+              "next": { "kind": "scene", "sceneId": "sw_apprentice2" }
+            },
+            {
+              "id": "sw_patent",
+              "label": "做专利/标准：把技术变成可防守的护城河",
+              "effects": [
+                { "op": "addStat", "stat": "career", "value": 8 },
+                { "op": "addStat", "stat": "stress", "value": 10 },
+                { "op": "addTag", "tag": "专利" }
+              ],
+              "next": { "kind": "scene", "sceneId": "sw_patent2" }
+            },
+            {
+              "id": "sw_early_craftsman",
+              "label": "到此为止也够了：名号与手艺已在手里，我想把余生直接交给「手脑仍灵」",
+              "visibleWhen": {
+                "tag": "技能线",
+                "statMin": { "stat": "career", "value": 62 }
+              },
+              "effects": [{ "op": "addTag", "tag": "早收束·工匠" }],
+              "next": { "kind": "stage", "stageId": "ending", "sceneId": "end_elder_craftsman" }
+            }
+          ]
+        },
+        {
+          "id": "sw_workshop2",
+          "narrative": [
+            "作坊不是浪漫，是细碎：报价、排期、返工、催款；你开始学会雇人、学会拒单。",
+            "当你第一次听见别人说「就找你们家」时，你知道自己正在长出根。"
+          ],
+          "choices": [
+            {
+              "id": "sw_ws_brand",
+              "label": "把风格做成招牌：宁愿少做，也要做出辨识度",
+              "effects": [
+                { "op": "addStat", "stat": "support", "value": 6 },
+                { "op": "addStat", "stat": "luck", "value": 4 },
+                { "op": "addTag", "tag": "招牌手艺" }
+              ],
+              "next": { "kind": "stage", "stageId": "careerEarly", "sceneId": "job_pick" }
+            },
+            {
+              "id": "sw_ws_merge",
+              "label": "做稳现金流：把作坊当生意，回到主路继续推进人生节点",
+              "effects": [
+                { "op": "addStat", "stat": "wealth", "value": 8 },
+                { "op": "addStat", "stat": "stress", "value": -2 }
+              ],
+              "next": { "kind": "stage", "stageId": "careerEarly", "sceneId": "job_pick" }
+            },
+            {
+              "id": "sw_early_craft_brand",
+              "label": "名声已经挂在门口：不想再走十年流程，我想直接看到「手艺到老」的收束",
+              "visibleWhen": {
+                "tag": "招牌手艺",
+                "statMin": { "stat": "support", "value": 52 }
+              },
+              "effects": [{ "op": "addTag", "tag": "早收束·招牌" }],
+              "next": { "kind": "stage", "stageId": "ending", "sceneId": "end_elder_craft_brand" }
+            }
+          ]
+        },
+        {
+          "id": "sw_apprentice2",
+          "narrative": [
+            "带人会暴露你的弱点：你以为「会」就等于「能教」，但教人需要拆解、耐心与情绪管理。",
+            "可当徒弟第一次独立交付，你也第一次获得一种不同的成就感。"
+          ],
+          "choices": [
+            {
+              "id": "sw_apprentice_merge",
+              "label": "把团队做成长期：继续在社会里滚动前进",
+              "effects": [
+                { "op": "addStat", "stat": "support", "value": 6 },
+                { "op": "addStat", "stat": "wealth", "value": 4 }
+              ],
+              "next": { "kind": "stage", "stageId": "careerEarly", "sceneId": "job_pick" }
+            },
+            {
+              "id": "sw_apprentice_teach",
+              "label": "把经验写成体系：课程/教材/公开课，让更多人学到",
+              "effects": [
+                { "op": "addStat", "stat": "career", "value": 6 },
+                { "op": "addTag", "tag": "传帮带" }
+              ],
+              "next": { "kind": "stage", "stageId": "careerEarly", "sceneId": "job_pick" }
+            },
+            {
+              "id": "sw_early_community",
+              "label": "传帮带已经长成网：我想把余生直接交给「人情互助」",
+              "visibleWhen": {
+                "tag": "传帮带",
+                "statMin": { "stat": "support", "value": 58 }
+              },
+              "effects": [{ "op": "addTag", "tag": "早收束·社群" }],
+              "next": { "kind": "stage", "stageId": "ending", "sceneId": "end_elder_community" }
+            },
+            {
+              "id": "sw_early_craftsman2",
+              "label": "徒弟能独立交付了：我想把余生直接交给「手脑仍灵」",
+              "visibleWhen": {
+                "tag": "收徒",
+                "statMin": { "stat": "career", "value": 56 }
+              },
+              "effects": [{ "op": "addTag", "tag": "早收束·师徒" }],
+              "next": { "kind": "stage", "stageId": "ending", "sceneId": "end_elder_craftsman" }
+            }
+          ]
+        },
+        {
+          "id": "sw_patent2",
+          "narrative": [
+            "专利与标准像另一种考试：材料、论证、答辩、署名。你把灵光变成文书，把细节变成证据。",
+            "它慢，但一旦落地，就像在世界上刻下一小段你能证明的东西。"
+          ],
+          "choices": [
+            {
+              "id": "sw_patent_merge",
+              "label": "以此为背书回到职场：让履历多一块硬骨头",
+              "effects": [
+                { "op": "addStat", "stat": "career", "value": 6 },
+                { "op": "addStat", "stat": "wealth", "value": 4 }
+              ],
+              "next": { "kind": "stage", "stageId": "careerEarly", "sceneId": "offer_compare" }
+            },
+            {
+              "id": "sw_patent_stay",
+              "label": "继续深挖：把研发当作长期，往更难的项目走",
+              "effects": [
+                { "op": "addStat", "stat": "career", "value": 8 },
+                { "op": "addStat", "stat": "stress", "value": 8 },
+                { "op": "addTag", "tag": "硬核研发" }
+              ],
+              "next": { "kind": "stage", "stageId": "careerEarly", "sceneId": "offer_compare" }
+            },
+            {
+              "id": "sw_early_legacy",
+              "label": "专利落下那一刻：我知道我想把余生直接交给「留下一点东西」",
+              "visibleWhen": {
+                "tag": "专利",
+                "statMin": { "stat": "career", "value": 60 }
+              },
+              "effects": [{ "op": "addTag", "tag": "早收束·遗产" }],
+              "next": { "kind": "stage", "stageId": "ending", "sceneId": "end_elder_legacy" }
             }
           ]
         }
@@ -519,6 +808,29 @@
                 { "op": "addTag", "tag": "作品集驱动" }
               ],
               "next": { "kind": "stage", "stageId": "university", "sceneId": "uni_grad" }
+            },
+            {
+              "id": "m_cert",
+              "label": "证书/项目流：把能力做成可被雇佣的清单",
+              "visibleWhen": {
+                "tag": "技能线"
+              },
+              "effects": [
+                { "op": "addStat", "stat": "career", "value": 8 },
+                { "op": "addStat", "stat": "stress", "value": 4 },
+                { "op": "addTag", "tag": "证书流" }
+              ],
+              "next": { "kind": "stage", "stageId": "university", "sceneId": "uni_grad" }
+            },
+            {
+              "id": "m_system",
+              "label": "制度路径：把稳定当成长期策略（考编/体制倾向）",
+              "visibleWhen": { "statMin": { "stat": "support", "value": 55 } },
+              "effects": [
+                { "op": "addStat", "stat": "stress", "value": 6 },
+                { "op": "addTag", "tag": "体制倾向" }
+              ],
+              "next": { "kind": "stage", "stageId": "university", "sceneId": "uni_grad" }
             }
           ]
         },
@@ -615,6 +927,19 @@
                 { "op": "addStat", "stat": "career", "value": 10 }
               ],
               "next": { "kind": "stage", "stageId": "careerEarly", "sceneId": "job_pick" }
+            },
+            {
+              "id": "phd_early_scholar",
+              "label": "追问已经长成一生：我想把余生直接交给「问学到老」",
+              "visibleWhen": {
+                "tag": "读研",
+                "statMin": { "stat": "career", "value": 64 }
+              },
+              "effects": [
+                { "op": "setFlag", "key": "academic", "value": true },
+                { "op": "addTag", "tag": "早收束·学术" }
+              ],
+              "next": { "kind": "stage", "stageId": "ending", "sceneId": "end_elder_scholar" }
             }
           ]
         }
@@ -658,6 +983,172 @@
                 { "op": "addStat", "stat": "stress", "value": 6 }
               ],
               "next": { "kind": "stage", "stageId": "careerEarly", "sceneId": "job_pick" }
+            },
+            {
+              "id": "oc_freelance",
+              "label": "优先自由：项目制/自由职业，靠作品或口碑吃饭",
+              "visibleWhen": {
+                "tag": "作品集驱动"
+              },
+              "effects": [
+                { "op": "addStat", "stat": "luck", "value": 6 },
+                { "op": "addStat", "stat": "stress", "value": 6 },
+                { "op": "addTag", "tag": "自由职业" }
+              ],
+              "next": { "kind": "stage", "stageId": "careerEarly", "sceneId": "freelance_start" }
+            },
+            {
+              "id": "oc_system",
+              "label": "优先稳定：把体制/编制当作抗风险资产",
+              "visibleWhen": { "tag": "体制倾向" },
+              "effects": [
+                { "op": "addStat", "stat": "stress", "value": 8 },
+                { "op": "addTag", "tag": "体制内" }
+              ],
+              "next": { "kind": "stage", "stageId": "careerEarly", "sceneId": "civil_entry" }
+            },
+            {
+              "id": "oc_craft",
+              "label": "优先手艺：接单/做活，把技能变成现金流",
+              "visibleWhen": { "tag": "证书流" },
+              "effects": [
+                { "op": "addStat", "stat": "wealth", "value": 6 },
+                { "op": "addStat", "stat": "career", "value": 4 },
+                { "op": "addTag", "tag": "工匠口碑" }
+              ],
+              "next": { "kind": "stage", "stageId": "careerEarly", "sceneId": "craft_start" }
+            },
+            {
+              "id": "oc_early_artist",
+              "label": "作品已经能养活自己：不想再等二十年，我想直接收束到「创作到老」",
+              "visibleWhen": {
+                "tag": "作品集驱动",
+                "statMin": { "stat": "career", "value": 60 }
+              },
+              "effects": [{ "op": "addTag", "tag": "早收束·创作" }],
+              "next": { "kind": "stage", "stageId": "ending", "sceneId": "end_elder_artist" }
+            },
+            {
+              "id": "oc_early_system",
+              "label": "体制这条路我已经看清：我想把余生直接交给「体制晚年」",
+              "visibleWhen": {
+                "tag": "体制倾向",
+                "statMin": { "stat": "support", "value": 56 }
+              },
+              "effects": [{ "op": "addTag", "tag": "早收束·体制" }],
+              "next": { "kind": "stage", "stageId": "ending", "sceneId": "end_elder_system" }
+            }
+          ]
+        },
+        {
+          "id": "freelance_start",
+          "narrative": [
+            "没有工牌，没有固定上班路。你把自己当成一家公司：报价、交付、沟通、催款，样样都得会。",
+            "自由很真，也很锋利。你要用什么方式把它磨成长期？"
+          ],
+          "choices": [
+            {
+              "id": "fl_portfolio",
+              "label": "把作品集打磨到极致，让作品替你说话",
+              "effects": [
+                { "op": "addStat", "stat": "career", "value": 6 },
+                { "op": "addStat", "stat": "stress", "value": 8 }
+              ],
+              "next": { "kind": "stage", "stageId": "careerEarly", "sceneId": "job_pick" }
+            },
+            {
+              "id": "fl_network",
+              "label": "经营客户与口碑：把关系做成复利",
+              "effects": [
+                { "op": "addStat", "stat": "support", "value": 8 },
+                { "op": "addStat", "stat": "wealth", "value": 4 }
+              ],
+              "next": { "kind": "stage", "stageId": "careerEarly", "sceneId": "job_pick" }
+            },
+            {
+              "id": "fl_early_artist",
+              "label": "自由职业已经跑通：我想把余生直接交给「创作到老」",
+              "visibleWhen": {
+                "tag": "自由职业",
+                "statMin": { "stat": "career", "value": 56 }
+              },
+              "effects": [{ "op": "addTag", "tag": "早收束·自由创作" }],
+              "next": { "kind": "stage", "stageId": "ending", "sceneId": "end_elder_artist" }
+            }
+          ]
+        },
+        {
+          "id": "civil_entry",
+          "narrative": [
+            "稳定不是一张床，是一套规则。考核、流程、合规与忍耐一起把你包住。",
+            "你决定怎么在系统里活得更像自己。"
+          ],
+          "choices": [
+            {
+              "id": "cv_safe",
+              "label": "守住边界：稳、准、少犯错，慢慢往上走",
+              "effects": [
+                { "op": "addStat", "stat": "stress", "value": -4 },
+                { "op": "addStat", "stat": "support", "value": 6 }
+              ],
+              "next": { "kind": "stage", "stageId": "careerEarly", "sceneId": "job_pick" }
+            },
+            {
+              "id": "cv_push",
+              "label": "主动承担：做能落地的事，换更好的位置",
+              "effects": [
+                { "op": "addStat", "stat": "career", "value": 6 },
+                { "op": "addStat", "stat": "stress", "value": 6 }
+              ],
+              "next": { "kind": "stage", "stageId": "careerEarly", "sceneId": "job_pick" }
+            },
+            {
+              "id": "cv_early_system",
+              "label": "规章与人情我已经走熟：我想把余生直接交给「体制晚年」",
+              "visibleWhen": {
+                "tag": "体制内",
+                "statMin": { "stat": "career", "value": 54 }
+              },
+              "effects": [{ "op": "addTag", "tag": "早收束·体制入口" }],
+              "next": { "kind": "stage", "stageId": "ending", "sceneId": "end_elder_system" }
+            }
+          ]
+        },
+        {
+          "id": "craft_start",
+          "narrative": [
+            "你把技能当作饭碗：接单、交付、返工、再接单。你学会用手艺与信誉在城市里站稳。",
+            "赚得不一定多，但每一分都很实。"
+          ],
+          "choices": [
+            {
+              "id": "crf_brand",
+              "label": "做出名气：把风格做成招牌，让人指名找你",
+              "effects": [
+                { "op": "addStat", "stat": "support", "value": 6 },
+                { "op": "addStat", "stat": "luck", "value": 4 },
+                { "op": "addTag", "tag": "招牌手艺" }
+              ],
+              "next": { "kind": "stage", "stageId": "careerEarly", "sceneId": "job_pick" }
+            },
+            {
+              "id": "crf_stable",
+              "label": "做稳现金流：少折腾，重交付，靠复购活",
+              "effects": [
+                { "op": "addStat", "stat": "wealth", "value": 4 },
+                { "op": "addStat", "stat": "stress", "value": -2 }
+              ],
+              "next": { "kind": "stage", "stageId": "careerEarly", "sceneId": "job_pick" }
+            },
+            {
+              "id": "crf_early_brand",
+              "label": "指名找你的人已经排上队：我想把余生直接交给「手艺到老」",
+              "visibleWhen": {
+                "tag": "招牌手艺",
+                "statMin": { "stat": "support", "value": 52 }
+              },
+              "effects": [{ "op": "addTag", "tag": "早收束·手艺招牌" }],
+              "next": { "kind": "stage", "stageId": "ending", "sceneId": "end_elder_craft_brand" }
             }
           ]
         },
@@ -761,6 +1252,26 @@
                 { "op": "setFlag", "key": "freedom_path", "value": true }
               ],
               "next": { "kind": "stage", "stageId": "relationships", "sceneId": "romance_start" }
+            },
+            {
+              "id": "w_early_craftsman",
+              "label": "技术已经长成我的名姓：不想再走中年流程，我想直接收束到「手脑仍灵」",
+              "visibleWhen": {
+                "tag": "技能线",
+                "statMin": { "stat": "career", "value": 62 }
+              },
+              "effects": [{ "op": "addTag", "tag": "早收束·职场工匠" }],
+              "next": { "kind": "stage", "stageId": "ending", "sceneId": "end_elder_craftsman" }
+            },
+            {
+              "id": "w_early_artist",
+              "label": "自由职业已经站稳：我想把余生直接交给「创作到老」",
+              "visibleWhen": {
+                "tag": "自由职业",
+                "statMin": { "stat": "career", "value": 56 }
+              },
+              "effects": [{ "op": "addTag", "tag": "早收束·职场创作" }],
+              "next": { "kind": "stage", "stageId": "ending", "sceneId": "end_elder_artist" }
             }
           ]
         },
@@ -1055,6 +1566,38 @@
                 { "op": "addStat", "stat": "wealth", "value": -4 }
               ],
               "next": { "kind": "stage", "stageId": "familyRing", "sceneId": "kids_scene" }
+            },
+            {
+              "id": "hb_budget",
+              "label": "先把账说清：做一份家庭预算与分工表",
+              "visibleWhen": { "flag": { "key": "married", "value": true } },
+              "effects": [{ "op": "addStat", "stat": "support", "value": 4 }],
+              "next": { "kind": "stage", "stageId": "familyRing", "sceneId": "house_budget" }
+            },
+            {
+              "id": "hb_renovate",
+              "label": "装修与风格：把「家」做成你们想要的样子",
+              "effects": [{ "op": "addStat", "stat": "stress", "value": 4 }],
+              "next": { "kind": "stage", "stageId": "familyRing", "sceneId": "house_renovate" }
+            },
+            {
+              "id": "hb_inlaw",
+              "label": "父母介入：出资、意见与边界一起上桌",
+              "effects": [{ "op": "addStat", "stat": "stress", "value": 6 }],
+              "next": { "kind": "stage", "stageId": "familyRing", "sceneId": "house_inlaw" }
+            },
+            {
+              "id": "hb_two_city",
+              "label": "两地与通勤：为了工作或家人，把生活拆成两半",
+              "effects": [{ "op": "addTag", "tag": "两地奔波" }],
+              "next": { "kind": "stage", "stageId": "familyRing", "sceneId": "house_two_city" }
+            },
+            {
+              "id": "hb_mortgage_shock",
+              "label": "房贷冲击：月供像闹钟一样准时响起",
+              "visibleWhen": { "tag": "房贷" },
+              "effects": [{ "op": "addStat", "stat": "stress", "value": 6 }],
+              "next": { "kind": "stage", "stageId": "familyRing", "sceneId": "house_mortgage_shock" }
             }
           ]
         },
@@ -1113,6 +1656,1061 @@
                 { "op": "addStat", "stat": "stress", "value": -6 }
               ],
               "next": { "kind": "stage", "stageId": "lifeLate", "sceneId": "midlife_fork" }
+            },
+            {
+              "id": "k_style",
+              "label": "先谈育儿观：你们到底想把孩子养成什么样的人？",
+              "visibleWhen": { "flag": { "key": "married", "value": true } },
+              "effects": [{ "op": "addStat", "stat": "support", "value": 2 }],
+              "next": { "kind": "stage", "stageId": "familyRing", "sceneId": "kids_style" }
+            },
+            {
+              "id": "k_grandparent",
+              "label": "先谈隔代照护：父母要不要参与？参与到什么程度？",
+              "visibleWhen": { "flag": { "key": "married", "value": true } },
+              "effects": [{ "op": "addStat", "stat": "stress", "value": 2 }],
+              "next": { "kind": "stage", "stageId": "familyRing", "sceneId": "kids_grandparent" }
+            },
+            {
+              "id": "k_cost",
+              "label": "先谈钱与时间：奶粉、托育与加班表怎么排？",
+              "visibleWhen": { "flag": { "key": "married", "value": true } },
+              "effects": [{ "op": "addStat", "stat": "wealth", "value": -1 }],
+              "next": { "kind": "stage", "stageId": "familyRing", "sceneId": "kids_cost" }
+            },
+            {
+              "id": "k_school",
+              "label": "先谈教育路线：鸡娃、松弛、还是两头都要？",
+              "visibleWhen": { "flag": { "key": "married", "value": true } },
+              "effects": [{ "op": "addStat", "stat": "stress", "value": 3 }],
+              "next": { "kind": "stage", "stageId": "familyRing", "sceneId": "kids_school" }
+            },
+            {
+              "id": "k_health",
+              "label": "先谈身体：你们能否在忙里把健康留住？",
+              "effects": [{ "op": "addTag", "tag": "家庭健康计划" }],
+              "next": { "kind": "stage", "stageId": "familyRing", "sceneId": "family_health_plan" }
+            },
+            {
+              "id": "k_childcare",
+              "label": "先谈照护方案：托育/老人/保姆/自己扛，选哪一种？",
+              "visibleWhen": { "flag": { "key": "married", "value": true } },
+              "effects": [{ "op": "addStat", "stat": "stress", "value": 2 }],
+              "next": { "kind": "stage", "stageId": "familyRing", "sceneId": "childcare_pick" }
+            },
+            {
+              "id": "k_postpartum",
+              "label": "先想清楚熬夜：新生儿到来后，谁来扛最黑的夜？",
+              "visibleWhen": { "flag": { "key": "married", "value": true } },
+              "effects": [{ "op": "addStat", "stat": "healthDebt", "value": 1 }],
+              "next": { "kind": "stage", "stageId": "familyRing", "sceneId": "postpartum_night" }
+            },
+            {
+              "id": "k_repair",
+              "label": "先谈关系修复：如果你们吵起来，怎么吵、怎么和？",
+              "visibleWhen": { "flag": { "key": "married", "value": true } },
+              "effects": [{ "op": "addStat", "stat": "support", "value": 2 }],
+              "next": { "kind": "stage", "stageId": "familyRing", "sceneId": "couple_repair" }
+            },
+            {
+              "id": "k_insurance",
+              "label": "先买保险：把未知的风险，提前写进合同里",
+              "effects": [{ "op": "addTag", "tag": "风险意识" }],
+              "next": { "kind": "stage", "stageId": "familyRing", "sceneId": "family_insurance" }
+            },
+            {
+              "id": "k_second_child",
+              "label": "先谈二胎：要不要让家庭再长一圈？",
+              "visibleWhen": { "flag": { "key": "married", "value": true } },
+              "effects": [{ "op": "addStat", "stat": "stress", "value": 2 }],
+              "next": { "kind": "stage", "stageId": "familyRing", "sceneId": "second_child" }
+            },
+            {
+              "id": "k_holiday",
+              "label": "先谈过节：两边父母、年夜饭与情绪怎么摆？",
+              "visibleWhen": { "flag": { "key": "married", "value": true } },
+              "effects": [{ "op": "addStat", "stat": "stress", "value": 3 }],
+              "next": { "kind": "stage", "stageId": "familyRing", "sceneId": "inlaw_holiday" }
+            },
+            {
+              "id": "k_child_sick",
+              "label": "先想一次突发：如果孩子生病，你们怎么扛？",
+              "visibleWhen": { "flag": { "key": "married", "value": true } },
+              "effects": [{ "op": "addStat", "stat": "stress", "value": 2 }],
+              "next": { "kind": "stage", "stageId": "familyRing", "sceneId": "child_sick" }
+            },
+            {
+              "id": "k_pause_career",
+              "label": "先谈谁降速：为了家庭，有人要放慢事业吗？",
+              "visibleWhen": { "flag": { "key": "married", "value": true } },
+              "effects": [{ "op": "addTag", "tag": "家庭优先议题" }],
+              "next": { "kind": "stage", "stageId": "familyRing", "sceneId": "career_pause" }
+            },
+            {
+              "id": "k_refinance",
+              "label": "先谈债务策略：月供、车贷、信用卡，怎么优化？",
+              "effects": [{ "op": "addStat", "stat": "stress", "value": 2 }],
+              "next": { "kind": "stage", "stageId": "familyRing", "sceneId": "debt_refinance" }
+            }
+          ]
+        }
+        ,
+        {
+          "id": "house_budget",
+          "narrative": [
+            "你们坐在餐桌边，把工资、房租、父母赡养与未来的孩子一项项写下来。",
+            "纸上的数字不浪漫，但它能让争吵提前发生在小处。"
+          ],
+          "choices": [
+            {
+              "id": "hb_open",
+              "label": "透明账本：共同账户+每月复盘，钱往同一个方向走",
+              "effects": [
+                { "op": "addStat", "stat": "support", "value": 8 },
+                { "op": "addTag", "tag": "透明账本" }
+              ],
+              "next": { "kind": "stage", "stageId": "familyRing", "sceneId": "kids_scene" }
+            },
+            {
+              "id": "hb_split",
+              "label": "各管各：AA 或按比例分摊，边界清楚但也更冷",
+              "effects": [
+                { "op": "addStat", "stat": "stress", "value": -2 },
+                { "op": "addTag", "tag": "各管各" }
+              ],
+              "next": { "kind": "stage", "stageId": "familyRing", "sceneId": "kids_scene" }
+            },
+            {
+              "id": "hb_blur",
+              "label": "先不细算：能过就过，把问题留到以后",
+              "effects": [
+                { "op": "addStat", "stat": "stress", "value": 6 },
+                { "op": "addTag", "tag": "模糊账" }
+              ],
+              "next": { "kind": "stage", "stageId": "familyRing", "sceneId": "kids_scene" }
+            }
+          ]
+        },
+        {
+          "id": "house_renovate",
+          "narrative": [
+            "装修像一次缩小版的人生：预算、审美、妥协与突发情况轮番上场。",
+            "你们在一张张色卡和清单里，看见彼此真实的脾气。"
+          ],
+          "choices": [
+            {
+              "id": "hr_style",
+              "label": "风格优先：做成你们喜欢的样子，哪怕贵点",
+              "effects": [
+                { "op": "addStat", "stat": "support", "value": 4 },
+                { "op": "addStat", "stat": "wealth", "value": -6 },
+                { "op": "addTag", "tag": "审美投入" }
+              ],
+              "next": { "kind": "stage", "stageId": "familyRing", "sceneId": "kids_scene" }
+            },
+            {
+              "id": "hr_save",
+              "label": "实用优先：能住就行，把钱留给更硬的风险",
+              "effects": [
+                { "op": "addStat", "stat": "wealth", "value": 2 },
+                { "op": "addStat", "stat": "stress", "value": -2 },
+                { "op": "addTag", "tag": "实用主义" }
+              ],
+              "next": { "kind": "stage", "stageId": "familyRing", "sceneId": "kids_scene" }
+            },
+            {
+              "id": "hr_outsource",
+              "label": "外包给专业：花钱买省心，把争吵减少一点",
+              "visibleWhen": { "statMin": { "stat": "wealth", "value": 34 } },
+              "effects": [
+                { "op": "addStat", "stat": "wealth", "value": -6 },
+                { "op": "addStat", "stat": "stress", "value": -4 }
+              ],
+              "next": { "kind": "stage", "stageId": "familyRing", "sceneId": "kids_scene" }
+            }
+          ]
+        },
+        {
+          "id": "house_inlaw",
+          "narrative": [
+            "父母出资像一根绳：它能把你们拉出坑，也能把你们绑在某种期待里。",
+            "你意识到，真正难谈的不是钱，而是边界。"
+          ],
+          "choices": [
+            {
+              "id": "hi_boundary",
+              "label": "先立边界：感谢支持，但生活的决定权只在你们手里",
+              "effects": [
+                { "op": "addStat", "stat": "support", "value": 6 },
+                { "op": "addStat", "stat": "stress", "value": 6 },
+                { "op": "addTag", "tag": "边界协商" }
+              ],
+              "next": { "kind": "stage", "stageId": "familyRing", "sceneId": "kids_scene" }
+            },
+            {
+              "id": "hi_follow",
+              "label": "顺着来：先把房子落地，别把关系撕裂",
+              "effects": [
+                { "op": "addStat", "stat": "stress", "value": -2 },
+                { "op": "addTag", "tag": "顺势而为" }
+              ],
+              "next": { "kind": "stage", "stageId": "familyRing", "sceneId": "kids_scene" }
+            },
+            {
+              "id": "hi_decline",
+              "label": "谢绝介入：宁愿苦一点，也不把未来押给人情",
+              "effects": [
+                { "op": "addStat", "stat": "stress", "value": 10 },
+                { "op": "addStat", "stat": "support", "value": -2 },
+                { "op": "addTag", "tag": "自立成家" }
+              ],
+              "next": { "kind": "stage", "stageId": "familyRing", "sceneId": "kids_scene" }
+            }
+          ]
+        },
+        {
+          "id": "house_two_city",
+          "narrative": [
+            "为了工作、父母或孩子，你们把生活拆成两半：一半在路上，一半在群消息里。",
+            "两地不是距离，是日常被切开的疼。"
+          ],
+          "choices": [
+            {
+              "id": "htc_commute",
+              "label": "硬扛通勤：把时间献给高速与地铁",
+              "effects": [
+                { "op": "addStat", "stat": "stress", "value": 10 },
+                { "op": "addStat", "stat": "healthDebt", "value": 4 }
+              ],
+              "next": { "kind": "stage", "stageId": "familyRing", "sceneId": "kids_scene" }
+            },
+            {
+              "id": "htc_move",
+              "label": "换城/换岗：让生活更像生活，而不是打卡",
+              "effects": [
+                { "op": "setFlag", "key": "freedom_path", "value": true },
+                { "op": "addStat", "stat": "stress", "value": 6 },
+                { "op": "addTag", "tag": "换城" }
+              ],
+              "next": { "kind": "stage", "stageId": "familyRing", "sceneId": "kids_scene" }
+            },
+            {
+              "id": "htc_pause",
+              "label": "暂时降速：把家庭当优先，少赚一点也认",
+              "effects": [
+                { "op": "addStat", "stat": "wealth", "value": -4 },
+                { "op": "addStat", "stat": "support", "value": 6 },
+                { "op": "addTag", "tag": "降速" }
+              ],
+              "next": { "kind": "stage", "stageId": "familyRing", "sceneId": "kids_scene" }
+            }
+          ]
+        },
+        {
+          "id": "house_mortgage_shock",
+          "narrative": [
+            "月供像闹钟一样准时响起：它不管你今天累不累、心情好不好。",
+            "你开始用每一笔消费衡量「安全感」与「自由」。"
+          ],
+          "choices": [
+            {
+              "id": "hms_side",
+              "label": "开副业/接活：把焦虑变成现金流",
+              "effects": [
+                { "op": "addStat", "stat": "wealth", "value": 6 },
+                { "op": "addStat", "stat": "stress", "value": 8 },
+                { "op": "addTag", "tag": "现金流优先" }
+              ],
+              "next": { "kind": "stage", "stageId": "familyRing", "sceneId": "kids_scene" }
+            },
+            {
+              "id": "hms_cut",
+              "label": "勒紧裤腰带：能省则省，把风险压到最低",
+              "effects": [
+                { "op": "addStat", "stat": "stress", "value": 4 },
+                { "op": "addStat", "stat": "wealth", "value": 2 },
+                { "op": "addTag", "tag": "极简消费" }
+              ],
+              "next": { "kind": "stage", "stageId": "familyRing", "sceneId": "kids_scene" }
+            },
+            {
+              "id": "hms_sell",
+              "label": "止损换小：卖掉或换更轻的房，把日子救回来",
+              "effects": [
+                { "op": "addStat", "stat": "stress", "value": -4 },
+                { "op": "addStat", "stat": "support", "value": -2 },
+                { "op": "addTag", "tag": "止损换小" }
+              ],
+              "next": { "kind": "stage", "stageId": "familyRing", "sceneId": "kids_scene" }
+            }
+          ]
+        },
+        {
+          "id": "kids_style",
+          "narrative": [
+            "你们在夜里讨论育儿观：要不要鸡娃？要不要卷？要不要把孩子当作「项目」？",
+            "这不是孩子的问题，是你们对人生的恐惧与期待。"
+          ],
+          "choices": [
+            {
+              "id": "ks_tiger",
+              "label": "目标导向：规矩、训练、别输在起跑线",
+              "effects": [
+                { "op": "addStat", "stat": "stress", "value": 8 },
+                { "op": "addTag", "tag": "教育内卷" }
+              ],
+              "next": { "kind": "stage", "stageId": "familyRing", "sceneId": "kids_scene" }
+            },
+            {
+              "id": "ks_relax",
+              "label": "松弛一点：先把孩子当人，再谈成绩",
+              "effects": [
+                { "op": "addStat", "stat": "stress", "value": -4 },
+                { "op": "addTag", "tag": "松弛育儿" }
+              ],
+              "next": { "kind": "stage", "stageId": "familyRing", "sceneId": "kids_scene" }
+            },
+            {
+              "id": "ks_mix",
+              "label": "折中：底线要有，但不把家变成训练营",
+              "effects": [{ "op": "addStat", "stat": "support", "value": 4 }],
+              "next": { "kind": "stage", "stageId": "familyRing", "sceneId": "kids_scene" }
+            }
+          ]
+        },
+        {
+          "id": "kids_grandparent",
+          "narrative": [
+            "隔代照护像一把双刃刀：它能救急，也能带来理念冲突。",
+            "你们要不要把父母拉进这个小系统？"
+          ],
+          "choices": [
+            {
+              "id": "kg_join",
+              "label": "请父母参与：有人手、有经验，也有牵扯",
+              "effects": [
+                { "op": "addStat", "stat": "support", "value": 10 },
+                { "op": "addTag", "tag": "隔代照护" }
+              ],
+              "next": { "kind": "stage", "stageId": "familyRing", "sceneId": "kids_scene" }
+            },
+            {
+              "id": "kg_boundary",
+              "label": "只让父母做后援：关键时刻来，平时不插手",
+              "effects": [
+                { "op": "addStat", "stat": "support", "value": 4 },
+                { "op": "addTag", "tag": "后援父母" }
+              ],
+              "next": { "kind": "stage", "stageId": "familyRing", "sceneId": "kids_scene" }
+            },
+            {
+              "id": "kg_no",
+              "label": "不让父母介入：宁愿辛苦，也要保持边界",
+              "effects": [
+                { "op": "addStat", "stat": "stress", "value": 6 },
+                { "op": "addTag", "tag": "育儿自理" }
+              ],
+              "next": { "kind": "stage", "stageId": "familyRing", "sceneId": "kids_scene" }
+            }
+          ]
+        },
+        {
+          "id": "kids_cost",
+          "narrative": [
+            "账本翻到「孩子」那一页，数字像突然变大的字体：奶粉、托育、学区、补课……",
+            "你们开始为「未来」争夺今天的时间。"
+          ],
+          "choices": [
+            {
+              "id": "kc_throw",
+              "label": "咬牙投：把资源砸进去，换孩子更好的起点",
+              "effects": [
+                { "op": "addStat", "stat": "wealth", "value": -10 },
+                { "op": "addStat", "stat": "stress", "value": 10 },
+                { "op": "addTag", "tag": "资源育儿" }
+              ],
+              "next": { "kind": "stage", "stageId": "familyRing", "sceneId": "kids_scene" }
+            },
+            {
+              "id": "kc_balance",
+              "label": "算着来：把孩子与自己都放进预算，不极端",
+              "effects": [
+                { "op": "addStat", "stat": "stress", "value": -2 },
+                { "op": "addTag", "tag": "预算育儿" }
+              ],
+              "next": { "kind": "stage", "stageId": "familyRing", "sceneId": "kids_scene" }
+            },
+            {
+              "id": "kc_reduce",
+              "label": "压缩欲望：不卷资源，先把家稳住",
+              "effects": [
+                { "op": "addStat", "stat": "wealth", "value": 4 },
+                { "op": "addStat", "stat": "support", "value": 2 },
+                { "op": "addTag", "tag": "低欲望育儿" }
+              ],
+              "next": { "kind": "stage", "stageId": "familyRing", "sceneId": "kids_scene" }
+            }
+          ]
+        },
+        {
+          "id": "kids_school",
+          "narrative": [
+            "教育路线不是路线图，是你们对世界的判断：世界是否残酷？努力是否有回报？",
+            "你们在孩子尚未出现之前，先把自己的答案写了一遍。"
+          ],
+          "choices": [
+            {
+              "id": "ke_track",
+              "label": "选赛道：学区、特长、竞赛，先把轨道铺好",
+              "effects": [
+                { "op": "addStat", "stat": "stress", "value": 10 },
+                { "op": "addTag", "tag": "赛道思维" }
+              ],
+              "next": { "kind": "stage", "stageId": "familyRing", "sceneId": "kids_scene" }
+            },
+            {
+              "id": "ke_life",
+              "label": "选生活：让孩子在生活里长大，不把他当 KPI",
+              "effects": [
+                { "op": "addStat", "stat": "stress", "value": -4 },
+                { "op": "addTag", "tag": "生活优先" }
+              ],
+              "next": { "kind": "stage", "stageId": "familyRing", "sceneId": "kids_scene" }
+            },
+            {
+              "id": "ke_uncertain",
+              "label": "暂不下注：先过好当下，别把未来提前透支",
+              "effects": [{ "op": "addStat", "stat": "support", "value": 2 }],
+              "next": { "kind": "stage", "stageId": "familyRing", "sceneId": "kids_scene" }
+            }
+          ]
+        },
+        {
+          "id": "family_health_plan",
+          "narrative": [
+            "你们开始做一件不那么酷的事：体检、作息、饮食、运动。",
+            "它不会立刻让人生变好，但会让人生更不容易崩。"
+          ],
+          "choices": [
+            {
+              "id": "fh_strict",
+              "label": "严格执行：把健康当成长期项目",
+              "effects": [
+                { "op": "addStat", "stat": "healthDebt", "value": -6 },
+                { "op": "addStat", "stat": "stress", "value": 2 },
+                { "op": "addTag", "tag": "康复计划" }
+              ],
+              "next": { "kind": "stage", "stageId": "familyRing", "sceneId": "kids_scene" }
+            },
+            {
+              "id": "fh_soft",
+              "label": "温和一点：不极端，但保持底线",
+              "effects": [
+                { "op": "addStat", "stat": "healthDebt", "value": -2 },
+                { "op": "addStat", "stat": "stress", "value": -2 }
+              ],
+              "next": { "kind": "stage", "stageId": "familyRing", "sceneId": "kids_scene" }
+            },
+            {
+              "id": "fh_delay",
+              "label": "先顾眼前：等忙过这阵再说",
+              "effects": [{ "op": "addStat", "stat": "healthDebt", "value": 2 }],
+              "next": { "kind": "stage", "stageId": "familyRing", "sceneId": "kids_scene" }
+            }
+          ]
+        }
+        ,
+        {
+          "id": "childcare_pick",
+          "narrative": [
+            "托育像一张分岔路：每一条路都不完美，只是代价不同。",
+            "你们要把哪一部分辛苦交给钱，哪一部分交给亲情，哪一部分交给自己？"
+          ],
+          "choices": [
+            {
+              "id": "cc_daycare",
+              "label": "托育/早教：用规则与机构换稳定",
+              "effects": [
+                { "op": "addStat", "stat": "wealth", "value": -6 },
+                { "op": "addStat", "stat": "stress", "value": 4 }
+              ],
+              "next": { "kind": "stage", "stageId": "familyRing", "sceneId": "childcare_daycare" }
+            },
+            {
+              "id": "cc_nanny",
+              "label": "请保姆/阿姨：用钱买时间，把日常外包一部分",
+              "visibleWhen": { "statMin": { "stat": "wealth", "value": 36 } },
+              "effects": [
+                { "op": "addStat", "stat": "wealth", "value": -8 },
+                { "op": "addStat", "stat": "stress", "value": -2 }
+              ],
+              "next": { "kind": "stage", "stageId": "familyRing", "sceneId": "childcare_nanny" }
+            },
+            {
+              "id": "cc_self",
+              "label": "自己扛：辛苦一点，但边界更干净",
+              "effects": [
+                { "op": "addStat", "stat": "stress", "value": 10 },
+                { "op": "addTag", "tag": "亲力亲为" }
+              ],
+              "next": { "kind": "stage", "stageId": "familyRing", "sceneId": "kids_scene" }
+            }
+          ]
+        },
+        {
+          "id": "childcare_daycare",
+          "narrative": [
+            "机构的好处是稳定：时间表、规则、替代你的一部分情绪劳动。",
+            "代价是钱，以及「把孩子交出去」的那一点不安。"
+          ],
+          "choices": [
+            {
+              "id": "ccd_rule",
+              "label": "把规则当靠山：按表推进，别让焦虑控制你",
+              "effects": [
+                { "op": "addStat", "stat": "stress", "value": -2 },
+                { "op": "addTag", "tag": "规则育儿" }
+              ],
+              "next": { "kind": "stage", "stageId": "familyRing", "sceneId": "kids_scene" }
+            },
+            {
+              "id": "ccd_anx",
+              "label": "不放心就加码：再报两个班，确保不落后",
+              "effects": [
+                { "op": "addStat", "stat": "stress", "value": 8 },
+                { "op": "addTag", "tag": "加码育儿" }
+              ],
+              "next": { "kind": "stage", "stageId": "familyRing", "sceneId": "kids_scene" }
+            }
+          ]
+        },
+        {
+          "id": "childcare_nanny",
+          "narrative": [
+            "家里多了一个人：她看见你们最真实的疲惫，也触碰你们最敏感的边界。",
+            "钱能买到时间，但买不到信任。信任要靠磨合。"
+          ],
+          "choices": [
+            {
+              "id": "ccn_trust",
+              "label": "建立信任：明确职责+尊重专业，让家更顺",
+              "effects": [
+                { "op": "addStat", "stat": "support", "value": 6 },
+                { "op": "addTag", "tag": "外部照护" }
+              ],
+              "next": { "kind": "stage", "stageId": "familyRing", "sceneId": "kids_scene" }
+            },
+            {
+              "id": "ccn_control",
+              "label": "事无巨细：你不放心，只能自己盯到极限",
+              "effects": [
+                { "op": "addStat", "stat": "stress", "value": 8 },
+                { "op": "addTag", "tag": "控制欲" }
+              ],
+              "next": { "kind": "stage", "stageId": "familyRing", "sceneId": "kids_scene" }
+            }
+          ]
+        },
+        {
+          "id": "postpartum_night",
+          "narrative": [
+            "你想象那种夜：灯很暗，奶瓶很烫，哭声很长。",
+            "最难的不是困，是「困到不讲理」的时候，谁来先退一步。"
+          ],
+          "choices": [
+            {
+              "id": "pp_shift",
+              "label": "轮班制：谁也别当永动机，把夜拆成两半",
+              "effects": [
+                { "op": "addStat", "stat": "support", "value": 6 },
+                { "op": "addStat", "stat": "healthDebt", "value": 2 }
+              ],
+              "next": { "kind": "stage", "stageId": "familyRing", "sceneId": "postpartum_support" }
+            },
+            {
+              "id": "pp_one",
+              "label": "一个人扛：你更擅长也更能忍，但会更伤",
+              "effects": [
+                { "op": "addStat", "stat": "stress", "value": 10 },
+                { "op": "addStat", "stat": "healthDebt", "value": 6 },
+                { "op": "addTag", "tag": "独自扛夜" }
+              ],
+              "next": { "kind": "stage", "stageId": "familyRing", "sceneId": "kids_scene" }
+            }
+          ]
+        },
+        {
+          "id": "postpartum_support",
+          "narrative": [
+            "你们把夜拆开之后，白天仍旧混乱：洗衣、做饭、哄睡、上班。",
+            "有人开始提议「让父母来住一阵」。"
+          ],
+          "choices": [
+            {
+              "id": "pps_yes",
+              "label": "让父母来：先救急，把家撑住",
+              "effects": [
+                { "op": "addStat", "stat": "support", "value": 8 },
+                { "op": "addTag", "tag": "父母救援" }
+              ],
+              "next": { "kind": "stage", "stageId": "familyRing", "sceneId": "postpartum_boundary" }
+            },
+            {
+              "id": "pps_no",
+              "label": "不让父母来：宁愿乱一点，也保持边界",
+              "effects": [
+                { "op": "addStat", "stat": "stress", "value": 6 },
+                { "op": "addTag", "tag": "产后边界" }
+              ],
+              "next": { "kind": "stage", "stageId": "familyRing", "sceneId": "kids_scene" }
+            }
+          ]
+        },
+        {
+          "id": "postpartum_boundary",
+          "narrative": [
+            "父母来了，家里更像「小单位」：有人操心、有人指挥、有人委屈。",
+            "你们第一次学会用更成熟的方式说：谢谢，也请停在这里。"
+          ],
+          "choices": [
+            {
+              "id": "ppb_talk",
+              "label": "把话说清：感谢参与，但规则由你们定",
+              "effects": [
+                { "op": "addStat", "stat": "support", "value": 6 },
+                { "op": "addTag", "tag": "成熟沟通" }
+              ],
+              "next": { "kind": "stage", "stageId": "familyRing", "sceneId": "kids_scene" }
+            },
+            {
+              "id": "ppb_swallow",
+              "label": "先忍着：别在这个阶段撕裂关系",
+              "effects": [
+                { "op": "addStat", "stat": "stress", "value": 8 },
+                { "op": "addTag", "tag": "吞咽情绪" }
+              ],
+              "next": { "kind": "stage", "stageId": "familyRing", "sceneId": "kids_scene" }
+            }
+          ]
+        },
+        {
+          "id": "couple_repair",
+          "narrative": [
+            "你们讨论一个很现实的问题：如果吵起来，怎么吵？怎么停？怎么和？",
+            "关系不是不吵，而是吵完还能回到同一张桌子。"
+          ],
+          "choices": [
+            {
+              "id": "cr_rules",
+              "label": "定规则：不翻旧账、不冷暴力、给彼此退出键",
+              "effects": [
+                { "op": "addStat", "stat": "support", "value": 10 },
+                { "op": "addTag", "tag": "争吵规则" }
+              ],
+              "next": { "kind": "stage", "stageId": "familyRing", "sceneId": "couple_conflict_rules" }
+            },
+            {
+              "id": "cr_date",
+              "label": "定仪式：再忙也要约会，提醒彼此不只是合伙人",
+              "effects": [
+                { "op": "addStat", "stat": "support", "value": 8 },
+                { "op": "addTag", "tag": "固定约会" }
+              ],
+              "next": { "kind": "stage", "stageId": "familyRing", "sceneId": "couple_date" }
+            },
+            {
+              "id": "cr_avoid",
+              "label": "先不谈：能不吵就不吵，把问题放一放",
+              "effects": [
+                { "op": "addStat", "stat": "stress", "value": 4 },
+                { "op": "addTag", "tag": "回避冲突" }
+              ],
+              "next": { "kind": "stage", "stageId": "familyRing", "sceneId": "kids_scene" }
+            }
+          ]
+        },
+        {
+          "id": "couple_conflict_rules",
+          "narrative": [
+            "规则写在纸上很容易，难的是执行：在你委屈、在他疲惫、在孩子哭的时候。",
+            "但你们至少知道：争吵也可以被设计得更少伤人。"
+          ],
+          "choices": [
+            {
+              "id": "ccr_keep",
+              "label": "坚持执行：吵归吵，但不互相碾压",
+              "effects": [
+                { "op": "addStat", "stat": "support", "value": 6 },
+                { "op": "addStat", "stat": "stress", "value": -2 }
+              ],
+              "next": { "kind": "stage", "stageId": "familyRing", "sceneId": "kids_scene" }
+            },
+            {
+              "id": "ccr_break",
+              "label": "执行不下去：你们还是会用最熟悉的方式伤人",
+              "effects": [
+                { "op": "addStat", "stat": "stress", "value": 6 },
+                { "op": "addTag", "tag": "关系耗损" }
+              ],
+              "next": { "kind": "stage", "stageId": "familyRing", "sceneId": "kids_scene" }
+            }
+          ]
+        },
+        {
+          "id": "couple_date",
+          "narrative": [
+            "约会不是电影，是两个成年人把手机扣下，把对方当作「人」重新看一遍。",
+            "你们发现：只要愿意，日子里仍有缝隙能透光。"
+          ],
+          "choices": [
+            {
+              "id": "cd_keep",
+              "label": "把它坚持下去：一年十二次也好，至少别断",
+              "effects": [
+                { "op": "addStat", "stat": "support", "value": 6 },
+                { "op": "addStat", "stat": "stress", "value": -2 }
+              ],
+              "next": { "kind": "stage", "stageId": "familyRing", "sceneId": "kids_scene" }
+            },
+            {
+              "id": "cd_drop",
+              "label": "很快就断了：生活总能找理由把浪漫挤出去",
+              "effects": [{ "op": "addStat", "stat": "stress", "value": 4 }],
+              "next": { "kind": "stage", "stageId": "familyRing", "sceneId": "kids_scene" }
+            }
+          ]
+        },
+        {
+          "id": "family_insurance",
+          "narrative": [
+            "你们第一次认真读保险条款：免责、等待期、理赔、保额。",
+            "它像一把不浪漫的伞，平时碍事，下雨时救命。"
+          ],
+          "choices": [
+            {
+              "id": "fi_buy",
+              "label": "买齐：把风险压到最低，睡得更踏实",
+              "effects": [
+                { "op": "addStat", "stat": "wealth", "value": -4 },
+                { "op": "addStat", "stat": "stress", "value": -2 },
+                { "op": "addTag", "tag": "保险齐备" }
+              ],
+              "next": { "kind": "stage", "stageId": "familyRing", "sceneId": "kids_scene" }
+            },
+            {
+              "id": "fi_basic",
+              "label": "买基础：够用就行，别让钱全花在恐惧上",
+              "effects": [{ "op": "addStat", "stat": "stress", "value": -1 }],
+              "next": { "kind": "stage", "stageId": "familyRing", "sceneId": "kids_scene" }
+            },
+            {
+              "id": "fi_ignore",
+              "label": "先不买：你相信自己不会那么倒霉",
+              "effects": [{ "op": "addStat", "stat": "luck", "value": 2 }],
+              "next": { "kind": "stage", "stageId": "familyRing", "sceneId": "kids_scene" }
+            }
+          ]
+        },
+        {
+          "id": "second_child",
+          "narrative": [
+            "二胎像一次重新下注：体力、金钱、关系、时间，都要再洗牌。",
+            "你们要不要让家庭再长一圈？"
+          ],
+          "choices": [
+            {
+              "id": "sc_yes",
+              "label": "要：辛苦加倍，但也许更热闹",
+              "effects": [
+                { "op": "addStat", "stat": "stress", "value": 10 },
+                { "op": "addStat", "stat": "support", "value": 6 },
+                { "op": "addStat", "stat": "wealth", "value": -6 },
+                { "op": "addTag", "tag": "二胎家庭" }
+              ],
+              "next": { "kind": "stage", "stageId": "familyRing", "sceneId": "kids_scene" }
+            },
+            {
+              "id": "sc_no",
+              "label": "不要：把资源集中在一个孩子或二人生活上",
+              "effects": [
+                { "op": "addStat", "stat": "stress", "value": -2 },
+                { "op": "addStat", "stat": "wealth", "value": 2 },
+                { "op": "addTag", "tag": "一胎止步" }
+              ],
+              "next": { "kind": "stage", "stageId": "familyRing", "sceneId": "kids_scene" }
+            }
+          ]
+        },
+        {
+          "id": "inlaw_holiday",
+          "narrative": [
+            "过节像一面镜子：两边父母都想要你们「回去」，饭桌上的情绪比菜更热。",
+            "你们如何在亲情与自我之间取一个不后悔的角度？"
+          ],
+          "choices": [
+            {
+              "id": "ih_balance",
+              "label": "轮流/折中：每年换一边，尽量公平",
+              "effects": [
+                { "op": "addStat", "stat": "support", "value": 4 },
+                { "op": "addTag", "tag": "过节折中" }
+              ],
+              "next": { "kind": "stage", "stageId": "familyRing", "sceneId": "kids_scene" }
+            },
+            {
+              "id": "ih_boundary",
+              "label": "立边界：小家优先，节日也要有自己的安排",
+              "effects": [
+                { "op": "addStat", "stat": "stress", "value": 6 },
+                { "op": "addTag", "tag": "节日边界" }
+              ],
+              "next": { "kind": "stage", "stageId": "familyRing", "sceneId": "kids_scene" }
+            },
+            {
+              "id": "ih_follow",
+              "label": "顺着父母：少争吵，先把和气保住",
+              "effects": [
+                { "op": "addStat", "stat": "stress", "value": -1 },
+                { "op": "addTag", "tag": "家族优先" }
+              ],
+              "next": { "kind": "stage", "stageId": "familyRing", "sceneId": "kids_scene" }
+            }
+          ]
+        },
+        {
+          "id": "house_neighbor",
+          "narrative": [
+            "住下之后，邻里开始出现：楼上脚步、楼下装修、物业群里永远吵不完的事。",
+            "你意识到：家不只在门里，也在门外。"
+          ],
+          "choices": [
+            {
+              "id": "hn_soft",
+              "label": "和气处理：能沟通就沟通，别把日子过成战",
+              "effects": [
+                { "op": "addStat", "stat": "support", "value": 4 },
+                { "op": "addStat", "stat": "stress", "value": -1 }
+              ],
+              "next": { "kind": "stage", "stageId": "familyRing", "sceneId": "kids_scene" }
+            },
+            {
+              "id": "hn_hard",
+              "label": "硬一点：该投诉就投诉，边界是争出来的",
+              "effects": [
+                { "op": "addStat", "stat": "stress", "value": 4 },
+                { "op": "addTag", "tag": "硬边界" }
+              ],
+              "next": { "kind": "stage", "stageId": "familyRing", "sceneId": "kids_scene" }
+            }
+          ]
+        }
+        ,
+        {
+          "id": "child_sick",
+          "narrative": [
+            "你们想象最普通也最致命的突发：半夜发烧、咳嗽停不下来、医院排队。",
+            "它不浪漫，但它会检验你们的分工与底气。"
+          ],
+          "choices": [
+            {
+              "id": "cs_hospital",
+              "label": "医院优先：立刻就医，把不确定交给专业",
+              "effects": [
+                { "op": "addStat", "stat": "wealth", "value": -2 },
+                { "op": "addStat", "stat": "stress", "value": 4 }
+              ],
+              "next": { "kind": "stage", "stageId": "familyRing", "sceneId": "child_sick_hospital" }
+            },
+            {
+              "id": "cs_home",
+              "label": "先居家观察：冷静一点，把节奏稳住",
+              "effects": [{ "op": "addStat", "stat": "stress", "value": -1 }],
+              "next": { "kind": "stage", "stageId": "familyRing", "sceneId": "child_sick_home" }
+            }
+          ]
+        },
+        {
+          "id": "child_sick_hospital",
+          "narrative": [
+            "医院的灯很白，队很长。你们在走廊里互相递水、互相撑住。",
+            "这一夜过去后，你们都更清楚：家庭需要一个更可靠的预案。"
+          ],
+          "choices": [
+            {
+              "id": "csh_plan",
+              "label": "把预案写下来：常备药、就医流程、备用联系人",
+              "effects": [
+                { "op": "addStat", "stat": "support", "value": 4 },
+                { "op": "addTag", "tag": "家庭预案" }
+              ],
+              "next": { "kind": "stage", "stageId": "familyRing", "sceneId": "kids_scene" }
+            },
+            {
+              "id": "csh_forget",
+              "label": "忙过就算：你们总觉得以后不会再发生",
+              "effects": [{ "op": "addStat", "stat": "luck", "value": 2 }],
+              "next": { "kind": "stage", "stageId": "familyRing", "sceneId": "kids_scene" }
+            }
+          ]
+        },
+        {
+          "id": "child_sick_home",
+          "narrative": [
+            "你们在家里守着：量体温、喂水、换汗湿的衣服。",
+            "照护是慢的，它逼你承认：你控制不了一切。"
+          ],
+          "choices": [
+            {
+              "id": "csh2_share",
+              "label": "分担照护：谁也别熬到崩溃",
+              "effects": [
+                { "op": "addStat", "stat": "support", "value": 4 },
+                { "op": "addStat", "stat": "healthDebt", "value": 2 }
+              ],
+              "next": { "kind": "stage", "stageId": "familyRing", "sceneId": "kids_scene" }
+            },
+            {
+              "id": "csh2_one",
+              "label": "一个人扛：你习惯了把焦虑吞下去",
+              "effects": [
+                { "op": "addStat", "stat": "stress", "value": 6 },
+                { "op": "addTag", "tag": "照护疲惫" }
+              ],
+              "next": { "kind": "stage", "stageId": "familyRing", "sceneId": "kids_scene" }
+            }
+          ]
+        },
+        {
+          "id": "career_pause",
+          "narrative": [
+            "家庭的需求会吞时间：托育接送、老人看病、孩子作业、家务。",
+            "你们要不要让其中一个人降速？降到什么程度？"
+          ],
+          "choices": [
+            {
+              "id": "cp_short",
+              "label": "短期降速：熬过这一段，再把事业捡回来",
+              "effects": [
+                { "op": "addStat", "stat": "wealth", "value": -2 },
+                { "op": "addStat", "stat": "support", "value": 6 }
+              ],
+              "next": { "kind": "stage", "stageId": "familyRing", "sceneId": "career_pause_return" }
+            },
+            {
+              "id": "cp_long",
+              "label": "长期降速：把家庭当主业，事业当副线",
+              "effects": [
+                { "op": "addStat", "stat": "wealth", "value": -4 },
+                { "op": "addStat", "stat": "support", "value": 8 },
+                { "op": "addTag", "tag": "家庭主业" }
+              ],
+              "next": { "kind": "stage", "stageId": "familyRing", "sceneId": "career_pause_stay" }
+            }
+          ]
+        },
+        {
+          "id": "career_pause_return",
+          "narrative": [
+            "短期降速让家稳住了，但你也感到焦虑：你怕自己被时代甩下去。",
+            "你开始练习更现实的平衡：不完美，但能持续。"
+          ],
+          "choices": [
+            {
+              "id": "cpr_back",
+              "label": "逐步回到轨道：把节奏一点点加回来",
+              "effects": [
+                { "op": "addStat", "stat": "career", "value": 4 },
+                { "op": "addStat", "stat": "stress", "value": 4 }
+              ],
+              "next": { "kind": "stage", "stageId": "familyRing", "sceneId": "kids_scene" }
+            },
+            {
+              "id": "cpr_keep",
+              "label": "继续维持：不追求更快，追求不崩",
+              "effects": [{ "op": "addStat", "stat": "stress", "value": -1 }],
+              "next": { "kind": "stage", "stageId": "familyRing", "sceneId": "kids_scene" }
+            }
+          ]
+        },
+        {
+          "id": "career_pause_stay",
+          "narrative": [
+            "长期降速让家更像一个系统：你知道每一项事情怎么运转。",
+            "代价是你要学会和「不被看见」相处。"
+          ],
+          "choices": [
+            {
+              "id": "cps_meaning",
+              "label": "给它意义：把照护与家务做成一种能力",
+              "effects": [
+                { "op": "addStat", "stat": "support", "value": 4 },
+                { "op": "addTag", "tag": "家务能力" }
+              ],
+              "next": { "kind": "stage", "stageId": "familyRing", "sceneId": "kids_scene" }
+            },
+            {
+              "id": "cps_bitter",
+              "label": "把委屈吞下：你不想吵，但心里会记账",
+              "effects": [
+                { "op": "addStat", "stat": "stress", "value": 4 },
+                { "op": "addTag", "tag": "委屈记账" }
+              ],
+              "next": { "kind": "stage", "stageId": "familyRing", "sceneId": "kids_scene" }
+            }
+          ]
+        },
+        {
+          "id": "debt_refinance",
+          "narrative": [
+            "债务像潮水：不处理就会慢慢涨上来，处理也需要力气。",
+            "你们要用哪种方式把压力从脖子上挪一点？"
+          ],
+          "choices": [
+            {
+              "id": "dr_opt",
+              "label": "优化结构：置换/延长/合并，让月供更可控",
+              "effects": [
+                { "op": "addStat", "stat": "stress", "value": -2 },
+                { "op": "addTag", "tag": "债务优化" }
+              ],
+              "next": { "kind": "stage", "stageId": "familyRing", "sceneId": "debt_refinance_outcome" }
+            },
+            {
+              "id": "dr_grind",
+              "label": "硬扛：多接活、多加班，用时间换安全",
+              "effects": [
+                { "op": "addStat", "stat": "wealth", "value": 4 },
+                { "op": "addStat", "stat": "stress", "value": 8 },
+                { "op": "addTag", "tag": "硬扛债务" }
+              ],
+              "next": { "kind": "stage", "stageId": "familyRing", "sceneId": "kids_scene" }
+            }
+          ]
+        },
+        {
+          "id": "debt_refinance_outcome",
+          "narrative": [
+            "账本终于变得没那么刺眼。你们并没有变富，只是把呼吸空间换大了一点。",
+            "你们意识到：家庭需要的不是奇迹，是长期可执行的策略。"
+          ],
+          "choices": [
+            {
+              "id": "dro_keep",
+              "label": "把策略坚持下去：每月复盘，慢慢变好",
+              "effects": [
+                { "op": "addStat", "stat": "stress", "value": -1 },
+                { "op": "addStat", "stat": "support", "value": 2 }
+              ],
+              "next": { "kind": "stage", "stageId": "familyRing", "sceneId": "kids_scene" }
+            },
+            {
+              "id": "dro_spend",
+              "label": "稍微放松：既然喘得过气，就给生活一点奖励",
+              "effects": [
+                { "op": "addStat", "stat": "stress", "value": -2 },
+                { "op": "addStat", "stat": "wealth", "value": -1 }
+              ],
+              "next": { "kind": "stage", "stageId": "familyRing", "sceneId": "kids_scene" }
             }
           ]
         }
@@ -1329,6 +2927,43 @@
                 { "op": "addTag", "tag": "隔代照护" }
               ],
               "next": { "kind": "stage", "stageId": "lifeLate", "sceneId": "retire_hang" }
+            },
+            {
+              "id": "en_early_hobby_root",
+              "label": "空出来的时间，已经长成了兴趣的根：我想在这里就落定「兴趣扎根」的晚年",
+              "visibleWhen": {
+                "tag": "长期爱好",
+                "statMin": { "stat": "luck", "value": 54 }
+              },
+              "effects": [{ "op": "addTag", "tag": "早收束·兴趣空巢" }],
+              "next": { "kind": "stage", "stageId": "ending", "sceneId": "end_elder_hobby_root" }
+            },
+            {
+              "id": "en_early_grand_circle",
+              "label": "家里安静了，但辈分在说话：我想把余生直接交给「隔代之环」",
+              "visibleWhen": {
+                "flag": { "key": "parent", "value": true },
+                "statMin": { "stat": "support", "value": 60 }
+              },
+              "effects": [{ "op": "addTag", "tag": "早收束·祖辈线" }],
+              "next": { "kind": "stage", "stageId": "ending", "sceneId": "end_elder_grand_circle" }
+            },
+            {
+              "id": "en_early_couple_nest",
+              "label": "空巢不是空：二人把日子过成更厚的对话——我想直接收束到「二人到老」",
+              "visibleWhen": {
+                "tag": "二人世界",
+                "statMin": { "stat": "support", "value": 58 }
+              },
+              "effects": [{ "op": "addTag", "tag": "早收束·空巢二人" }],
+              "next": { "kind": "stage", "stageId": "ending", "sceneId": "end_elder_couple_duo" }
+            },
+            {
+              "id": "en_early_solo_nest",
+              "label": "热闹退场后，我更认得自己：我想把余生直接交给「独行至终章」",
+              "visibleWhen": { "tag": "独自走过中年" },
+              "effects": [{ "op": "addTag", "tag": "早收束·空巢独行" }],
+              "next": { "kind": "stage", "stageId": "ending", "sceneId": "end_elder_solo_midlife" }
             }
           ]
         },
@@ -1377,6 +3012,47 @@
                 { "op": "addTag", "tag": "康复计划" }
               ],
               "next": { "kind": "stage", "stageId": "lifeLate", "sceneId": "community_role" }
+            },
+            {
+              "id": "rt_early_second_wind",
+              "label": "退休门前我仍有余热：小店与顾问已经排上日程——我想直接收束到「余热不息」",
+              "visibleWhen": {
+                "tag": "余热创业",
+                "statMin": { "stat": "wealth", "value": 40 }
+              },
+              "effects": [{ "op": "addTag", "tag": "早收束·余热退休" }],
+              "next": { "kind": "stage", "stageId": "ending", "sceneId": "end_elder_second_wind" }
+            },
+            {
+              "id": "rt_early_rehab",
+              "label": "身体在敲门：我想把余生直接交给「养回身体」",
+              "visibleWhen": { "tag": "康复计划" },
+              "effects": [{ "op": "addTag", "tag": "早收束·康复退休" }],
+              "next": { "kind": "stage", "stageId": "ending", "sceneId": "end_elder_rehab" }
+            },
+            {
+              "id": "rt_early_soft_brake",
+              "label": "我不想再被「再干几年」拖着走：软着陆已经落地——我想直接收束到「慢刹车」",
+              "visibleWhen": {
+                "tag": "软着陆",
+                "statMax": { "stat": "stress", "value": 46 }
+              },
+              "effects": [{ "op": "addTag", "tag": "早收束·软着陆" }],
+              "next": { "kind": "stage", "stageId": "ending", "sceneId": "end_elder_soft_brake" }
+            },
+            {
+              "id": "rt_early_retire_plan_close",
+              "label": "账与日程都排好了：我想把余生直接交给「慢刹车」",
+              "visibleWhen": { "tag": "退休规划" },
+              "effects": [{ "op": "addTag", "tag": "早收束·退休规划" }],
+              "next": { "kind": "stage", "stageId": "ending", "sceneId": "end_elder_soft_brake" }
+            },
+            {
+              "id": "rt_early_affluent",
+              "label": "门槛前后我都还宽裕：我想把余生直接交给「物质从容」",
+              "visibleWhen": { "statMin": { "stat": "wealth", "value": 52 } },
+              "effects": [{ "op": "addTag", "tag": "早收束·宽裕退休" }],
+              "next": { "kind": "stage", "stageId": "ending", "sceneId": "end_elder_affluent" }
             }
           ]
         },
@@ -1417,102 +3093,71 @@
                 { "op": "addTag", "tag": "传帮带" }
               ],
               "next": { "kind": "stage", "stageId": "lifeLate", "sceneId": "elder_care" }
+            },
+            {
+              "id": "cr_early_community_net",
+              "label": "互助已经织成网：我想把余生直接交给「人情互助」",
+              "visibleWhen": {
+                "statMin": { "stat": "support", "value": 62 }
+              },
+              "effects": [{ "op": "addTag", "tag": "早收束·社群门前" }],
+              "next": { "kind": "stage", "stageId": "ending", "sceneId": "end_elder_community" }
+            },
+            {
+              "id": "cr_early_mentor_stream",
+              "label": "带人这件事我已经做成方法：我想把余生直接交给「传帮带之河」",
+              "visibleWhen": {
+                "tag": "传帮带",
+                "statMin": { "stat": "career", "value": 56 }
+              },
+              "effects": [{ "op": "addTag", "tag": "早收束·导师社群" }],
+              "next": { "kind": "stage", "stageId": "ending", "sceneId": "end_elder_mentor_stream" }
+            },
+            {
+              "id": "cr_early_volunteer_glow",
+              "label": "楼栋与志愿群都认得我：我想把余生直接交给「志愿微光」",
+              "visibleWhen": {
+                "tag": "社群骨干",
+                "statMin": { "stat": "support", "value": 60 }
+              },
+              "effects": [{ "op": "addTag", "tag": "早收束·志愿" }],
+              "next": { "kind": "stage", "stageId": "ending", "sceneId": "end_elder_volunteer_glow" }
             }
           ]
         },
         {
-          "id": "elder_care",
+          "id": "elder_fork_home",
           "narrative": [
-            "父母的白发比天气预报更准；体检单上的箭头，也开始指向你自己。",
-            "晚年不是故事的尾巴，而是另一种叙述的开场：你打算把接下来的年月，过成哪一种光亮？"
+            "你愿意把晚年先放进「人与人」的日常：家的直径、二人的宽度、独身的清静，或按揭的现实。",
+            "哪一条更像你此刻的底气？"
           ],
           "choices": [
             {
-              "id": "elder_cap_family",
+              "id": "efh_family",
               "label": "以家为轴：周末饭桌、孙辈的笑声与电话里的叮咛",
               "visibleWhen": { "flag": { "key": "parent", "value": true } },
               "next": { "kind": "stage", "stageId": "ending", "sceneId": "end_elder_family" }
             },
             {
-              "id": "elder_cap_solo",
-              "label": "独身亦自足：散步、旧友与随手翻的书",
-              "visibleWhen": { "tag": "独身倾向" },
-              "next": { "kind": "stage", "stageId": "ending", "sceneId": "end_elder_solo" }
-            },
-            {
-              "id": "elder_cap_scholar",
-              "label": "讲台或书桌仍在：带学生、写东西，老仍好奇",
-              "visibleWhen": { "flag": { "key": "academic", "value": true } },
-              "next": { "kind": "stage", "stageId": "ending", "sceneId": "end_elder_scholar" }
-            },
-            {
-              "id": "elder_cap_affluent",
-              "label": "物质宽裕些：旅行、照护与选择多一点",
-              "visibleWhen": { "statMin": { "stat": "wealth", "value": 52 } },
-              "next": { "kind": "stage", "stageId": "ending", "sceneId": "end_elder_affluent" }
-            },
-            {
-              "id": "elder_cap_hometown",
-              "label": "小城或近乡：慢车、院子与熟人社会的问候",
-              "visibleWhen": { "flag": { "key": "freedom_path", "value": true } },
-              "next": { "kind": "stage", "stageId": "ending", "sceneId": "end_elder_hometown" }
-            },
-            {
-              "id": "elder_cap_body",
-              "label": "身体有旧账，心却放轻：药盒与阳光都在桌上",
-              "visibleWhen": { "statMin": { "stat": "healthDebt", "value": 32 } },
-              "next": { "kind": "stage", "stageId": "ending", "sceneId": "end_elder_health_note" }
-            },
-            {
-              "id": "elder_cap_metro",
-              "label": "仍扎在都市：地铁、展览、老友与不减的好奇心",
-              "visibleWhen": { "tag": "都市扎根" },
-              "next": { "kind": "stage", "stageId": "ending", "sceneId": "end_elder_metro" }
-            },
-            {
-              "id": "elder_cap_return",
-              "label": "回到更近的故乡节奏：祠堂、田埂与亲戚的问候",
-              "visibleWhen": { "tag": "还乡晚年" },
-              "next": { "kind": "stage", "stageId": "ending", "sceneId": "end_elder_return" }
-            },
-            {
-              "id": "elder_cap_second_wind",
-              "label": "余热仍在：小店、顾问或副业，手不离事",
-              "visibleWhen": { "tag": "余热创业" },
-              "next": { "kind": "stage", "stageId": "ending", "sceneId": "end_elder_second_wind" }
-            },
-            {
-              "id": "elder_cap_duo",
+              "id": "efh_duo",
               "label": "二人世界到白头：旅行清单与互相体检提醒",
               "visibleWhen": { "tag": "二人世界" },
               "next": { "kind": "stage", "stageId": "ending", "sceneId": "end_elder_couple_duo" }
             },
             {
-              "id": "elder_cap_wander_mid",
+              "id": "efh_solo_mid",
               "label": "独自走过中年，晚年把社交收束成少数深交",
               "visibleWhen": { "tag": "独自走过中年" },
               "next": { "kind": "stage", "stageId": "ending", "sceneId": "end_elder_solo_midlife" }
             },
             {
-              "id": "elder_cap_crafts",
-              "label": "手脑仍灵：工具台、学徒与社区里的一点名气",
-              "visibleWhen": { "tag": "技能线" },
-              "next": { "kind": "stage", "stageId": "ending", "sceneId": "end_elder_craftsman" }
+              "id": "efh_solo",
+              "label": "独身亦自足：散步、旧友与随手翻的书",
+              "visibleWhen": { "tag": "独身倾向" },
+              "next": { "kind": "stage", "stageId": "ending", "sceneId": "end_elder_solo" }
             },
             {
-              "id": "elder_cap_community",
-              "label": "人情网密：互助群、志愿与「有事喊一声」的底气",
-              "visibleWhen": { "statMin": { "stat": "support", "value": 62 } },
-              "next": { "kind": "stage", "stageId": "ending", "sceneId": "end_elder_community" }
-            },
-            {
-              "id": "elder_cap_caregiver",
-              "label": "照护余生：责任与亲情并存，把晚年过成一场长期护理",
-              "visibleWhen": { "tag": "照护者" },
-              "next": { "kind": "stage", "stageId": "ending", "sceneId": "end_elder_caregiver" }
-            },
-            {
-              "id": "elder_cap_mortgage",
+              "id": "efh_mortgage",
               "label": "还贷到老：账本与节俭，稳住生活的底盘",
               "visibleWhen": {
                 "tag": "房贷",
@@ -1521,23 +3166,221 @@
               "next": { "kind": "stage", "stageId": "ending", "sceneId": "end_elder_mortgage" }
             },
             {
-              "id": "elder_cap_rehab",
+              "id": "efh_grand_circle",
+              "label": "隔代之环：接送、电话与辈分在同一张表里排队",
+              "visibleWhen": {
+                "flag": { "key": "parent", "value": true },
+                "tag": "隔代照护"
+              },
+              "next": { "kind": "stage", "stageId": "ending", "sceneId": "end_elder_grand_circle" }
+            },
+            {
+              "id": "efh_hobby_root",
+              "label": "兴趣扎根：把空出来的时间过成不被评价的喜欢",
+              "visibleWhen": {
+                "tag": "长期爱好",
+                "statMin": { "stat": "luck", "value": 54 }
+              },
+              "next": { "kind": "stage", "stageId": "ending", "sceneId": "end_elder_hobby_root" }
+            },
+            {
+              "id": "efh_quiet",
+              "label": "寻常晚年：晨昏、新闻、体检与不再逞强的睡眠",
+              "next": { "kind": "stage", "stageId": "ending", "sceneId": "end_elder_quiet" }
+            }
+          ]
+        },
+        {
+          "id": "elder_fork_world",
+          "narrative": [
+            "你愿意把晚年放进「城市、路途与资源」里：扎根、还乡、换城、余热，或物质宽裕后的从容。",
+            "哪一条更像你与世界相处的方式？"
+          ],
+          "choices": [
+            {
+              "id": "efw_metro",
+              "label": "仍扎在都市：地铁、展览、老友与不减的好奇心",
+              "visibleWhen": { "tag": "都市扎根" },
+              "next": { "kind": "stage", "stageId": "ending", "sceneId": "end_elder_metro" }
+            },
+            {
+              "id": "efw_return",
+              "label": "回到更近的故乡节奏：祠堂、田埂与亲戚的问候",
+              "visibleWhen": { "tag": "还乡晚年" },
+              "next": { "kind": "stage", "stageId": "ending", "sceneId": "end_elder_return" }
+            },
+            {
+              "id": "efw_hometown",
+              "label": "小城或近乡：慢车、院子与熟人社会的问候",
+              "visibleWhen": { "flag": { "key": "freedom_path", "value": true } },
+              "next": { "kind": "stage", "stageId": "ending", "sceneId": "end_elder_hometown" }
+            },
+            {
+              "id": "efw_second",
+              "label": "余热仍在：小店、顾问或副业，手不离事",
+              "visibleWhen": { "tag": "余热创业" },
+              "next": { "kind": "stage", "stageId": "ending", "sceneId": "end_elder_second_wind" }
+            },
+            {
+              "id": "efw_affluent",
+              "label": "物质宽裕些：旅行、照护与选择多一点",
+              "visibleWhen": { "statMin": { "stat": "wealth", "value": 52 } },
+              "next": { "kind": "stage", "stageId": "ending", "sceneId": "end_elder_affluent" }
+            },
+            {
+              "id": "efw_system",
+              "label": "体制晚年：规章与人情之间，稳稳地老去",
+              "visibleWhen": { "tag": "体制内" },
+              "next": { "kind": "stage", "stageId": "ending", "sceneId": "end_elder_system" }
+            },
+            {
+              "id": "efw_soft_brake",
+              "label": "慢刹车：软着陆之后，把余生交给可持续的节奏",
+              "visibleWhen": {
+                "tag": "软着陆",
+                "statMax": { "stat": "stress", "value": 48 }
+              },
+              "next": { "kind": "stage", "stageId": "ending", "sceneId": "end_elder_soft_brake" }
+            },
+            {
+              "id": "efw_soft_brake_plan",
+              "label": "慢刹车：退休规划已写在纸上，把余生交给可执行的节奏",
+              "visibleWhen": { "tag": "退休规划" },
+              "next": { "kind": "stage", "stageId": "ending", "sceneId": "end_elder_soft_brake" }
+            },
+            {
+              "id": "efw_quiet",
+              "label": "寻常晚年：晨昏、新闻、体检与不再逞强的睡眠",
+              "next": { "kind": "stage", "stageId": "ending", "sceneId": "end_elder_quiet" }
+            }
+          ]
+        },
+        {
+          "id": "elder_fork_craft",
+          "narrative": [
+            "你愿意把晚年放进「手、脑与作品」里：技能、招牌、创作、学问，或那点想留下的运气。",
+            "哪一条更像你一生最想被记住的形状？"
+          ],
+          "choices": [
+            {
+              "id": "efc_craftsman",
+              "label": "手脑仍灵：工具台、学徒与社区里的一点名气",
+              "visibleWhen": { "tag": "技能线" },
+              "next": { "kind": "stage", "stageId": "ending", "sceneId": "end_elder_craftsman" }
+            },
+            {
+              "id": "efc_brand",
+              "label": "手艺到老：招牌还亮着，手上仍有活",
+              "visibleWhen": { "tag": "招牌手艺" },
+              "next": { "kind": "stage", "stageId": "ending", "sceneId": "end_elder_craft_brand" }
+            },
+            {
+              "id": "efc_artist",
+              "label": "把创作留到老：作品集没有退休，你也没有",
+              "visibleWhen": { "tag": "自由职业" },
+              "next": { "kind": "stage", "stageId": "ending", "sceneId": "end_elder_artist" }
+            },
+            {
+              "id": "efc_scholar",
+              "label": "讲台或书桌仍在：带学生、写东西，老仍好奇",
+              "visibleWhen": { "flag": { "key": "academic", "value": true } },
+              "next": { "kind": "stage", "stageId": "ending", "sceneId": "end_elder_scholar" }
+            },
+            {
+              "id": "efc_legacy",
+              "label": "留下一点东西：把爱好、经验或作品交给后来的人",
+              "visibleWhen": { "statMin": { "stat": "luck", "value": 65 } },
+              "next": { "kind": "stage", "stageId": "ending", "sceneId": "end_elder_legacy" }
+            },
+            {
+              "id": "efc_quiet",
+              "label": "寻常晚年：晨昏、新闻、体检与不再逞强的睡眠",
+              "next": { "kind": "stage", "stageId": "ending", "sceneId": "end_elder_quiet" }
+            }
+          ]
+        },
+        {
+          "id": "elder_fork_care",
+          "narrative": [
+            "你愿意把晚年放进「身体与支持」里：照护、社群、康复，或与旧账和解。",
+            "哪一条更像你此刻最需要托住自己的地方？"
+          ],
+          "choices": [
+            {
+              "id": "efc2_caregiver",
+              "label": "照护余生：责任与亲情并存，把晚年过成一场长期护理",
+              "visibleWhen": { "tag": "照护者" },
+              "next": { "kind": "stage", "stageId": "ending", "sceneId": "end_elder_caregiver" }
+            },
+            {
+              "id": "efc2_community",
+              "label": "人情网密：互助群、志愿与「有事喊一声」的底气",
+              "visibleWhen": { "statMin": { "stat": "support", "value": 62 } },
+              "next": { "kind": "stage", "stageId": "ending", "sceneId": "end_elder_community" }
+            },
+            {
+              "id": "efc2_rehab",
               "label": "养回身体：康复、复健与不再逞强的节奏",
               "visibleWhen": { "tag": "康复计划" },
               "next": { "kind": "stage", "stageId": "ending", "sceneId": "end_elder_rehab" }
             },
             {
-              "id": "elder_cap_legacy",
-              "label": "留下一点东西：把爱好、经验或作品交给后来的人",
-              "visibleWhen": {
-                "statMin": { "stat": "luck", "value": 65 }
-              },
-              "next": { "kind": "stage", "stageId": "ending", "sceneId": "end_elder_legacy" }
+              "id": "efc2_body",
+              "label": "身体有旧账，心却放轻：药盒与阳光都在桌上",
+              "visibleWhen": { "statMin": { "stat": "healthDebt", "value": 32 } },
+              "next": { "kind": "stage", "stageId": "ending", "sceneId": "end_elder_health_note" }
             },
             {
-              "id": "elder_cap_quiet",
+              "id": "efc2_mentor_stream",
+              "label": "传帮带之河：把经验拆成步骤，交给后来的人继续用",
+              "visibleWhen": {
+                "tag": "传帮带",
+                "statMin": { "stat": "career", "value": 56 }
+              },
+              "next": { "kind": "stage", "stageId": "ending", "sceneId": "end_elder_mentor_stream" }
+            },
+            {
+              "id": "efc2_volunteer_glow",
+              "label": "志愿微光：楼栋与互助群都认得我",
+              "visibleWhen": {
+                "tag": "社群骨干",
+                "statMin": { "stat": "support", "value": 60 }
+              },
+              "next": { "kind": "stage", "stageId": "ending", "sceneId": "end_elder_volunteer_glow" }
+            },
+            {
+              "id": "efc2_quiet",
               "label": "寻常晚年：晨昏、新闻、体检与不再逞强的睡眠",
               "next": { "kind": "stage", "stageId": "ending", "sceneId": "end_elder_quiet" }
+            }
+          ]
+        },
+        {
+          "id": "elder_care",
+          "narrative": [
+            "父母的白发比天气预报更准；体检单上的箭头，也开始指向你自己。",
+            "晚年不是「一道题」，更像一扇门：你不必在这里把所有结局摊开，只要先选你想站进哪一种光亮里。"
+          ],
+          "choices": [
+            {
+              "id": "elder_hub_home",
+              "label": "往家里收：亲情、二人、独身与房贷账本",
+              "next": { "kind": "stage", "stageId": "lifeLate", "sceneId": "elder_fork_home" }
+            },
+            {
+              "id": "elder_hub_world",
+              "label": "往城市与路上收：扎根、还乡、换城、余热与物质余地",
+              "next": { "kind": "stage", "stageId": "lifeLate", "sceneId": "elder_fork_world" }
+            },
+            {
+              "id": "elder_hub_craft",
+              "label": "往手里收：技能、招牌、创作、学问与那一点想留下的东西",
+              "next": { "kind": "stage", "stageId": "lifeLate", "sceneId": "elder_fork_craft" }
+            },
+            {
+              "id": "elder_hub_care",
+              "label": "往身上收：照护、社群、康复与身体的旧账",
+              "next": { "kind": "stage", "stageId": "lifeLate", "sceneId": "elder_fork_care" }
             }
           ]
         }
@@ -1702,12 +3545,85 @@
           ]
         },
         {
+          "id": "end_elder_artist",
+          "title": "创作到老",
+          "isEnding": true,
+          "narrative": [
+            "你仍在做作品：也许不再追热点，不再追奖项，但你知道自己要把什么留下。",
+            "【老年结局：创作到老】—— 你把一生磨成一套风格，老去只是换了手的力道。"
+          ]
+        },
+        {
+          "id": "end_elder_system",
+          "title": "体制晚年",
+          "isEnding": true,
+          "narrative": [
+            "规则把日子压得很平，也把风险压得很低。你在制度里学会了耐心，也学会了不把自己交出去。",
+            "【老年结局：体制晚年】—— 你用稳定换来了更少的惊险，也换来了更可预期的晚霞。"
+          ]
+        },
+        {
+          "id": "end_elder_craft_brand",
+          "title": "招牌手艺",
+          "isEnding": true,
+          "narrative": [
+            "人们仍会说「找你最放心」。你把一门手艺做成名姓，做成社区里可靠的光。",
+            "【老年结局：招牌手艺】—— 你没有离开生活，而是把生活修得更牢靠。"
+          ]
+        },
+        {
           "id": "end_elder_legacy",
           "title": "留下些什么",
           "isEnding": true,
           "narrative": [
             "你不再执着于被谁记住，却愿意把一件事做完：一门手艺、一本小册子、一组作品、或者一套经验，交给后来的人继续用。",
             "【老年结局：留下些什么】—— 人生不一定留下丰碑，但可以留下火种。"
+          ]
+        },
+        {
+          "id": "end_elder_hobby_root",
+          "title": "兴趣扎根",
+          "isEnding": true,
+          "narrative": [
+            "家里安静了，你却更忙：不是忙给别人看，而是忙给心里那点火——画画、写字、种花、练琴，像一条不需要退休证的班。",
+            "【老年结局：兴趣扎根】—— 你把「空」过成了「满」，把晚年过成一种不被评价的喜欢。"
+          ]
+        },
+        {
+          "id": "end_elder_grand_circle",
+          "title": "隔代之环",
+          "isEnding": true,
+          "narrative": [
+            "辈分像年轮：你接住了下一代的忙，也接住了上一代的慢。电话、接送、作业与复查在同一张表里排队。",
+            "【老年结局：隔代之环】—— 你不是被消耗，而是把自己活成了一座小小的桥。"
+          ]
+        },
+        {
+          "id": "end_elder_soft_brake",
+          "title": "慢刹车",
+          "isEnding": true,
+          "narrative": [
+            "你提前学会了减速：把「再干几年」换成「够就好」，把「证明」换成「可持续」。",
+            "【老年结局：慢刹车】—— 你没有输在终点前，只是选择在合适的地方温柔地收油。"
+          ]
+        },
+        {
+          "id": "end_elder_mentor_stream",
+          "title": "传帮带之河",
+          "isEnding": true,
+          "narrative": [
+            "你不再追逐更高的 title，却把经验拆成步骤、写成清单、讲成一句句能落地的话。",
+            "后来的人沿着你的河道走，少走许多弯路。",
+            "【老年结局：传帮带之河】—— 你把自己活成了一条可继承的水路。"
+          ]
+        },
+        {
+          "id": "end_elder_volunteer_glow",
+          "title": "志愿微光",
+          "isEnding": true,
+          "narrative": [
+            "楼栋、互助群、志愿排班与「有事喊一声」——你把「被需要」过成了日常，也把日常过成了尊严。",
+            "【老年结局：志愿微光】—— 你不靠聚光灯，却在许多人的门口点亮了一盏小灯。"
           ]
         }
       ]
